@@ -1,0 +1,61 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model RegistroPeso {
+  id              Int      @id @default(autoincrement())
+  usuario_id      Int
+  peso            Decimal  @db.Decimal(5, 2)
+  data_registro   DateTime
+  criado_em       DateTime @default(now())
+  modificado_em   DateTime @default(now())
+  usuario         Usuario  @relation(fields: [usuario_id], references: [id])
+
+  @@map("registro_peso")
+}
+
+model Midia {
+  id              Int      @id @default(autoincrement())
+  usuario_id      Int
+  nome_arquivo    String
+  tipo_midia      String
+  conteudo        Bytes
+  criado_em       DateTime @default(now())
+  modificado_em   DateTime @default(now())
+  usuario         Usuario  @relation(fields: [usuario_id], references: [id])
+
+  @@map("midia")
+}
+
+model Usuario {
+  id              Int              @id @default(autoincrement())
+  nome            String
+  idade           Int
+  email           String
+  senha           String
+  peso            Decimal
+  peso_meta       Decimal
+  altura          Decimal
+  tempo_meta      Int
+  is_ativo        Boolean          @default(true)
+  criado_em       DateTime         @default(now())
+  modificado_em   DateTime         @default(now())
+  registros_peso  RegistroPeso[]
+  midias          Midia[]
+
+  @@map("usuarios")
+}
+
+
+model TokenBlacklist {
+    id         Int      @id @default(autoincrement())
+    token      String
+    created_At DateTime @default(now())
+
+    @@map("tokenbl")
+}
