@@ -1,4 +1,4 @@
-import { Usuario } from "../domain/Usuario";
+import { Usuario } from "../../domain/Usuario";
 
 export function toResponseCadastro(Usuario: Usuario) {
     return {

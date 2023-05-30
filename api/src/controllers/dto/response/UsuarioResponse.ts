@@ -6,5 +6,5 @@ export class UserLoginResponse{
     constructor(id: number, token: string){
         this.id = id;
         this.token = token;
-    }
-}
+    };
+};

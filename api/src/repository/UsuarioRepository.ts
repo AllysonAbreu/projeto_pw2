@@ -72,5 +72,5 @@ export async function buscarUsuarioByEmail({ email }: EmailUsuario) {
 };
 
 export async function buscarUsuarios() {
-    return await prisma.usuario.findMany();    
+    return await prisma.usuario.findMany();   
 };

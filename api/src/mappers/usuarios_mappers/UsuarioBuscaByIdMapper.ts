@@ -1,4 +1,4 @@
-import { IUsuarioBuscaRequest } from "../controllers/dto/request/UsuarioRequest";
+import { IUsuarioBuscaRequest } from "../../controllers/dto/request/UsuarioRequest";
 
 
 export function toResponseBuscaById(Usuario: IUsuarioBuscaRequest) {

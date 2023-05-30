@@ -15,6 +15,8 @@ export class TokenBlackListService {
         if(tokenBl){
             throw new Error(`Token já foi utilizado.`);
         };
+
+        await this.inserirTokenBl({token});
         return true;
     };
 };

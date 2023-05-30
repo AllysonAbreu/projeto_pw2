@@ -1,5 +1,5 @@
 import { hash } from "bcrypt";
-import { AtualizarUsuario, DadosAtualizados, Usuario } from "../domain/Usuario";
+import { AtualizarUsuario, DadosAtualizados, Usuario } from "../../domain/Usuario";
 
 export async function updateUsuarioRequestToObject({id, dados}:AtualizarUsuario) {
 

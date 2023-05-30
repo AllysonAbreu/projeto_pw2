@@ -1,4 +1,4 @@
-import { UserLoginResponse } from "../controllers/dto/response/UsuarioResponse";
+import { UserLoginResponse } from "../../controllers/dto/response/UsuarioResponse";
 
 
 export function toResponseLogin(id:number, token:string) {

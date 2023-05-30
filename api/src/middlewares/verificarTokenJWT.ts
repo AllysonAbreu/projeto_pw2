@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { verify } from 'jsonwebtoken'
+import { splitToken } from '../utils/splitToken';
 
 export function verificarToken(
     req: Request,
@@ -10,16 +11,18 @@ export function verificarToken(
 
     if (!token) {
         return res.status(403).json({
-            message: 'Não há token.',
+            code: 403,
+            message: 'Não há token.'
         });
     };
 
     try {
-        verify(token, process.env.CHAVE_JWT!);
+        verify(splitToken(token), process.env.CHAVE_JWT!);
 
         return next();
     } catch (error: any) {
         return res.status(403).json({
+            code: 403,
             message: 'Token não é válido.',
         });
     };

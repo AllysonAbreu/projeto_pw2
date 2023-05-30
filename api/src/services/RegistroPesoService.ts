@@ -1,16 +1,16 @@
 import { IUsuarioCadastroRequest, IUsuarioLoginRequest } from "../controllers/dto/request/UsuarioRequest";
 import { compare, hash } from 'bcrypt'
-import { sign } from 'jsonwebtoken'
 import { buscarUsuarioByEmail, buscarUsuarioById, buscarUsuarios, cadastrarUsuario, deleteLogicoUsuario, updateUsuario } from "../repository/UsuarioRepository";
 import { AtualizarUsuario, EmailUsuario } from "../domain/Usuario";
 import { IId } from "../controllers/dto/request/IdRequest";
 import { toResponseBuscaById } from "../mappers/UsuarioBuscaByIdMapper";
-import { toResponseLogin } from "../mappers/UsuarioLoginMapper";
 import { toResponseCadastro } from "../mappers/UsuarioCadastroMapper";
 import { toResponseNovoUsuario, updateUsuarioRequestToObject } from "../mappers/usuarios_mappers/UpdateUsuarioMapper";
+import { buscarRegistrosPesosByUsuarioId } from "../repository/RegistroPesoRepository";
+import { toResponseRegistroPesoByUserId } from "../mappers/registrosPesos_mappers/RegistroPesoBuscaByUserIdMapper";
 
 
-export class UsuariosService{
+export class RegistroPesoService{
     async atualizarUsuario({ id, dados }: AtualizarUsuario) {
         
         const dadosAtualizacao = await updateUsuarioRequestToObject(new AtualizarUsuario(id, dados));
@@ -23,10 +23,10 @@ export class UsuariosService{
         throw new Error(`Usuário com id ${id} não encontrado.`);
     }
 
-    async buscarUsuarioPorId({ id }: IId) {
-        const user = await buscarUsuarioById({ id });
-        if (user) {
-            return toResponseBuscaById(user);
+    async buscarRegistrosPesosByUsuario({ id }: IId) {
+        const registros = await buscarRegistrosPesosByUsuarioId({ id });
+        if (registros) {
+            return toResponseRegistroPesoByUserId(registros);
         };
         throw new Error("Usuário não cadastrado.");
     };
@@ -47,15 +47,6 @@ export class UsuariosService{
         return toResponseCadastro(user);
     };
     
-    async usuarioExiste({ email }: EmailUsuario) {
-        const user = await buscarUsuarioByEmail({ email });
-
-        if(user) {
-            throw new Error(`Usuário já cadastrado com o email ${email}.`);
-        };
-        return user;
-    };
-    
     async buscarUsuarios() {
         const usuarios = await buscarUsuarios();
 
@@ -65,27 +56,6 @@ export class UsuariosService{
         return usuarios; 
     };
 
-    async autenticarUsuarioService({ email, senha }: IUsuarioLoginRequest) {
-        const user = await buscarUsuarioByEmail({ email });
-        const senhaAtual = user ? user.senha : '';
 
-        const isSenha = await compare(senha, senhaAtual);
-        if (!isSenha) {
-            throw new Error('Senha está incorreta.');
-        };
-
-        if (!user) {
-            throw new Error('Usuário não cadastrado.');
-        }
-
-        const token = sign({ email }, process.env.CHAVE_JWT!, {
-            expiresIn: '1d',
-            algorithm: 'HS256',
-            subject: String(user.id),
-        });
-
-        const response = toResponseLogin(user.id,token);
-        return {token, response};
-    };
 };
 

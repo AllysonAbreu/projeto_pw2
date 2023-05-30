@@ -1,3 +1,4 @@
+import { RegistroPeso } from './../domain/ResgistroPeso';
 import { Request, Response } from "express";
 import { IUpdateUsuarioRequest, IUsuarioCadastroRequest, IUsuarioLoginRequest } from "./dto/request/UsuarioRequest";
 import { UsuariosService } from "../services/UsuarioService";
@@ -5,66 +6,17 @@ import { TokenBlackListService } from "../services/TokenBlackListService";
 import { AtualizarUsuario, EmailUsuario } from "../domain/Usuario";
 import { IId } from "./dto/request/IdRequest";
 import { splitToken } from "../utils/splitToken";
+import { RegistroPesoService } from "../services/RegistroPesoService";
 
-const usuarioService = new UsuariosService();
-const tokenService = new TokenBlackListService();
+const service = new RegistroPesoService();
 
-export class UsuariosController{
-    
-    async login(req: Request, res: Response){
+export class RegistroPesoController{
+
+    async buscarTodosPesosRegistradosByUsuario(req: Request, res: Response) {
         try {
-
-            const { email, senha } = <IUsuarioLoginRequest>req.body;
-
-            const {token,response} = await usuarioService.autenticarUsuarioService({ email, senha });
-
-            return res.status(200).set('Authorization', token).json({
-                code: 200,
-                response
-            })
-        } catch (error:any) {
-            return res.status(400).json({
-                code: 400,
-                message: error.message,
-            });
-        };
-    };
-
-    async logout(req: Request, res: Response) {
-        try {
-            const bearerToken = req.headers.authorization;
-
-            if (!bearerToken) {
-                return res.status(403).json({
-                    code: 403,
-                    message: 'Não há token.'
-                });
-            };
-
-            const token = splitToken(bearerToken);
-            const isTokenInDb = await tokenService.buscarTokenBl({ token });
-
-            if (isTokenInDb) {
-                return res.status(200).json({
-                    code: 200,
-                    message: 'Logout realizado.'
-                });
-            };
-
-        } catch (error: any) {
-            return res.status(400).json({
-                code: 400,
-                message: error.message,
-            });
-        };
-    };
-
-    async buscarTodosUsuarios(req: Request, res: Response) {
-        try {
-
-            const usuarios = await usuarioService.buscarUsuarios();
-            return res.status(200).json({ code:200, usuarios });
-            
+            const { id } = <IId><unknown>req.params;
+            const response = await service.buscarRegistrosPesosByUsuario({ id });
+            return res.status(200).json({ code:200, response });
         } catch (error: any) {
             return res.status(400).json({
                 code: 400,
