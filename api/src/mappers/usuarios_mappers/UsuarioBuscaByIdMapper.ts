@@ -1,14 +1,12 @@
-import { IUsuarioBuscaRequest } from "../../controllers/dto/request/UsuarioRequest";
+import { Usuario } from "../../domain/Usuario";
 
 
-export function toResponseBuscaById(Usuario: IUsuarioBuscaRequest) {
+export function toResponseBuscaById(Usuario: Usuario) {
     return {
         id: Usuario.id,
         nome: Usuario.nome,
         idade: Usuario.idade,
         email: Usuario.idade,
-        peso: Usuario.peso,
-        peso_meta: Usuario.peso_meta,
         altura: Usuario.altura,
         tempo_meta: Usuario.tempo_meta,
         is_ativo: Usuario.is_ativo,

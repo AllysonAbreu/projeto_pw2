@@ -3,7 +3,7 @@ CREATE TABLE "registro_peso" (
     "id" SERIAL NOT NULL,
     "usuario_id" INTEGER NOT NULL,
     "peso" DECIMAL(5,2) NOT NULL,
-    "data_registro" TIMESTAMP(3) NOT NULL,
+    "peso_meta" DECIMAL(65,30) NOT NULL,
     "criado_em" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "modificado_em" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -30,8 +30,6 @@ CREATE TABLE "usuarios" (
     "idade" INTEGER NOT NULL,
     "email" TEXT NOT NULL,
     "senha" TEXT NOT NULL,
-    "peso" DECIMAL(65,30) NOT NULL,
-    "peso_meta" DECIMAL(65,30) NOT NULL,
     "altura" DECIMAL(65,30) NOT NULL,
     "tempo_meta" INTEGER NOT NULL,
     "is_ativo" BOOLEAN NOT NULL DEFAULT true,

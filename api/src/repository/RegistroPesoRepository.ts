@@ -4,31 +4,53 @@ import { IId } from "../controllers/dto/request/IdRequest";
 const prisma = new PrismaClient();
 
 export async function buscarRegistroPesoById({ id }: { id: number }) {
-    const registroPeso = await prisma.registroPeso.findFirst({
-        where: {
-            id,
-        },
-    });
-    return registroPeso;
+    try {
+        const registroPeso = await prisma.registroPeso.findFirst({
+            where: {
+                id,
+            },
+        });
+        if(registroPeso === null){
+            throw new Error(`Não há registro de peso com o id:${id}.`);
+        } else {
+            return registroPeso;
+        };
+    } catch (error:any) {
+        throw new Error(`Erro ao buscar registro de peso no banco de dados com o id:${id}.\nError message:${error.message}.`);
+    };
 };
 
 export async function buscarRegistrosPesosByUsuarioId({ id }:IId) {
-    const registrosPesos = await prisma.registroPeso.findMany({
-        where: {
-            usuario_id:id,
-        },
-    });
-    return registrosPesos;
+    try {
+        const registrosPesos = await prisma.registroPeso.findMany({
+            where: {
+                usuario_id: id,
+            },
+        });
+        if (registrosPesos.length === 0) {
+            throw new Error(`Não há registros de peso para o usuário com id: ${id}.`);
+        };
+        return registrosPesos;
+    } catch (error: any) {
+        throw new Error(`Erro ao buscar registros de peso no banco de dados com o id: ${id}.\nError message: ${error.message}.`);
+    };
 };
 
-export async function registrarPeso({ usuarioId, peso }: { usuarioId: number, peso: number }) {
-    const registroPeso = await prisma.registroPeso.create({
-        data: {
-            usuarioId,
-            peso,
-        },
-    });
-    return registroPeso;
+export async function registrarPeso({ usuarioId, peso, peso_meta }: { usuarioId: number, peso: number, peso_meta: number }) {
+    try {
+        const registroPeso = await prisma.registroPeso.create({
+            data: {
+                usuario_id: usuarioId,
+                peso,
+                peso_meta
+            },
+        });
+        if(registroPeso){
+            return registroPeso;
+        };
+    } catch (error:any) {
+        throw new Error(`Erro ao cadastrar registro de peso: ${error.message}`);     
+    };
 };
 
 export async function atualizarPeso({ id, peso }: { id: number, peso: number }) {

@@ -1,10 +1,9 @@
-import { IUsuarioCadastroRequest, IUsuarioLoginRequest } from "../controllers/dto/request/UsuarioRequest";
-import { compare, hash } from 'bcrypt'
-import { buscarUsuarioByEmail, buscarUsuarioById, buscarUsuarios, cadastrarUsuario, deleteLogicoUsuario, updateUsuario } from "../repository/UsuarioRepository";
+import { IUsuarioCadastroRequest } from "../controllers/dto/request/UsuarioRequest";
+import { hash } from 'bcrypt'
+import { buscarUsuarioByEmail, buscarUsuarios, cadastrarUsuario, deleteLogicoUsuario, updateUsuario } from "../repository/UsuarioRepository";
 import { AtualizarUsuario, EmailUsuario } from "../domain/Usuario";
 import { IId } from "../controllers/dto/request/IdRequest";
-import { toResponseBuscaById } from "../mappers/UsuarioBuscaByIdMapper";
-import { toResponseCadastro } from "../mappers/UsuarioCadastroMapper";
+import { toResponseCadastro } from "../mappers/usuarios_mappers/UsuarioCadastroMapper";
 import { toResponseNovoUsuario, updateUsuarioRequestToObject } from "../mappers/usuarios_mappers/UpdateUsuarioMapper";
 import { buscarRegistrosPesosByUsuarioId } from "../repository/RegistroPesoRepository";
 import { toResponseRegistroPesoByUserId } from "../mappers/registrosPesos_mappers/RegistroPesoBuscaByUserIdMapper";
@@ -12,23 +11,27 @@ import { toResponseRegistroPesoByUserId } from "../mappers/registrosPesos_mapper
 
 export class RegistroPesoService{
     async atualizarUsuario({ id, dados }: AtualizarUsuario) {
-        
-        const dadosAtualizacao = await updateUsuarioRequestToObject(new AtualizarUsuario(id, dados));
-
-        const novosDados = await updateUsuario(dadosAtualizacao);
-
-        if(novosDados){
-            return toResponseNovoUsuario(novosDados);
+        try {
+            const dadosAtualizacao = await updateUsuarioRequestToObject(new AtualizarUsuario(id, dados));
+            const novosDados = await updateUsuario(dadosAtualizacao);
+            if(novosDados){
+                return toResponseNovoUsuario(novosDados);
+            };    
+        } catch (error:any) {
+            throw new Error(`Usuário com id ${id} não encontrado.\nErro: ${error.message}.`);
         };
-        throw new Error(`Usuário com id ${id} não encontrado.`);
-    }
+    };
 
     async buscarRegistrosPesosByUsuario({ id }: IId) {
-        const registros = await buscarRegistrosPesosByUsuarioId({ id });
-        if (registros) {
-            return toResponseRegistroPesoByUserId(registros);
+        try {
+            const registros = await buscarRegistrosPesosByUsuarioId({ id });
+            if (registros.length > 0) {
+                return toResponseRegistroPesoByUserId(registros);
+            }
+            throw new Error("Usuário não cadastrado.");
+        } catch (error:any) {
+          throw new Error(`Erro ao buscar registros de peso do usuário com id ${id}.\nErro: ${error.message}.`);  
         };
-        throw new Error("Usuário não cadastrado.");
     };
 
     async deletarUsuario( {email}:EmailUsuario ) {
@@ -39,13 +42,6 @@ export class RegistroPesoService{
         }
         throw new Error(`Usuário com email ${email} não cadastrado.`);
     };
-
-    async cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta }:IUsuarioCadastroRequest) {        
-        this.usuarioExiste({ email });
-        const senhaHash = hash(senha, 10);
-        const user = await cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta }, senhaHash);
-        return toResponseCadastro(user);
-    };
     
     async buscarUsuarios() {
         const usuarios = await buscarUsuarios();
@@ -55,7 +51,5 @@ export class RegistroPesoService{
         };
         return usuarios; 
     };
-
-
 };
 

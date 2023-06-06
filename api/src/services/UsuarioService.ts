@@ -4,11 +4,10 @@ import { sign } from 'jsonwebtoken'
 import { buscarUsuarioByEmail, buscarUsuarioById, buscarUsuarios, cadastrarUsuario, deleteLogicoUsuario, updateUsuario } from "../repository/UsuarioRepository";
 import { AtualizarUsuario, EmailUsuario } from "../domain/Usuario";
 import { IId } from "../controllers/dto/request/IdRequest";
-import { toResponseBuscaById } from "../mappers/UsuarioBuscaByIdMapper";
-import { toResponseLogin } from "../mappers/UsuarioLoginMapper";
-import { toResponseCadastro } from "../mappers/UsuarioCadastroMapper";
+import { toResponseBuscaById } from "../mappers/usuarios_mappers/UsuarioBuscaByIdMapper";
+import { toResponseLogin } from "../mappers/usuarios_mappers/UsuarioLoginMapper";
+import { toResponseCadastro } from "../mappers/usuarios_mappers/UsuarioCadastroMapper";
 import { toResponseNovoUsuario, updateUsuarioRequestToObject } from "../mappers/usuarios_mappers/UpdateUsuarioMapper";
-
 
 export class UsuariosService{
     async atualizarUsuario({ id, dados }: AtualizarUsuario) {
@@ -21,30 +20,42 @@ export class UsuariosService{
             return toResponseNovoUsuario(novosDados);
         };
         throw new Error(`Usuário com id ${id} não encontrado.`);
-    }
+    };
 
     async buscarUsuarioPorId({ id }: IId) {
-        const user = await buscarUsuarioById({ id });
-        if (user) {
-            return toResponseBuscaById(user);
+        try {
+            const user = await buscarUsuarioById({ id });
+            if (user) {
+                return toResponseBuscaById(user);
+            };
+        } catch (error:any) {
+            throw new Error("Usuário não cadastrado."); 
         };
-        throw new Error("Usuário não cadastrado.");
     };
 
     async deletarUsuario( {email}:EmailUsuario ) {
-        const user = await buscarUsuarioByEmail({ email });
-        if (user){
-            const id = user.id;
-            return await deleteLogicoUsuario({ id });
-        }
-        throw new Error(`Usuário com email ${email} não cadastrado.`);
+        try {
+            const user = await buscarUsuarioByEmail({ email });
+            if (user){
+                const id = user.id;
+                return await deleteLogicoUsuario({ id });
+            };
+        } catch (error:any) {
+            throw new Error(`Usuário com email ${email} não cadastrado.\nErro: ${error.message}.`);
+        };
     };
 
-    async cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta }:IUsuarioCadastroRequest) {        
-        this.usuarioExiste({ email });
-        const senhaHash = hash(senha, 10);
-        const user = await cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta }, senhaHash);
-        return toResponseCadastro(user);
+    async cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta }:IUsuarioCadastroRequest) {
+        try {
+            this.usuarioExiste({ email });
+            const senhaHash = hash(senha, 10);
+            const user = await cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta }, senhaHash);
+            if(user){
+                return toResponseCadastro(user);
+            };
+        } catch (error:any) {
+            throw new Error(`Erro ao cadastrar usuário: ${error.message}`);
+        };
     };
     
     async usuarioExiste({ email }: EmailUsuario) {
