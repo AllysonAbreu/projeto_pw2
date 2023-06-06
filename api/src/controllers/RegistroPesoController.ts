@@ -1,12 +1,7 @@
-import { RegistroPeso } from './../domain/ResgistroPeso';
 import { Request, Response } from "express";
-import { IUpdateUsuarioRequest, IUsuarioCadastroRequest, IUsuarioLoginRequest } from "./dto/request/UsuarioRequest";
-import { UsuariosService } from "../services/UsuarioService";
-import { TokenBlackListService } from "../services/TokenBlackListService";
-import { AtualizarUsuario, EmailUsuario } from "../domain/Usuario";
 import { IId } from "./dto/request/IdRequest";
-import { splitToken } from "../utils/splitToken";
 import { RegistroPesoService } from "../services/RegistroPesoService";
+import { IAtualizarRegistroPesoRequest, ICriarRegistroPesoRequest } from './dto/request/RegistroPesoRequest';
 
 const service = new RegistroPesoService();
 
@@ -25,20 +20,14 @@ export class RegistroPesoController{
         };
     };
 
-    async registrarUsuario(req: Request, res: Response) {
+    async registrarPeso(req: Request, res: Response) {
         try {
-            const { nome, idade, email, senha, peso, peso_meta, altura, tempo_meta } = <IUsuarioCadastroRequest>req.body;
-
-            await usuarioService.usuarioExiste({ email });
-
-            const response = await usuarioService.cadastrarUsuario({
-                nome, idade, email, senha, peso, peso_meta, altura, tempo_meta
-            });
-
+            const { id, peso, peso_meta } = <ICriarRegistroPesoRequest>req.body;
+            const response = await service.registrarNovoPeso({ id, peso, peso_meta });
             return res.status(201)
                 .json({ code: 201,
-                        message:`Usuário cadastrado com sucesso.`,
-                        usuario: response });
+                        message:`Peso registrado com sucesso.`,
+                        registro: response });
         } catch (error: any) {
             return res.status(400).json({
                 code: 400,
@@ -47,16 +36,13 @@ export class RegistroPesoController{
         };
     };
 
-    async deletarUsuario(req: Request, res: Response) {
+    async removerRegistro(req: Request, res: Response) {
         try {
-
-            const { email } = <EmailUsuario>req.body;
-
-            await usuarioService.deletarUsuario({ email });
-
+            const { id } = <IId>req.body;
+            await service.deletarPeso({ id });
             return res.status(200).json({
                 code: 200,
-                message: `Usuário removido com sucesso.`
+                message: `Registro de peso com id ${id} deletado com sucesso.`
             });
         } catch (error: any) {
             return res.status(400).json({
@@ -66,13 +52,11 @@ export class RegistroPesoController{
         };
     };
 
-    async buscarUsuarioById(req: Request, res: Response) {
+    async buscarRegistroPeso(req: Request, res: Response) {
         try { 
             const { id } = <IId><unknown>req.params;
-
-            const response = await usuarioService.buscarUsuarioPorId({ id })
-
-            return res.status(200).json({ code:200, usuario: response })
+            const response = await service.buscarRegistroPesoPorId({ id });
+            return res.status(200).json({ code:200, registro: response })
         } catch (error: any) {
             return res.status(400).json({
                 code: 400,
@@ -81,17 +65,13 @@ export class RegistroPesoController{
         };
     };
 
-    async atualizarUsuario(req: Request, res: Response) {
+    async atualizarRegistro(req: Request, res: Response) {
         try {
             const { id } = <IId>(<unknown>req.params);
-
-            const dados = <IUpdateUsuarioRequest>req.body;
-
-            const dadosCopy = { ...dados };
-
-            const response = await usuarioService.atualizarUsuario(new AtualizarUsuario(id, dadosCopy));
-
-            return res.status(200).json({ code:200, message: "Usuário atualizado", usuario: response })
+            const dados = <IAtualizarRegistroPesoRequest>req.body;
+            const { id: idToUpdate, ...dadosCopy } = dados;
+            const response = await service.atualizarPeso({ id: idToUpdate, ...dadosCopy });
+            return res.status(200).json({ code: 200, message: `Registro atualizado.`, registro: response });
         } catch (error: any) {
             return res.status(400).json({
                 code: 400,

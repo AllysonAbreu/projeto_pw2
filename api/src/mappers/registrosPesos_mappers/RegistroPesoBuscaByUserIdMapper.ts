@@ -1,5 +1,5 @@
 import { ListRegistroPesoBuscaByIdResponse, RegistroPesoBuscaByUserIdResponse } from "../../controllers/dto/response/RegistroPesoBuscaByUserIdResponse";
-import { RegistroPeso as PrismaRegistroPeso } from '@prisma/client';
+import { RegistroPeso as PrismaRegistroPeso, RegistroPeso } from '@prisma/client';
 
 
 export function toResponseRegistroPesoByUserId(registrosPeso: PrismaRegistroPeso[]) {
@@ -16,4 +16,14 @@ export function toResponseRegistroPesoByUserId(registrosPeso: PrismaRegistroPeso
         listRegistros.registrosPeso.push(registro);
     });
     return listRegistros;
+};
+
+export function toResponseRegistroPeso(registroPeso:PrismaRegistroPeso){
+    const registro = new RegistroPesoBuscaByUserIdResponse();
+    registro.id=registroPeso.id;
+    registro.peso=registroPeso.peso;
+    registro.peso_meta=registroPeso.peso_meta;
+    registro.criado_em=registroPeso.criado_em;
+    registro.modificado_em=registroPeso.modificado_em;
+    return registro;
 };
