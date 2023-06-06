@@ -1,10 +1,11 @@
 import { Usuario } from './Usuario';
+import { TipoMidia } from './enum/EnumTipoMidia';
 
 export class Midia {
   id: number;
   usuario_id: number;
   nome_arquivo: string;
-  tipo_midia: string;
+  tipo_midia: TipoMidia;
   conteudo: Buffer;
   criado_em: Date;
   modificado_em: Date;
@@ -14,7 +15,7 @@ export class Midia {
     id: number,
     usuario_id: number,
     nome_arquivo: string,
-    tipo_midia: string,
+    tipo_midia: TipoMidia,
     conteudo: Buffer,
     criado_em: Date,
     modificado_em: Date,
@@ -28,5 +29,5 @@ export class Midia {
     this.criado_em = criado_em;
     this.modificado_em = modificado_em;
     this.usuario = usuario;
-  }
-}
+  };
+};

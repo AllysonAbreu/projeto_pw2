@@ -1,21 +1,19 @@
 import { TokenBl } from '../domain/TokenBlackList';
-import { buscarToken, inserirToken } from '../repository/TokenBlackListRepository';
+import { TokenRepositoy } from '../repository/TokenBlackListRepository';
 
+const repository = new TokenRepositoy();
 
 export class TokenBlackListService {
 
     async inserirTokenBl( {token}:TokenBl ){
-        return await inserirToken({token});
+        return await repository.inserirToken({token});
     };
 
     async buscarTokenBl( {token}:TokenBl ) {
-        
-        const tokenBl = await buscarToken({token});
-
+        const tokenBl = await repository.buscarToken({token});
         if(tokenBl){
             throw new Error(`Token já foi utilizado.`);
         };
-
         await this.inserirTokenBl({token});
         return true;
     };

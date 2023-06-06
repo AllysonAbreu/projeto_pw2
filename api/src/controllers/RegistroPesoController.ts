@@ -5,7 +5,7 @@ import { IAtualizarRegistroPesoRequest, ICriarRegistroPesoRequest } from './dto/
 
 const service = new RegistroPesoService();
 
-export class RegistroPesoController{
+export class RegistroPesoController {
 
     async buscarTodosPesosRegistradosByUsuario(req: Request, res: Response) {
         try {

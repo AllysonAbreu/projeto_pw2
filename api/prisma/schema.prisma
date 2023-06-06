@@ -24,13 +24,18 @@ model Midia {
   id              Int      @id @default(autoincrement())
   usuario_id      Int
   nome_arquivo    String
-  tipo_midia      String
+  tipo_midia      TipoMidia
   conteudo        Bytes
   criado_em       DateTime @default(now())
   modificado_em   DateTime @default(now())
   usuario         Usuario  @relation(fields: [usuario_id], references: [id])
 
   @@map("midia")
+}
+
+enum TipoMidia {
+  IMAGEM
+  VIDEO
 }
 
 model Usuario {

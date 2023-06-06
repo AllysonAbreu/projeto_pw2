@@ -3,22 +3,22 @@ import { TokenBl } from "../domain/TokenBlackList";
 
 const prisma = new PrismaClient();
 
-export async function inserirToken( {token}:TokenBl ){
-        
-    await prisma.tokenBlacklist.create({
-        data:{
-            token
-        }
-    });
-};
+export class TokenRepositoy {
 
-export async function buscarToken( {token}:TokenBl ) {
-        
-    const tokenBl = await prisma.tokenBlacklist.findFirst({
-        where:{
-            token
-        }
-    });
-
-    return tokenBl;
+    async inserirToken( {token}:TokenBl ){
+        await prisma.tokenBlacklist.create({
+            data:{
+                token
+            }
+        });
+    };
+    
+    async buscarToken( {token}:TokenBl ) {
+        const tokenBl = await prisma.tokenBlacklist.findFirst({
+            where:{
+                token
+            }
+        });
+        return tokenBl;
+    };
 };
