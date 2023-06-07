@@ -1,10 +1,7 @@
-import { File } from "buffer";
 import { AtualizarMidiaRequest, CriarMidiaRequest } from "../controllers/dto/request/MidiaRequest";
-import { Midia } from "../domain/Midia";
 import { TipoMidia } from "../domain/enum/EnumTipoMidia";
 import { MidiaRepository } from "../repository/MidiaRepository";
 import { VerificaTipoMidia } from "../utils/verficaTipoMidia";
-import { MidiaConverter } from "../utils/midiaConverter";
 
 export class MidiaService {
     private repository: MidiaRepository;
@@ -14,7 +11,7 @@ export class MidiaService {
     };
 
     async criarMidia(usuario_id: number, nome_arquivo: string, tipo_midia: TipoMidia, conteudo: Express.Multer.File) {
-        if(VerificaTipoMidia.isTipoMidia(tipo_midia)) {
+        if(!VerificaTipoMidia.isTipoMidia(tipo_midia)) {
             throw new Error('Tipo de mídia inválido.');
         };
         try {

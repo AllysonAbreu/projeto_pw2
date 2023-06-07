@@ -13,6 +13,9 @@ export interface IUsuarioCadastroRequest {
     peso_meta: number;
     altura: number;
     tempo_meta: number;
+    nome_arquivo: string;
+    tipo_midia: TipoMidia;
+    conteudo: Express.Multer.File
 };
 
 export interface IUsuarioBuscaRequest {

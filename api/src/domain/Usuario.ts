@@ -1,4 +1,5 @@
 import { Decimal } from "@prisma/client/runtime";
+import { TipoMidia } from "./enum/EnumTipoMidia";
 
 export class Usuario {
     id: number;
@@ -60,16 +61,26 @@ export class Usuario {
     idade?: number;
     email?: string;
     senha?: string;
+    peso?: number;
+    peso_meta?: number;
     altura?: number;
     tempo_meta?: number;
+    nome_arquivo?: string;
+    tipo_midia?: TipoMidia;
+    conteudo?: Express.Multer.File;
 
-    constructor(nome?: string, idade?: number, email?: string, senha?: string, altura?: number, tempo_meta?: number) {
+    constructor(nome?: string, idade?: number, email?: string, senha?: string, peso?: number, peso_meta?: number, altura?: number, tempo_meta?: number, nome_arquivo?: string, tipo_midia?: TipoMidia, conteudo?: Express.Multer.File){
       this.nome = nome;
       this.idade = idade;
       this.email = email;
       this.senha = senha;
+      this.peso = peso;
+      this.peso_meta = peso_meta;
       this.altura = altura;
       this.tempo_meta = tempo_meta;
+      this.nome_arquivo = nome_arquivo;
+      this.tipo_midia = tipo_midia;
+      this.conteudo = conteudo;
     };
   };
   

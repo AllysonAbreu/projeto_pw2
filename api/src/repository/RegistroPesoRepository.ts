@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { IId } from "../controllers/dto/request/IdRequest";
-import { IAtualizarRegistroPesoRequest } from "../controllers/dto/request/RegistroPesoRequest";
+import { CriarRegistroPesoRequest, IAtualizarRegistroPesoRequest } from "../controllers/dto/request/RegistroPesoRequest";
 import { toResponseRegistroPeso, toResponseRegistroPesoByUserId } from "../mappers/registrosPesos_mappers/RegistroPesoBuscaByUserIdMapper";
 
 const prisma = new PrismaClient();
@@ -24,27 +23,46 @@ export class RegistroPesoRepository {
         };
     };
     
-    async buscarRegistrosPesosByUsuarioId({ id }:IId) {
+    async buscarRegistrosPesosByUsuarioId(id: number, page: number, pageSize: number) {
         try {
-            const registrosPesos = await prisma.registroPeso.findMany({
-                where: {
-                    usuario_id: id,
-                },
-            });
+            const [registrosPesos, totalRegistros] = await Promise.all([
+                prisma.registroPeso.findMany({
+                    where: {
+                        usuario_id: id,
+                    },
+                    skip: (page - 1) * pageSize,
+                    take: pageSize,
+                }),
+                prisma.registroPeso.count({
+                    where: {
+                        usuario_id: id,
+                    },
+                }),
+            ]);
+    
             if (registrosPesos.length === 0) {
                 throw new Error(`Não há registros de peso para o usuário com id: ${id}.`);
             };
-            return toResponseRegistroPesoByUserId(registrosPesos);
+    
+            const registrosPesoResponse = toResponseRegistroPesoByUserId(registrosPesos);
+            const totalPages = Math.ceil(totalRegistros / pageSize);
+    
+            return {
+                registrosPeso: registrosPesoResponse,
+                totalPages,
+                pageSize,
+                currentPage: page,
+            };
         } catch (error: any) {
             throw new Error(`Erro ao buscar registros de peso no banco de dados com o id: ${id}.\nError message: ${error.message}.`);
         };
     };
     
-    async registrarPeso({ usuarioId, peso, peso_meta }: { usuarioId: number, peso: number, peso_meta: number }) {
+    async registrarPeso(id:number, peso:number, peso_meta:number ) {
         try {
             const registroPeso = await prisma.registroPeso.create({        
                 data: {
-                    usuario_id: usuarioId,
+                    usuario_id: id,
                     peso,
                     peso_meta
                 },
@@ -55,7 +73,7 @@ export class RegistroPesoRepository {
         };
     };
     
-    async atualizarRegistro({ id, peso, peso_meta }:IAtualizarRegistroPesoRequest) {
+    async atualizarRegistro(id:number, { peso, peso_meta }:IAtualizarRegistroPesoRequest) {
         try {
             if (peso === undefined || peso === null) {
                 const dados =  await this.atualizarPropriedade({ id, propriedade: 'peso_meta', valor: peso_meta });

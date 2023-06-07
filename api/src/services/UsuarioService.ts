@@ -3,25 +3,29 @@ import { compare, hash } from 'bcrypt'
 import { sign } from 'jsonwebtoken'
 import { UsuarioRepository } from "../repository/UsuarioRepository";
 import { AtualizarUsuario, EmailUsuario } from "../domain/Usuario";
-import { IId } from "../controllers/dto/request/IdRequest";
 import { toResponseLogin } from "../mappers/usuarios_mappers/UsuarioLoginMapper";
 import { updateUsuarioRequestToObject } from "../mappers/usuarios_mappers/UpdateUsuarioMapper";
 
-const repository = new UsuarioRepository();
-
 export class UsuariosService{
+
+    private repository: UsuarioRepository;
+
+    constructor(){
+        this.repository = new UsuarioRepository();
+    };
+
     async atualizarUsuario({ id, dados }: AtualizarUsuario) {
         try {
             const dadosAtualizacao = await updateUsuarioRequestToObject(new AtualizarUsuario(id, dados));
-            return await repository.updateUsuario(dadosAtualizacao); 
+            return await this.repository.updateUsuario(dadosAtualizacao); 
         } catch (error:any) {
             throw new Error(`Usuário com id ${id} não encontrado.`); 
         };
     };
 
-    async buscarUsuarioPorId({ id }: IId) {
+    async buscarUsuarioPorId(id:number) {
         try {
-            return await repository.buscarUsuarioById({ id });
+            return await this.repository.buscarUsuarioById(id);
         } catch (error:any) {
             throw new Error("Usuário não cadastrado."); 
         };
@@ -29,28 +33,28 @@ export class UsuariosService{
 
     async deletarUsuario( {email}:EmailUsuario ) {
         try {
-            const user = await repository.buscarUsuarioByEmail({ email });
+            const user = await this.repository.buscarUsuarioByEmail({ email });
             if (user){
                 const id = user.id;
-                return await repository.deleteLogicoUsuario({ id });
+                return await this.repository.deleteLogicoUsuario({ id });
             };
         } catch (error:any) {
             throw new Error(`Usuário com email ${email} não cadastrado.\nErro: ${error.message}.`);
         };
     };
 
-    async cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta }:IUsuarioCadastroRequest) {
+    async cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta, nome_arquivo, tipo_midia, conteudo }:IUsuarioCadastroRequest) {
         try {
             this.usuarioExiste({ email });
             const senhaHash = hash(senha, 10);
-            return await repository.cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta }, senhaHash);
+            return await this.repository.cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta, nome_arquivo, tipo_midia, conteudo }, senhaHash);
         } catch (error:any) {
             throw new Error(`Erro ao cadastrar usuário: ${error.message}`);
         };
     };
     
     async usuarioExiste({ email }: EmailUsuario) {
-        const user = await repository.buscarUsuarioByEmail({ email });
+        const user = await this.repository.buscarUsuarioByEmail({ email });
         if(user) {
             throw new Error(`Usuário já cadastrado com o email ${email}.`);
         };
@@ -58,7 +62,7 @@ export class UsuariosService{
     };
     
     async buscarUsuarios() {
-        const usuarios = await repository.buscarUsuarios();
+        const usuarios = await this.repository.buscarUsuarios();
         if (usuarios.length === 0) {
             throw new Error('Não há usuários cadastrados no sistema.');
         };
@@ -66,7 +70,7 @@ export class UsuariosService{
     };
 
     async autenticarUsuarioService({ email, senha }: IUsuarioLoginRequest) {
-        const user = await repository.buscarUsuarioByEmail({ email });
+        const user = await this.repository.buscarUsuarioByEmail({ email });
         const senhaAtual = user ? user.senha : '';
         const isSenha = await compare(senha, senhaAtual);
         if (!isSenha) {

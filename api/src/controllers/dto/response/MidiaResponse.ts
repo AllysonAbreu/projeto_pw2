@@ -1,5 +1,3 @@
-
-
 export class MidiaResponse{
     id: number;
     usuario_id: number;
@@ -17,5 +15,19 @@ export class MidiaResponse{
         this.conteudo = conteudo;
         this.data_criacao = data_criacao;
         this.data_atualizacao = data_atualizacao;
+    };
+};
+
+export class MidiaPaginadaResponse{
+    listaPaginada: MidiaResponse[];
+    paginaAtual: number;
+    totalPaginas: number;
+    totalRegistros: number;
+
+    constructor(listaPaginada: MidiaResponse[], paginaAtual: number, totalPaginas: number, totalRegistros: number) {
+        this.listaPaginada = listaPaginada;
+        this.paginaAtual = paginaAtual;
+        this.totalPaginas = totalPaginas;
+        this.totalRegistros = totalRegistros;
     };
 };

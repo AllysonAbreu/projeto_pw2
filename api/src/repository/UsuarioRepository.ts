@@ -1,16 +1,25 @@
 import { PrismaClient } from '@prisma/client';
 import { AtualizarUsuario, EmailUsuario } from '../domain/Usuario';
 import { IUsuarioCadastroRequest } from '../controllers/dto/request/UsuarioRequest';
-import { IId } from '../controllers/dto/request/IdRequest';
-import { RegistroPesoRepository } from './RegistroPesoRepository';
 import { toResponseNovoUsuario } from '../mappers/usuarios_mappers/UpdateUsuarioMapper';
 import { toResponseBuscaById } from '../mappers/usuarios_mappers/UsuarioBuscaByIdMapper';
 import { toResponseCadastro } from '../mappers/usuarios_mappers/UsuarioCadastroMapper';
+import { RegistroPesoService } from '../services/RegistroPesoService';
+import { MidiaService } from '../services/MidiaService';
+import { CriarRegistroPesoRequest } from '../controllers/dto/request/RegistroPesoRequest';
 
 const prisma = new PrismaClient();
-const repositoryResgistroPeso = new RegistroPesoRepository();
 
 export class UsuarioRepository {
+
+    private serviceRegistroPeso: RegistroPesoService;
+    private serviceMidia: MidiaService;
+
+    constructor(){
+        this.serviceRegistroPeso = new RegistroPesoService();
+        this.serviceMidia = new MidiaService();
+    };
+
     async updateUsuario({ id, dados }: AtualizarUsuario) {
         try {
             const dataAtualizacao = Date.now();
@@ -28,7 +37,11 @@ export class UsuarioRepository {
                     modificado_em: new Date(dataAtualizacao),
                 },
             });
-            return toResponseNovoUsuario(novosDados);
+            const registroPeso = await this.serviceRegistroPeso.registrarNovoPeso(id, new CriarRegistroPesoRequest(dados.peso, dados.peso_meta));
+            const inserirImagem = await this.serviceMidia.criarMidia(id, dados.nome_arquivo, dados.tipo_midia, dados.conteudo);
+            if(registroPeso && inserirImagem){
+                return toResponseNovoUsuario(novosDados);
+            };
         } catch (error:any) {
           throw new Error(`Erro ao atualizar usuário no banco de dados: ${error.message}`);  
         };
@@ -51,7 +64,7 @@ export class UsuarioRepository {
         };
     };
     
-    async cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta }:IUsuarioCadastroRequest, senhaHash: Promise<string>) {
+    async cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta, nome_arquivo, tipo_midia, conteudo }:IUsuarioCadastroRequest, senhaHash: Promise<string>) {
         try {
             const user =  await prisma.usuario.create({
                 data: {
@@ -63,8 +76,9 @@ export class UsuarioRepository {
                     tempo_meta,
                 },
             });
-            const registroPeso = await repositoryResgistroPeso.registrarPeso({ usuarioId: user.id, peso, peso_meta });
-            if(registroPeso){
+            const registroPeso = await this.serviceRegistroPeso.registrarNovoPeso(user.id,{peso, peso_meta });
+            const inserirImagem = await this.serviceMidia.criarMidia(user.id, nome_arquivo, tipo_midia, conteudo);
+            if(registroPeso && inserirImagem){
                 return toResponseCadastro(user);
             };
         } catch (error:any) {
@@ -72,7 +86,7 @@ export class UsuarioRepository {
         };
     };
     
-    async buscarUsuarioById({ id }:IId) {
+    async buscarUsuarioById( id:number ) {
         try {
             const usuario = await prisma.usuario.findFirst({
                 where: {

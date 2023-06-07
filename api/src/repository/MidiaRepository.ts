@@ -1,9 +1,8 @@
 import { PrismaClient } from "@prisma/client";
-import { Midia } from "../domain/Midia";
 import { CriarMidiaRequest, AtualizarMidiaRequest } from "../controllers/dto/request/MidiaRequest";
 import { MidiaMappers } from "../mappers/midias_mappers/MidiaMappers";
-import { TipoMidia } from "../domain/enum/EnumTipoMidia";
-import { MidiaConverter } from "../utils/midiaConverter";
+import { MidiaPaginadaResponse } from "../controllers/dto/response/MidiaResponse";
+import { MidiaUtils } from "../utils/midiaUtils";
 
 const prisma = new PrismaClient();
 
@@ -11,12 +10,7 @@ export class MidiaRepository {
     
     async criarMidia(midia: CriarMidiaRequest) {
         try {
-            let conteudoBuffer: Buffer = Buffer.from("");
-            if(midia.tipo_midia.toUpperCase() === TipoMidia.IMAGEM) {
-                conteudoBuffer = await MidiaConverter.convertImageToBuffer(midia.conteudo);
-            } else if(midia.tipo_midia.toUpperCase() === TipoMidia.VIDEO) {
-                conteudoBuffer = await MidiaConverter.convertVideoToBuffer(midia.conteudo);
-            };
+            const conteudoBuffer: Buffer = await MidiaUtils.convertToBuffer(midia.conteudo, midia.tipo_midia);
             const novaMidia = await prisma.midia.create({
                 data: {
                     usuario_id: midia.usuario_id,
@@ -38,15 +32,9 @@ export class MidiaRepository {
                     id,
                 },
             });
-            if(midia !== null){
-                let conteudoFille: string;
-                if(midia.tipo_midia.toUpperCase() === TipoMidia.IMAGEM) {
-                    conteudoFille = MidiaConverter.convertBufferToImage(midia.conteudo);
-                    return MidiaMappers.buscaMidiaToResponse(midia,conteudoFille);
-                } else if(midia.tipo_midia.toUpperCase() === TipoMidia.VIDEO) {
-                    conteudoFille = MidiaConverter.convertBufferToVideo(midia.conteudo);
-                    return MidiaMappers.buscaMidiaToResponse(midia,conteudoFille);
-                };
+            if (midia !== null) {
+                const conteudoFille = MidiaUtils.convertToContentType(midia.conteudo, midia.tipo_midia);
+                return MidiaMappers.buscaMidiaToResponse(midia, conteudoFille);
             };
         } catch (error: any) {
             throw new Error(`Não foi possível obter mídia no banco de dados. Erro: ${error.message}.`);
@@ -56,12 +44,7 @@ export class MidiaRepository {
     async atualizarMidia(id: number, midia: AtualizarMidiaRequest) {
         try {
             const dataAtualizacao  = new Date();
-            let conteudoBuffer: Buffer = Buffer.from("");
-            if(midia.tipo_midia.toUpperCase() === TipoMidia.IMAGEM) {
-                conteudoBuffer = await MidiaConverter.convertImageToBuffer(midia.conteudo);
-            } else if(midia.tipo_midia.toUpperCase() === TipoMidia.VIDEO) {
-                conteudoBuffer = await MidiaConverter.convertVideoToBuffer(midia.conteudo);
-            };
+            const conteudoBuffer: Buffer = await MidiaUtils.convertToBuffer(midia.conteudo, midia.tipo_midia);
             const midiaAtualizada = await prisma.midia.update({
                 where: {
                     id,
@@ -74,14 +57,8 @@ export class MidiaRepository {
                 },
             });
             if(midiaAtualizada !== null){
-                let conteudoFille: string;
-                if(midia.tipo_midia.toUpperCase() === TipoMidia.IMAGEM) {
-                    conteudoFille = MidiaConverter.convertBufferToImage(midiaAtualizada.conteudo);
-                    return MidiaMappers.buscaMidiaToResponse(midiaAtualizada,conteudoFille);
-                } else if(midia.tipo_midia.toUpperCase() === TipoMidia.VIDEO) {
-                    conteudoFille = MidiaConverter.convertBufferToVideo(midiaAtualizada.conteudo);
-                    return MidiaMappers.buscaMidiaToResponse(midiaAtualizada,conteudoFille);
-                };
+                const conteudoFille = MidiaUtils.convertToContentType(midiaAtualizada.conteudo, midiaAtualizada.tipo_midia);
+                return MidiaMappers.buscaMidiaToResponse(midiaAtualizada, conteudoFille);
             };
         } catch (error: any) {
             throw new Error(`Não foi possível atualizar mídia no banco de dados. Erro: ${error.message}.`);
@@ -104,24 +81,33 @@ export class MidiaRepository {
         try {
             // Calcule a quantidade de itens para ignorar (pular) com base na página e no tamanho da página
             const skip = (page - 1) * pageSize;
-            const midias = await prisma.midia.findMany({
-                where: {
+            const [totalRegistros, midias] = await Promise.all([
+                prisma.midia.count({
+                  where: {
                     usuario_id,
-                },
-                skip, // Pule a quantidade de itens calculada
-                take: pageSize, // Defina o número máximo de itens para retornar
-            });
+                  },
+                }),
+                prisma.midia.findMany({
+                  where: {
+                    usuario_id,
+                  },
+                  skip, // Pule a quantidade de itens calculada
+                  take: pageSize, // Defina o número máximo de itens para retornar
+                }),
+            ]);
             if(midias !== null){
-                let conteudoFille: string;
+                const midiasPaginadasResponse: MidiaPaginadaResponse = {
+                    listaPaginada: [],
+                    paginaAtual: page,
+                    totalPaginas: Math.ceil(totalRegistros / pageSize),
+                    totalRegistros,
+                };
                 midias.forEach(midia => {
-                    if(midia.tipo_midia.toUpperCase() === TipoMidia.IMAGEM) {
-                        conteudoFille = MidiaConverter.convertBufferToImage(midiaAtualizada.conteudo);
-                        return MidiaMappers.buscaMidiaToResponse(midiaAtualizada,conteudoFille);
-                    } else if(midia.tipo_midia.toUpperCase() === TipoMidia.VIDEO) {
-                        conteudoFille = MidiaConverter.convertBufferToVideo(midiaAtualizada.conteudo);
-                        return MidiaMappers.buscaMidiaToResponse(midiaAtualizada,conteudoFille);
-                    };
+                    const conteudoFille = MidiaUtils.convertToContentType(midia.conteudo, midia.tipo_midia);
+                    const midiaResponse = MidiaUtils.mapToMidiaResponse(midia, conteudoFille);
+                    midiasPaginadasResponse.listaPaginada.push(midiaResponse);
                 });
+                return midiasPaginadasResponse;
             };
         } catch (error: any) {
             throw new Error(`Não foi possível listar mídias no banco de dados. Erro: ${error.message}.`);
