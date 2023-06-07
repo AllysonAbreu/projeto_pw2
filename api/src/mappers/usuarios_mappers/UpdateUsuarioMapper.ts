@@ -1,19 +1,6 @@
 import { hash } from "bcrypt";
 import { AtualizarUsuario, DadosAtualizados, Usuario } from "../../domain/Usuario";
 
-export async function updateUsuarioRequestToObject({id, dados}:AtualizarUsuario) {
-
-    if (typeof dados.senha !== 'undefined') {
-        dados.senha = await hash(dados.senha, 10)
-    };
-
-    const dadosAtualizados = new DadosAtualizados(dados.nome, dados.idade, dados.email, dados.senha, dados.altura, dados.tempo_meta);
-
-    const usuarioAtualizado = new AtualizarUsuario(id, dadosAtualizados);
-
-    return usuarioAtualizado;
-};
-
 export function toResponseNovoUsuario(usuario:Usuario){
     return {
         id: usuario.id,

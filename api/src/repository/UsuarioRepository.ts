@@ -7,6 +7,7 @@ import { toResponseCadastro } from '../mappers/usuarios_mappers/UsuarioCadastroM
 import { RegistroPesoService } from '../services/RegistroPesoService';
 import { MidiaService } from '../services/MidiaService';
 import { CriarRegistroPesoRequest } from '../controllers/dto/request/RegistroPesoRequest';
+import { CriarMidiaRequest } from '../controllers/dto/request/MidiaRequest';
 
 const prisma = new PrismaClient();
 
@@ -38,7 +39,7 @@ export class UsuarioRepository {
                 },
             });
             const registroPeso = await this.serviceRegistroPeso.registrarNovoPeso(id, new CriarRegistroPesoRequest(dados.peso, dados.peso_meta));
-            const inserirImagem = await this.serviceMidia.criarMidia(id, dados.nome_arquivo, dados.tipo_midia, dados.conteudo);
+            const inserirImagem = await this.serviceMidia.criarMidia(new CriarMidiaRequest(id, dados.nome_arquivo, dados.tipo_midia, dados.conteudo));
             if(registroPeso && inserirImagem){
                 return toResponseNovoUsuario(novosDados);
             };
@@ -77,7 +78,7 @@ export class UsuarioRepository {
                 },
             });
             const registroPeso = await this.serviceRegistroPeso.registrarNovoPeso(user.id,{peso, peso_meta });
-            const inserirImagem = await this.serviceMidia.criarMidia(user.id, nome_arquivo, tipo_midia, conteudo);
+            const inserirImagem = await this.serviceMidia.criarMidia(new CriarMidiaRequest(user.id, nome_arquivo, tipo_midia, conteudo));
             if(registroPeso && inserirImagem){
                 return toResponseCadastro(user);
             };

@@ -15,7 +15,7 @@ export interface IUsuarioCadastroRequest {
     tempo_meta: number;
     nome_arquivo: string;
     tipo_midia: TipoMidia;
-    conteudo: Express.Multer.File
+    conteudo: Express.Multer.File;
 };
 
 export interface IUsuarioBuscaRequest {
@@ -30,15 +30,5 @@ export interface IUsuarioBuscaRequest {
     is_ativo: boolean;
     criado_em: Date;
     modificado_em: Date;
-};
-
-export interface IUpdateUsuarioRequest {
-    nome?: string;
-    idade?: number;
-    email?: string;
-    senha?: string;
-    altura?: number;
-    tempo_meta?: number;
-    peso_meta?: number;
 };
 

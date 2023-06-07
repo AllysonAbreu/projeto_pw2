@@ -2,9 +2,9 @@ import { IUsuarioCadastroRequest, IUsuarioLoginRequest } from "../controllers/dt
 import { compare, hash } from 'bcrypt'
 import { sign } from 'jsonwebtoken'
 import { UsuarioRepository } from "../repository/UsuarioRepository";
-import { AtualizarUsuario, EmailUsuario } from "../domain/Usuario";
+import { DadosAtualizados, EmailUsuario } from "../domain/Usuario";
 import { toResponseLogin } from "../mappers/usuarios_mappers/UsuarioLoginMapper";
-import { updateUsuarioRequestToObject } from "../mappers/usuarios_mappers/UpdateUsuarioMapper";
+import { SenhaHash } from "../utils/senhaHashUtil";
 
 export class UsuariosService{
 
@@ -14,9 +14,9 @@ export class UsuariosService{
         this.repository = new UsuarioRepository();
     };
 
-    async atualizarUsuario({ id, dados }: AtualizarUsuario) {
+    async atualizarUsuario(id:number, dados:DadosAtualizados) {
         try {
-            const dadosAtualizacao = await updateUsuarioRequestToObject(new AtualizarUsuario(id, dados));
+            const dadosAtualizacao = await SenhaHash.atualizaSenhaParaHash(id,dados);
             return await this.repository.updateUsuario(dadosAtualizacao); 
         } catch (error:any) {
             throw new Error(`Usuário com id ${id} não encontrado.`); 
