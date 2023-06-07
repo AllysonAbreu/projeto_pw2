@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import { MidiaService } from "../services/MidiaService";
 
-
-
 export class MidiaController {
 
     private service: MidiaService;
@@ -14,19 +12,21 @@ export class MidiaController {
     async criarMidia(req: Request, res: Response) {
         try {
           const { usuario_id, nome_arquivo, tipo_midia, conteudo } = req.body;
-          const midia = await this.service.criarMidia(usuario_id, nome_arquivo, tipo_midia, conteudo);
-          return res.status(201).json(midia);
+          const response = await this.service.criarMidia(usuario_id, nome_arquivo, tipo_midia, conteudo);
+          return res.status(201)
+            .json(`Mídia cadastrada com sucesso sob o id ${response}`);
         } catch (error: any) {
-          return res.status(400).json({ message: error.message });
+          return res.status(400)
+            .json({ message: error.message });
         };
     };
 
     async obterMidia(req: Request, res: Response) {
         try {
           const { id } = req.params;
-          const midia = await this.service.obterMidia(Number(id));
-          if (midia) {
-            return res.status(200).json(midia);
+          const response = await this.service.obterMidia(Number(id));
+          if (response) {
+            return res.status(200).json(response);
           } else {
             return res.status(404).json({ message: 'Midia não encontrada' });
           };
@@ -39,8 +39,8 @@ export class MidiaController {
         try {
           const { id } = req.params;
           const { nome_arquivo, tipo_midia, conteudo } = req.body;
-          const midia = await this.service.atualizarMidia(Number(id), nome_arquivo, tipo_midia, conteudo);
-          return res.status(200).json(midia);
+          const reponse = await this.service.atualizarMidia(Number(id), nome_arquivo, tipo_midia, conteudo);
+          return res.status(200).json(reponse);
         } catch (error: any) {
           return res.status(400).json({ message: error.message });
         };
@@ -56,9 +56,11 @@ export class MidiaController {
         };
     };
     
-    async listarMidias(req: Request, res: Response) {
+    async listarMidiasByUserId(req: Request, res: Response) {
         try {
-          const midias = await this.service.listarMidias();
+          const { id } = req.params;
+          const { page, pageSize } = req.query;
+          const midias = await this.service.listarMidias(Number(id), Number(page), Number(pageSize));
           return res.status(200).json(midias);
         } catch (error: any) {
           return res.status(400).json({ message: error.message });
