@@ -7,9 +7,10 @@ interface ButtonProps {
   width?: string;
   height?: string;
   fontSize?: string;
+  onClick?: () => void;
 }
 
-const Button: React.FC<ButtonProps> = ({ buttonColor, textColor, buttonText, width, height, fontSize }) => {
+const Button: React.FC<ButtonProps> = ({ buttonColor, textColor, buttonText, width, height, fontSize, onClick }) => {
   const buttonStyle = {
     backgroundColor: buttonColor,
     color: textColor,
@@ -21,7 +22,7 @@ const Button: React.FC<ButtonProps> = ({ buttonColor, textColor, buttonText, wid
   };
 
   return (
-    <button style={buttonStyle}>
+    <button style={buttonStyle} onClick={onClick}>
       {buttonText}
     </button>
   );
