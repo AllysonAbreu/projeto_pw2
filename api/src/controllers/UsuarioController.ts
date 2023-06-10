@@ -52,17 +52,6 @@ export class UsuariosController{
         };
     };
 
-    async buscarTodosUsuarios(req: Request, res: Response) {
-        try {
-            const usuarios = await this.usuarioService.buscarUsuarios();
-            return res.status(200).json({ usuarios });
-        } catch (error: any) {
-            return res.status(400).json({
-                message: error.message,
-            });
-        };
-    };
-
     async registrarUsuario(req: Request, res: Response) {
         try {
             const { nome, idade, email, senha, peso, peso_meta, altura, tempo_meta, nome_arquivo, tipo_midia, conteudo } = <IUsuarioCadastroRequest>req.body;

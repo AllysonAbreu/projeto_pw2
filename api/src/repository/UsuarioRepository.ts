@@ -116,12 +116,4 @@ export class UsuarioRepository {
             throw new Error(`Erro ao buscar usuário no banco de dados: ${error.message}`);
         };
     };
-    
-    async buscarUsuarios() {
-        try {
-            return await prisma.usuario.findMany();
-        } catch (error:any) {
-            throw new Error(`Erro ao buscar usuários no banco de dados: ${error.message}`);  
-        };
-    };
 };

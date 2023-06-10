@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { RegistroPesoService } from "../services/RegistroPesoService";
-import { IAtualizarRegistroPesoRequest, ICriarRegistroPesoRequest } from './dto/request/RegistroPesoRequest';
+import { IAtualizarRegistroPesoRequest } from './dto/request/RegistroPesoRequest';
 
 
 export class RegistroPesoController {
@@ -26,8 +26,8 @@ export class RegistroPesoController {
 
     async registrarPeso(req: Request, res: Response) {
         try {
-            const { id, peso, peso_meta } = <ICriarRegistroPesoRequest>req.body;
-            const response = await this.service.registrarNovoPeso({ id, peso, peso_meta });
+            const { id, peso, peso_meta } = req.body;
+            const response = await this.service.registrarNovoPeso(Number(id),{ peso, peso_meta });
             return res.status(201)
                 .json({ message:`Peso registrado com sucesso.`,
                         registro: response });

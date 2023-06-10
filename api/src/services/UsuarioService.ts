@@ -60,14 +60,6 @@ export class UsuariosService{
         };
         return user;
     };
-    
-    async buscarUsuarios() {
-        const usuarios = await this.repository.buscarUsuarios();
-        if (usuarios.length === 0) {
-            throw new Error('Não há usuários cadastrados no sistema.');
-        };
-        return usuarios; 
-    };
 
     async autenticarUsuarioService({ email, senha }: IUsuarioLoginRequest) {
         const user = await this.repository.buscarUsuarioByEmail({ email });
