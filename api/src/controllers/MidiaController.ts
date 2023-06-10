@@ -12,7 +12,7 @@ export class MidiaController {
     async criarMidia(req: Request, res: Response) {
         try {
           const { usuario_id, nome_arquivo, tipo_midia, conteudo } = req.body;
-          const response = await this.service.criarMidia(usuario_id, nome_arquivo, tipo_midia, conteudo);
+          const response = await this.service.criarMidia({usuario_id, nome_arquivo, tipo_midia, conteudo});
           return res.status(201)
             .json(`Mídia cadastrada com sucesso sob o id ${response}`);
         } catch (error: any) {

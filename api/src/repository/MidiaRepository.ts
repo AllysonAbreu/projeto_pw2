@@ -1,15 +1,19 @@
-import { PrismaClient } from "@prisma/client";
-import { CriarMidiaRequest, AtualizarMidiaRequest } from "../controllers/dto/request/MidiaRequest";
+import { PrismaClient, TipoMidia } from "@prisma/client";
+import { AtualizarMidiaRequest, CriarMidiaRequest } from "../controllers/dto/request/MidiaRequest";
 import { MidiaMappers } from "../mappers/midias_mappers/MidiaMappers";
 import { MidiaPaginadaResponse } from "../controllers/dto/response/MidiaResponse";
 import { MidiaUtils } from "../utils/midiaUtils";
+import { VerificaTipoMidia } from "../utils/verficaTipoMidia";
 
 const prisma = new PrismaClient();
 
 export class MidiaRepository {
     
-    async criarMidia(midia: CriarMidiaRequest) {
+    async criarMidia(midia:CriarMidiaRequest) {
         try {
+            if(!VerificaTipoMidia.isTipoMidia(midia.tipo_midia)) {
+                throw new Error('Tipo de mídia inválido.');
+            };
             const conteudoBuffer: Buffer = await MidiaUtils.convertToBuffer(midia.conteudo, midia.tipo_midia);
             const novaMidia = await prisma.midia.create({
                 data: {

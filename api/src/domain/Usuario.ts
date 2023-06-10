@@ -57,19 +57,19 @@ export class Usuario {
   };
 
   export class DadosAtualizados{
-    nome?: string;
-    idade?: number;
-    email?: string;
-    senha?: string;
-    peso?: number;
-    peso_meta?: number;
-    altura?: number;
-    tempo_meta?: number;
-    nome_arquivo?: string;
-    tipo_midia?: TipoMidia;
-    conteudo?: Express.Multer.File;
+    nome: string;
+    idade: number;
+    email: string;
+    senha: string;
+    peso: number;
+    peso_meta: number;
+    altura: number;
+    tempo_meta: number;
+    nome_arquivo: string;
+    tipo_midia: TipoMidia;
+    conteudo: Express.Multer.File;
 
-    constructor(nome?: string, idade?: number, email?: string, senha?: string, peso?: number, peso_meta?: number, altura?: number, tempo_meta?: number, nome_arquivo?: string, tipo_midia?: TipoMidia, conteudo?: Express.Multer.File){
+    constructor(nome: string, idade: number, email: string, senha: string, peso: number, peso_meta: number, altura: number, tempo_meta: number, nome_arquivo: string, tipo_midia: TipoMidia, conteudo: Express.Multer.File){
       this.nome = nome;
       this.idade = idade;
       this.email = email;
