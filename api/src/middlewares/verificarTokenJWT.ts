@@ -1,6 +1,6 @@
+import { SplitToken } from './../utils/splitToken';
 import { NextFunction, Request, Response } from 'express'
 import { verify } from 'jsonwebtoken'
-import { splitToken } from '../utils/splitToken';
 
 export function verificarToken(
     req: Request,
@@ -17,7 +17,7 @@ export function verificarToken(
     };
 
     try {
-        verify(splitToken(token), process.env.CHAVE_JWT!);
+        verify(SplitToken.splitToken(token), process.env.CHAVE_JWT!);
 
         return next();
     } catch (error: any) {
