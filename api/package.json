@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "start": "rm -rf ./dist && tsc",
-    "build": "node ./dist/server.js"
+    "build": "rm -rf ./dist && tsc && node ./dist/src/server.js",
+    "start": "node ./dist/src/server.js"
   },
   "dependencies": {
     "@types/express-fileupload": "^1.4.1",
