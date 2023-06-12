@@ -3,4 +3,3 @@ node_modules
 data
 .env
 dist
-package-lock.json
