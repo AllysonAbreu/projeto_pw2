@@ -4,9 +4,45 @@ import express from 'express';
 import fileUpload from 'express-fileupload';
 import helmet from 'helmet';
 import path from 'node:path';
-import './swagger';
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
+import { routes } from './routes';
 
 const app = express();
+
+// Configuração do Swagger
+const swaggerOptions = {
+    swaggerDefinition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'Cadastro e acompanhamento de massa corporal',
+        version: '1.0.0',
+        description: 'API para cadastro e acompanhamento de massa corporal',
+      },
+      servers: [
+            {
+                url: 'http://localhost:3000', // Altere a URL conforme necessário
+            },
+            {
+                url: 'https://dull-pear-shrimp.cyclic.app/', // Altere a URL conforme necessário
+            },
+            {
+                url: 'https://api-projeto-pw2.cyclic.app', // Altere a URL conforme necessário
+            },
+        ],
+    },
+    apis: ['./src/routes/*.ts'], // Altere o caminho das suas rotas conforme necessário
+};
+
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+// Configuração das suas rotas
+app.use(routes);
+
+app.listen(process.env.PORT || 3000, () => {
+    console.log(`🚀 Server started on port:${process.env.PORT}`);
+});
 
 app.use(helmet());
 
