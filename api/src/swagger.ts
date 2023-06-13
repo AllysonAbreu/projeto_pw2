@@ -35,6 +35,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // Configuração das suas rotas
 app.use(routes);
 
-app.listen(process.env.PORT || 8080, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log(`🚀 Server started on port:${process.env.PORT}`);
 });
