@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "rm -rf build && npm i && tsc",
-    "start": "node server.js"
+    "start": "node dist/server.js"
   },
   "dependencies": {
     "@types/express-fileupload": "^1.4.1",
