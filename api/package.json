@@ -1,12 +1,12 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "main": "dist/server.js",
+  "main": "server.js",
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "rm -rf build && npm i && tsc && cp package.json ./dist && cp package-lock.json ./dist",
-    "start": "node dist/server.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "@types/express-fileupload": "^1.4.1",
