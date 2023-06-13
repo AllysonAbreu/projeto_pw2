@@ -10,6 +10,38 @@ import { routes } from './routes';
 
 const app = express();
 
+//Configurando cors
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    app.use(cors());
+    next();
+});
+
+app.use(cors());
+
+app.use(helmet());
+
+dotenv.config();
+
+//Definindo json como padrão
+app.use(express.json());
+
+const statics = path.join(__dirname, './public');
+
+app.get('/static/:file', (req, res) => {
+    const file = req.params.file;
+    res.sendFile(path.join(statics, file));
+});
+
+app.use('/static', express.static(statics));
+
+app.use(
+    fileUpload({
+        limits: { fileSize: 50 * 1024 * 1024 },
+    })
+);
+
 // Configuração do Swagger
 const swaggerOptions = {
     swaggerDefinition: {
@@ -37,41 +69,9 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-// Configuração das suas rotas
-app.use(routes);
-
 app.listen(process.env.PORT || 3000, () => {
     console.log(`🚀 Server started on port:${process.env.PORT}`);
 });
 
-app.use(helmet());
-
-app.use(cors());
-
-dotenv.config();
-
-//Configurando cors
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    app.use(cors());
-    next();
-})
-
-//Definindo json como padrão
-app.use(express.json());
-
-const statics = path.join(__dirname, './public');
-
-app.get('/static/:file', (req, res) => {
-    const file = req.params.file;
-    res.sendFile(path.join(statics, file));
-})
-
-app.use('/static', express.static(statics));
-
-app.use(
-    fileUpload({
-        limits: { fileSize: 50 * 1024 * 1024 },
-    })
-);
+// Configuração das suas rotas
+app.use(routes);
