@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { CriarRegistroPesoRequest, IAtualizarRegistroPesoRequest } from "../controllers/dto/request/RegistroPesoRequest";
+import { IAtualizarRegistroPesoRequest } from "../controllers/dto/request/RegistroPesoRequest";
 import { toResponseRegistroPeso, toResponseRegistroPesoByUserId } from "../mappers/registrosPesos_mappers/RegistroPesoBuscaByUserIdMapper";
 
 const prisma = new PrismaClient();

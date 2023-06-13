@@ -4,39 +4,39 @@ import ffmpeg from 'fluent-ffmpeg';
 
 export class MidiaConverter {
     static async convertImageToBuffer(file: Express.Multer.File): Promise<Buffer> {
-    const { buffer } = file;
-    const resizeBuffer = await sharp(buffer)
-        .resize({ width: 800 })
-        .toBuffer();
-    return resizeBuffer;
+        const { buffer } = file;
+        const resizeBuffer = await sharp(buffer)
+            .resize({ width: 800 })
+            .toBuffer();
+        return resizeBuffer;
     };
 
     static async convertVideoToBuffer(file: Express.Multer.File): Promise<Buffer> {
-    return new Promise((resolve, reject) => {
-        const { buffer } = file;
-        const readableStream = new Readable();
-        readableStream.push(buffer);
-        readableStream.push(null);
+        return new Promise((resolve, reject) => {
+            const { buffer } = file;
+            const readableStream = new Readable();
+            readableStream.push(buffer);
+            readableStream.push(null);
 
-        const writableStream = new Writable();
-        const buffers: Buffer[] = [];
+            const writableStream = new Writable();
+            const buffers: Buffer[] = [];
 
-        writableStream._write = (chunk, encoding, next) => {
-        buffers.push(chunk);
-        next();
-        };
+            writableStream._write = (chunk, encoding, next) => {
+                buffers.push(chunk);
+                next();
+            };
 
-        writableStream.on('finish', () => {
-        const convertedBuffer = Buffer.concat(buffers);
-        resolve(convertedBuffer);
+            writableStream.on('finish', () => {
+                const convertedBuffer = Buffer.concat(buffers);
+                resolve(convertedBuffer);
+            });
+
+            ffmpeg(readableStream)
+            .outputFormat('mp4')
+            .outputOptions('-preset veryfast')
+            .on('error', (error) => reject(error))
+            .pipe(writableStream);
         });
-
-        ffmpeg(readableStream)
-        .outputFormat('mp4')
-        .outputOptions('-preset veryfast')
-        .on('error', (error) => reject(error))
-        .pipe(writableStream);
-    });
     };
 
     static convertBufferToImage(buffer: Buffer): string {

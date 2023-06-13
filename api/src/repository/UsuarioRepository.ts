@@ -10,16 +10,10 @@ import { CriarRegistroPesoRequest } from '../controllers/dto/request/RegistroPes
 import { CriarMidiaRequest } from '../controllers/dto/request/MidiaRequest';
 
 const prisma = new PrismaClient();
+const serviceRegistroPeso = new RegistroPesoService();
+const serviceMidia = new MidiaService();
 
 export class UsuarioRepository {
-
-    private serviceRegistroPeso: RegistroPesoService;
-    private serviceMidia: MidiaService;
-
-    constructor(){
-        this.serviceRegistroPeso = new RegistroPesoService();
-        this.serviceMidia = new MidiaService();
-    };
 
     async updateUsuario({ id, dados }: AtualizarUsuario) {
         try {
@@ -38,8 +32,8 @@ export class UsuarioRepository {
                     modificado_em: new Date(dataAtualizacao),
                 },
             });
-            const registroPeso = await this.serviceRegistroPeso.registrarNovoPeso(id, new CriarRegistroPesoRequest(dados.peso, dados.peso_meta));
-            const inserirImagem = await this.serviceMidia.criarMidia(new CriarMidiaRequest(id, dados.nome_arquivo, dados.tipo_midia, dados.conteudo));
+            const registroPeso = await  serviceRegistroPeso.registrarNovoPeso(id, dados.peso, dados.peso_meta);
+            const inserirImagem = await  serviceMidia.criarMidia(new CriarMidiaRequest(id, dados.nome_arquivo, dados.tipo_midia, dados.conteudo));
             if(registroPeso && inserirImagem){
                 return toResponseNovoUsuario(novosDados);
             };
@@ -77,8 +71,8 @@ export class UsuarioRepository {
                     tempo_meta,
                 },
             });
-            const registroPeso = await this.serviceRegistroPeso.registrarNovoPeso(user.id,{peso, peso_meta });
-            const inserirImagem = await this.serviceMidia.criarMidia(new CriarMidiaRequest(user.id, nome_arquivo, tipo_midia, conteudo));
+            const registroPeso = await  serviceRegistroPeso.registrarNovoPeso(user.id, peso, peso_meta );
+            const inserirImagem = await  serviceMidia.criarMidia(new CriarMidiaRequest(user.id, nome_arquivo, tipo_midia, conteudo));
             if(registroPeso && inserirImagem){
                 return toResponseCadastro(user);
             };

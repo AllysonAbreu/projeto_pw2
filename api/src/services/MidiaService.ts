@@ -4,18 +4,15 @@ import { TipoMidia } from "../domain/enum/EnumTipoMidia";
 import { MidiaRepository } from "../repository/MidiaRepository";
 import { VerificaTipoMidia } from "../utils/verficaTipoMidia";
 
-export class MidiaService {
-    private repository: MidiaRepository;
+const repository = new MidiaRepository();
 
-    constructor() {
-        this.repository = new MidiaRepository();
-    };
+export class MidiaService {
 
     async criarMidia({usuario_id, nome_arquivo, tipo_midia, conteudo}:CriarMidiaRequest) {
         try {
             if(MidiaValidators.nomeArquivoIsValid(nome_arquivo) && MidiaValidators.tipoMidiaIsValid(tipo_midia) && MidiaValidators.conteudoIsValid(conteudo)) {
-                const req = new CriarMidiaRequest(usuario_id, nome_arquivo, tipo_midia, conteudo);
-                const response = await this.repository.criarMidia(req);
+                const req = {usuario_id, nome_arquivo, tipo_midia, conteudo};
+                const response = await  repository.criarMidia(req);
                 return response;
             };
         } catch (error: any) {
@@ -25,7 +22,7 @@ export class MidiaService {
 
     async obterMidia(id: number) {
         try {
-            return await this.repository.obterMidia(id);
+            return await  repository.obterMidia(id);
         } catch (error: any) {
             throw new Error(`Não foi possível obter mídia. Erro: ${error.message}.`);
         };
@@ -37,7 +34,7 @@ export class MidiaService {
         };
         try {
             const midia = new AtualizarMidiaRequest(nome_arquivo, tipo_midia, conteudo);
-            return await this.repository.atualizarMidia(id, midia);
+            return await  repository.atualizarMidia(id, midia);
         } catch (error: any) {
             throw new Error(`Não foi possível atualizar mídia. Erro: ${error.message}.`);
         }
@@ -45,7 +42,7 @@ export class MidiaService {
     
     async excluirMidia(id: number) {
         try {
-            await this.repository.excluirMidia(id);
+            await  repository.excluirMidia(id);
         } catch (error: any) {
             throw new Error(`Não foi possível excluir mídia. Erro: ${error.message}.`);
         };
@@ -53,7 +50,7 @@ export class MidiaService {
     
     async listarMidias(id: number, page: number, pageSize: number) {
         try {
-            return await this.repository.listarMidias(id, page, pageSize);
+            return await  repository.listarMidias(id, page, pageSize);
         } catch (error: any) {
             throw new Error(`Não foi possível listar mídias. Erro: ${error.message}.`);
         };

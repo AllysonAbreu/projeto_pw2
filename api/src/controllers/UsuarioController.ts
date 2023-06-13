@@ -1,25 +1,19 @@
 import { Request, Response } from "express";
 import { IUsuarioCadastroRequest, IUsuarioLoginRequest } from "./dto/request/UsuarioRequest";
-import { UsuariosService } from "../services/UsuarioService";
+import { UsuarioService } from "../services/UsuarioService";
 import { TokenBlackListService } from "../services/TokenBlackListService";
 import { DadosAtualizados, EmailUsuario } from "../domain/Usuario";
 import { SplitToken } from "../utils/splitToken";
 
+const usuarioService = new UsuarioService();
+const tokenService = new TokenBlackListService();
 
-export class UsuariosController{
-
-    private usuarioService: UsuariosService;
-    private tokenService: TokenBlackListService;
-
-    constructor(){
-        this.usuarioService = new UsuariosService();
-        this.tokenService = new TokenBlackListService();
-    };
+export class UsuarioController{
 
     async login(req: Request, res: Response){
         try {
             const { email, senha } = <IUsuarioLoginRequest>req.body;
-            const {token,response} = await this.usuarioService.autenticarUsuarioService({ email, senha });
+            const {token,response} = await usuarioService.autenticarUsuarioService({ email, senha });
             return res.status(200).set('Authorization', token).json({
                 response
             });
@@ -39,7 +33,7 @@ export class UsuariosController{
                 });
             };
             const token = SplitToken.splitToken(bearerToken);
-            const isTokenInDb = await this.tokenService.buscarTokenBl({ token });
+            const isTokenInDb = await tokenService.buscarTokenBl({ token });
             if (isTokenInDb) {
                 return res.status(200).json({
                     message: 'Logout realizado.'
@@ -55,14 +49,15 @@ export class UsuariosController{
     async registrarUsuario(req: Request, res: Response) {
         try {
             const { nome, idade, email, senha, peso, peso_meta, altura, tempo_meta, nome_arquivo, tipo_midia, conteudo } = <IUsuarioCadastroRequest>req.body;
-            await this.usuarioService.usuarioExiste({ email });
-            const response = await this.usuarioService.cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta, nome_arquivo, tipo_midia, conteudo });
+            await usuarioService.usuarioExiste({ email });
+            const response = await usuarioService.cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta, nome_arquivo, tipo_midia, conteudo });
             return res.status(201)
                 .json({ message:`Usuário cadastrado com sucesso.`,
                         usuario: response });
         } catch (error: any) {
             return res.status(400).json({
                 message: error.message,
+                stack: error.stack
             });
         };
     };
@@ -70,7 +65,7 @@ export class UsuariosController{
     async deletarUsuario(req: Request, res: Response) {
         try {
             const { email } = <EmailUsuario>req.body;
-            await this.usuarioService.deletarUsuario({ email });
+            await  usuarioService.deletarUsuario({ email });
             return res.status(200).json({
                 message: `Usuário removido com sucesso.`
             });
@@ -84,7 +79,7 @@ export class UsuariosController{
     async buscarUsuarioById(req: Request, res: Response) {
         try { 
             const { id } = req.params;
-            const response = await this.usuarioService.buscarUsuarioPorId(Number(id));
+            const response = await usuarioService.buscarUsuarioPorId(Number(id));
             return res.status(200).json({ usuario: response })
         } catch (error: any) {
             return res.status(400).json({
@@ -97,7 +92,7 @@ export class UsuariosController{
         try {
             const { id } = req.params;
             const { nome, idade, email, senha, peso, peso_meta, altura, tempo_meta, nome_arquivo, tipo_midia, conteudo } = <DadosAtualizados>req.body;
-            const response = await this.usuarioService.atualizarUsuario(Number(id), { nome, idade, email, senha, peso, peso_meta, altura, tempo_meta, nome_arquivo, tipo_midia, conteudo });
+            const response = await usuarioService.atualizarUsuario(Number(id), { nome, idade, email, senha, peso, peso_meta, altura, tempo_meta, nome_arquivo, tipo_midia, conteudo });
             return res.status(200).json({ message: "Usuário atualizado", usuario: response });
         } catch (error: any) {
             return res.status(400).json({

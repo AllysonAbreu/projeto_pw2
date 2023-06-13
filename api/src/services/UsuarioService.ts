@@ -6,18 +6,14 @@ import { DadosAtualizados, EmailUsuario } from "../domain/Usuario";
 import { toResponseLogin } from "../mappers/usuarios_mappers/UsuarioLoginMapper";
 import { SenhaHash } from "../utils/senhaHashUtil";
 
-export class UsuariosService{
+const repository = new UsuarioRepository();
 
-    private repository: UsuarioRepository;
-
-    constructor(){
-        this.repository = new UsuarioRepository();
-    };
+export class UsuarioService{
 
     async atualizarUsuario(id:number, dados:DadosAtualizados) {
         try {
             const dadosAtualizacao = await SenhaHash.atualizaSenhaParaHash(id,dados);
-            return await this.repository.updateUsuario(dadosAtualizacao); 
+            return await  repository.updateUsuario(dadosAtualizacao); 
         } catch (error:any) {
             throw new Error(`Usuário com id ${id} não encontrado.`); 
         };
@@ -25,7 +21,7 @@ export class UsuariosService{
 
     async buscarUsuarioPorId(id:number) {
         try {
-            return await this.repository.buscarUsuarioById(id);
+            return await  repository.buscarUsuarioById(id);
         } catch (error:any) {
             throw new Error("Usuário não cadastrado."); 
         };
@@ -33,10 +29,10 @@ export class UsuariosService{
 
     async deletarUsuario( {email}:EmailUsuario ) {
         try {
-            const user = await this.repository.buscarUsuarioByEmail({ email });
+            const user = await  repository.buscarUsuarioByEmail({ email });
             if (user){
                 const id = user.id;
-                return await this.repository.deleteLogicoUsuario({ id });
+                return await  repository.deleteLogicoUsuario({ id });
             };
         } catch (error:any) {
             throw new Error(`Usuário com email ${email} não cadastrado.\nErro: ${error.message}.`);
@@ -47,14 +43,14 @@ export class UsuariosService{
         try {
             this.usuarioExiste({ email });
             const senhaHash = hash(senha, 10);
-            return await this.repository.cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta, nome_arquivo, tipo_midia, conteudo }, senhaHash);
+            return await  repository.cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta, nome_arquivo, tipo_midia, conteudo }, senhaHash);
         } catch (error:any) {
             throw new Error(`Erro ao cadastrar usuário: ${error.message}`);
         };
     };
     
     async usuarioExiste({ email }: EmailUsuario) {
-        const user = await this.repository.buscarUsuarioByEmail({ email });
+        const user = await  repository.buscarUsuarioByEmail({ email });
         if(user) {
             throw new Error(`Usuário já cadastrado com o email ${email}.`);
         };
@@ -62,7 +58,7 @@ export class UsuariosService{
     };
 
     async autenticarUsuarioService({ email, senha }: IUsuarioLoginRequest) {
-        const user = await this.repository.buscarUsuarioByEmail({ email });
+        const user = await  repository.buscarUsuarioByEmail({ email });
         const senhaAtual = user ? user.senha : '';
         const isSenha = await compare(senha, senhaAtual);
         if (!isSenha) {

@@ -1,9 +1,9 @@
 import { verificarToken } from '../middlewares/verificarTokenJWT';
-import { UsuariosController } from './../controllers/UsuarioController';
+import { UsuarioController } from './../controllers/UsuarioController';
 import { Router } from "express";
 
 const routesUsuarios = Router();
-const controller = new UsuariosController();
+const controller = new UsuarioController();
 
 /**
  * @swagger
@@ -114,12 +114,52 @@ const controller = new UsuariosController();
  *     summary: Registra um novo usuário.
  *     tags:
  *       - Usuários
- *     requestBody:
- *       description: Dados do usuário a ser registrado.
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/UsuarioRequest'
+ *     consumes:
+ *       - multipart/form-data
+ *     parameters:
+ *       - in: formData
+ *         name: nome
+ *         type: string
+ *         description: Nome do usuário.
+ *       - in: formData
+ *         name: idade
+ *         type: integer
+ *         description: Idade do usuário.
+ *       - in: formData
+ *         name: email
+ *         type: string
+ *         description: Email do usuário.
+ *       - in: formData
+ *         name: senha
+ *         type: string
+ *         description: Senha do usuário.
+ *       - in: formData
+ *         name: peso
+ *         type: number
+ *         description: Peso do usuário.
+ *       - in: formData
+ *         name: peso_meta
+ *         type: number
+ *         description: Meta de peso do usuário.
+ *       - in: formData
+ *         name: altura
+ *         type: number
+ *         description: Altura do usuário.
+ *       - in: formData
+ *         name: tempo_meta
+ *         type: number
+ *         description: Tempo da meta do usuário.
+ *       - in: formData
+ *         name: arquivo
+ *         type: file
+ *         description: Arquivo de mídia do usuário.
+ *       - in: formData
+ *         name: tipo_midia
+ *         type: string
+ *         enum:
+ *           - imagem
+ *           - video
+ *         description: Tipo de mídia do usuário.
  *     responses:
  *       '201':
  *         description: Usuário registrado com sucesso.
@@ -263,4 +303,4 @@ routesUsuarios.put('/usuarios/:id', verificarToken, controller.atualizarUsuario)
  */
 routesUsuarios.delete('/usuarios/:id', verificarToken, controller.deletarUsuario);
 
-export {routesUsuarios};
+export default routesUsuarios;

@@ -6,10 +6,10 @@ export class CriarMidiaRequest {
     tipo_midia:TipoMidia;
     conteudo:Express.Multer.File;
 
-    constructor(usuario_id:number, nome_arquivo:string, tipo_midia:TipoMidia, conteudo:Express.Multer.File) {
+    constructor(usuario_id:number, nome_arquivo:string, tipo_midia:string, conteudo:Express.Multer.File) {
         this.usuario_id = usuario_id;
         this.nome_arquivo = nome_arquivo;
-        this.tipo_midia = tipo_midia;
+        this.tipo_midia = tipo_midia === 'imagem' ? TipoMidia.IMAGEM : TipoMidia.VIDEO;
         this.conteudo = conteudo;
     };
 };

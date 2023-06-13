@@ -1,4 +1,4 @@
-import { PrismaClient, TipoMidia } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { AtualizarMidiaRequest, CriarMidiaRequest } from "../controllers/dto/request/MidiaRequest";
 import { MidiaMappers } from "../mappers/midias_mappers/MidiaMappers";
 import { MidiaPaginadaResponse } from "../controllers/dto/response/MidiaResponse";

@@ -238,4 +238,4 @@ routesMidias.delete('/midias/:id', verificarToken, controller.excluirMidia);
  */
 routesMidias.get('/midias/usuario/:id', verificarToken, controller.listarMidiasByUserId);
 
-export {routesMidias};
+export default routesMidias;

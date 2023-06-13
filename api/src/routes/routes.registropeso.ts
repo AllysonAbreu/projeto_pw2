@@ -259,4 +259,4 @@ routesRegistroPesos.put('/usuarios/pesos/:id', verificarToken, controller.atuali
  */
 routesRegistroPesos.delete('/usuarios/pesos/:id', verificarToken, controller.removerRegistro);
 
-export {routesRegistroPesos};
+export default routesRegistroPesos;
