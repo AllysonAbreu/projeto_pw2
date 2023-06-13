@@ -16,9 +16,15 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:8080', // Altere a URL conforme necessário
+          url: 'http://localhost:8080', // Altere a URL conforme necessário
       },
-    ],
+      {
+          url: 'https://dull-pear-shrimp.cyclic.app/', // Altere a URL conforme necessário
+      },
+      {
+          url: 'https://api-projeto-pw2.cyclic.app', // Altere a URL conforme necessário
+      },
+  ],
   },
   apis: ['./src/routes/*.ts'], // Altere o caminho das suas rotas conforme necessário
 };
