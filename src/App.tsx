@@ -5,8 +5,17 @@ import Button from './components/Button/button';
 import InputField from './components/InputField/inputfield';
 import userIcon from './assets/avatar.png';
 import passwordIcon from './assets/password.png'
+import { useNavigate } from 'react-router-dom';
 
-function App() {
+
+
+const App = () => {
+  const navigate = useNavigate();
+
+  const handleCreateAccount = () => {
+    navigate('/signup');
+  };
+
   return (
     <div className="page">
       <div className="container">
@@ -46,6 +55,7 @@ function App() {
             width="350px"
             height="40px"
             fontSize="16px"
+            onClick={handleCreateAccount}
           />
           <Button
             buttonColor="#03045E"

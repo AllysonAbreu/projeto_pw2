@@ -1,7 +1,7 @@
 import React from 'react';
 import './signup.css';
 
-const Cadastro: React.FC = () => {
+const Signup: React.FC = () => {
   return (
     <div className="page">
       <div className="container">
@@ -11,4 +11,4 @@ const Cadastro: React.FC = () => {
   );
 }
 
-export default Cadastro;
+export default Signup;
