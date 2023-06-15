@@ -1,7 +1,6 @@
 import { MidiaValidators } from './../validators/midia.validators';
 import { AtualizarMidiaRequest, CriarMidiaRequest } from "../controllers/dto/request/MidiaRequest";
 import { MidiaRepository } from "../repository/MidiaRepository";
-import { VerificaTipoMidia } from "../utils/verficaTipoMidia";
 
 const repository = new MidiaRepository();
 
