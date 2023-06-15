@@ -1,5 +1,4 @@
-import { hash } from "bcrypt";
-import { AtualizarUsuario, DadosAtualizados, Usuario } from "../../domain/Usuario";
+import { Usuario } from "../../domain/Usuario";
 
 export function toResponseNovoUsuario(usuario:Usuario){
     return {

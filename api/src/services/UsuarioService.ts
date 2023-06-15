@@ -5,6 +5,7 @@ import { UsuarioRepository } from "../repository/UsuarioRepository";
 import { DadosAtualizados, EmailUsuario } from "../domain/Usuario";
 import { toResponseLogin } from "../mappers/usuarios_mappers/UsuarioLoginMapper";
 import { SenhaHash } from "../utils/senhaHashUtil";
+import { EmailValidator } from "../validators/email.validators";
 
 const repository = new UsuarioRepository();
 
@@ -39,22 +40,27 @@ export class UsuarioService{
         };
     };
 
-    async cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta, nome_arquivo, tipo_midia, conteudo }:IUsuarioCadastroRequest) {
+    async cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta }:IUsuarioCadastroRequest) {
         try {
             this.usuarioExiste({ email });
             const senhaHash = hash(senha, 10);
-            return await  repository.cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta, nome_arquivo, tipo_midia, conteudo }, senhaHash);
+            return await  repository.cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta }, senhaHash);
         } catch (error:any) {
             throw new Error(`Erro ao cadastrar usuário: ${error.message}`);
         };
     };
     
     async usuarioExiste({ email }: EmailUsuario) {
-        const user = await  repository.buscarUsuarioByEmail({ email });
-        if(user) {
-            throw new Error(`Usuário já cadastrado com o email ${email}.`);
+        try {
+            EmailValidator.emailIsValid(email);
+            const user = await  repository.buscarUsuarioByEmail({ email });
+            if(user) {
+                throw new Error(`Usuário já cadastrado com o email ${email}.`);
+            };
+            return user;
+        } catch (error:any) {
+          throw new Error(`Erro ao cadastrar usuário: ${error.message}`);  
         };
-        return user;
     };
 
     async autenticarUsuarioService({ email, senha }: IUsuarioLoginRequest) {

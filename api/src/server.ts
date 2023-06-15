@@ -53,9 +53,6 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:3000', // Altere a URL conforme necessário
-      },
-      {
         url: 'https://dull-pear-shrimp.cyclic.app/', // Altere a URL conforme necessário
       },
       {

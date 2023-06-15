@@ -8,7 +8,6 @@ export class MidiaMappers {
             midia?.id,
             midia?.usuario_id,
             midia?.nome_arquivo,
-            midia?.tipo_midia,
             conteudoFille,
             midia?.criado_em,
             midia?.modificado_em

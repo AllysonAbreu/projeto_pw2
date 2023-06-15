@@ -3,7 +3,6 @@ import { AtualizarMidiaRequest, CriarMidiaRequest } from "../controllers/dto/req
 import { MidiaMappers } from "../mappers/midias_mappers/MidiaMappers";
 import { MidiaPaginadaResponse } from "../controllers/dto/response/MidiaResponse";
 import { MidiaUtils } from "../utils/midiaUtils";
-import { VerificaTipoMidia } from "../utils/verficaTipoMidia";
 
 const prisma = new PrismaClient();
 
@@ -11,15 +10,11 @@ export class MidiaRepository {
     
     async criarMidia(midia:CriarMidiaRequest) {
         try {
-            if(!VerificaTipoMidia.isTipoMidia(midia.tipo_midia)) {
-                throw new Error('Tipo de mídia inválido.');
-            };
-            const conteudoBuffer: Buffer = await MidiaUtils.convertToBuffer(midia.conteudo, midia.tipo_midia);
+            const conteudoBuffer: Buffer = await MidiaUtils.convertToBuffer(midia.conteudo);
             const novaMidia = await prisma.midia.create({
                 data: {
                     usuario_id: midia.usuario_id,
                     nome_arquivo: midia.nome_arquivo,
-                    tipo_midia: midia.tipo_midia,
                     conteudo: conteudoBuffer,
                 },
             });
@@ -37,7 +32,7 @@ export class MidiaRepository {
                 },
             });
             if (midia !== null) {
-                const conteudoFille = MidiaUtils.convertToContentType(midia.conteudo, midia.tipo_midia);
+                const conteudoFille = MidiaUtils.convertToContentType(midia.conteudo);
                 return MidiaMappers.buscaMidiaToResponse(midia, conteudoFille);
             };
         } catch (error: any) {
@@ -48,20 +43,19 @@ export class MidiaRepository {
     async atualizarMidia(id: number, midia: AtualizarMidiaRequest) {
         try {
             const dataAtualizacao  = new Date();
-            const conteudoBuffer: Buffer = await MidiaUtils.convertToBuffer(midia.conteudo, midia.tipo_midia);
+            const conteudoBuffer: Buffer = await MidiaUtils.convertToBuffer(midia.conteudo);
             const midiaAtualizada = await prisma.midia.update({
                 where: {
                     id,
                 },
                 data: {
                     nome_arquivo: midia.nome_arquivo,
-                    tipo_midia: midia.tipo_midia,
                     conteudo: conteudoBuffer,
                     modificado_em: dataAtualizacao,
                 },
             });
             if(midiaAtualizada !== null){
-                const conteudoFille = MidiaUtils.convertToContentType(midiaAtualizada.conteudo, midiaAtualizada.tipo_midia);
+                const conteudoFille = MidiaUtils.convertToContentType(midiaAtualizada.conteudo);
                 return MidiaMappers.buscaMidiaToResponse(midiaAtualizada, conteudoFille);
             };
         } catch (error: any) {
@@ -107,7 +101,7 @@ export class MidiaRepository {
                     totalRegistros,
                 };
                 midias.forEach(midia => {
-                    const conteudoFille = MidiaUtils.convertToContentType(midia.conteudo, midia.tipo_midia);
+                    const conteudoFille = MidiaUtils.convertToContentType(midia.conteudo);
                     const midiaResponse = MidiaUtils.mapToMidiaResponse(midia, conteudoFille);
                     midiasPaginadasResponse.listaPaginada.push(midiaResponse);
                 });

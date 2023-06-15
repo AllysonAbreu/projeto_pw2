@@ -26,7 +26,6 @@ model Midia {
   id              Int      @id @default(autoincrement())
   usuario_id      Int
   nome_arquivo    String
-  tipo_midia      TipoMidia
   conteudo        Bytes
   criado_em       DateTime @default(now())
   modificado_em   DateTime @default(now())
@@ -35,10 +34,6 @@ model Midia {
   @@map("midia")
 }
 
-enum TipoMidia {
-  IMAGEM
-  VIDEO
-}
 
 model Usuario {
   id              Int              @id @default(autoincrement())

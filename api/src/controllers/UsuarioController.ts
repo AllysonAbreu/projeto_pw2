@@ -48,9 +48,8 @@ export class UsuarioController{
 
     async registrarUsuario(req: Request, res: Response) {
         try {
-            const { nome, idade, email, senha, peso, peso_meta, altura, tempo_meta, nome_arquivo, tipo_midia, conteudo } = <IUsuarioCadastroRequest>req.body;
-            await usuarioService.usuarioExiste({ email });
-            const response = await usuarioService.cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta, nome_arquivo, tipo_midia, conteudo });
+            const { nome, idade, email, senha, peso, peso_meta, altura, tempo_meta } = <IUsuarioCadastroRequest>req.body;
+            const response = await usuarioService.cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta });
             return res.status(201)
                 .json({ message:`Usuário cadastrado com sucesso.`,
                         usuario: response });
@@ -91,8 +90,8 @@ export class UsuarioController{
     async atualizarUsuario(req: Request, res: Response) {
         try {
             const { id } = req.params;
-            const { nome, idade, email, senha, peso, peso_meta, altura, tempo_meta, nome_arquivo, tipo_midia, conteudo } = <DadosAtualizados>req.body;
-            const response = await usuarioService.atualizarUsuario(Number(id), { nome, idade, email, senha, peso, peso_meta, altura, tempo_meta, nome_arquivo, tipo_midia, conteudo });
+            const { nome, idade, email, senha, peso, peso_meta, altura, tempo_meta } = <DadosAtualizados>req.body;
+            const response = await usuarioService.atualizarUsuario(Number(id), { nome, idade, email, senha, peso, peso_meta, altura, tempo_meta });
             return res.status(200).json({ message: "Usuário atualizado", usuario: response });
         } catch (error: any) {
             return res.status(400).json({

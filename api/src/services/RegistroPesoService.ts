@@ -1,5 +1,5 @@
 import { RegistroPesoRepository } from "../repository/RegistroPesoRepository";
-import { CriarRegistroPesoRequest, IAtualizarRegistroPesoRequest } from "../controllers/dto/request/RegistroPesoRequest";
+import { IAtualizarRegistroPesoRequest } from "../controllers/dto/request/RegistroPesoRequest";
 
 const repository = new RegistroPesoRepository();
 

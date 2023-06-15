@@ -7,8 +7,8 @@ export class MidiaController {
 
     async criarMidia(req: Request, res: Response) {
         try {
-          const { usuario_id, nome_arquivo, tipo_midia, conteudo } = req.body;
-          const response = await  service.criarMidia({usuario_id, nome_arquivo, tipo_midia, conteudo});
+          const { usuario_id, nome_arquivo, conteudo } = req.body;
+          const response = await  service.criarMidia({usuario_id, nome_arquivo, conteudo});
           return res.status(201)
             .json(`Mídia cadastrada com sucesso sob o id ${response}`);
         } catch (error: any) {
@@ -34,8 +34,8 @@ export class MidiaController {
     async atualizarMidia(req: Request, res: Response) {
         try {
           const { id } = req.params;
-          const { nome_arquivo, tipo_midia, conteudo } = req.body;
-          const reponse = await  service.atualizarMidia(Number(id), nome_arquivo, tipo_midia, conteudo);
+          const { nome_arquivo, conteudo } = req.body;
+          const reponse = await  service.atualizarMidia(Number(id), nome_arquivo, conteudo);
           return res.status(200).json(reponse);
         } catch (error: any) {
           return res.status(400).json({ message: error.message });

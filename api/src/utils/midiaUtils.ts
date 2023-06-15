@@ -1,33 +1,26 @@
 import { MidiaConverter } from "../utils/midiaConverter";
 import { MidiaMappers } from "../mappers/midias_mappers/MidiaMappers";
-import { TipoMidia } from "../domain/enum/EnumTipoMidia";
 import { Midia } from "@prisma/client";
 
 export class MidiaUtils {
-    static async convertToBuffer(conteudo: Express.Multer.File, tipoMidia: string): Promise<Buffer> {
-        if (tipoMidia.toUpperCase() === TipoMidia.IMAGEM) {
+    static async convertToBuffer(conteudo: Express.Multer.File): Promise<Buffer> {
+        if (conteudo !== null && conteudo !== undefined) {
             return await MidiaConverter.convertImageToBuffer(conteudo);
-        } else if (tipoMidia.toUpperCase() === TipoMidia.VIDEO) {
-            return await MidiaConverter.convertVideoToBuffer(conteudo);
-        };
-        throw new Error(`Tipo de mídia inválido: ${tipoMidia}`);
+        };     
+        throw new Error(`Conteúdo de mídia inválido: ${conteudo}`);
     };
 
-    static convertToContentType(conteudo: Buffer, tipoMidia: string): string {
-        if (tipoMidia.toUpperCase() === TipoMidia.IMAGEM) {
+    static convertToContentType(conteudo: Buffer): string {
+        if (conteudo !== null && conteudo !== undefined) {
             return MidiaConverter.convertBufferToImage(conteudo);
-        } else if (tipoMidia.toUpperCase() === TipoMidia.VIDEO) {
-            return MidiaConverter.convertBufferToVideo(conteudo);
         };
-        throw new Error(`Tipo de mídia inválido: ${tipoMidia}`);
+        throw new Error(`Conteúdo de mídia inválido: ${conteudo}`);
     };
 
     static mapToMidiaResponse(midia: Midia, conteudo: string) {
-        if (midia.tipo_midia.toUpperCase() === TipoMidia.IMAGEM) {
-            return MidiaMappers.buscaMidiaToResponse(midia, conteudo);
-        } else if (midia.tipo_midia.toUpperCase() === TipoMidia.VIDEO) {
+        if (conteudo !== null && conteudo !== undefined) {
             return MidiaMappers.buscaMidiaToResponse(midia, conteudo);
         };
-        throw new Error(`Tipo de mídia inválido: ${midia.tipo_midia}`);
+        throw new Error(`Conteúdo de mídia inválido: ${conteudo}`);
     };
 };

@@ -93,17 +93,6 @@ const controller = new UsuarioController();
  *         tempo_meta:
  *           type: number
  *           description: Tempo da meta do usuário.
- *         nome_arquivo:
- *           type: string
- *           description: Nome do arquivo de mídia do usuário.
- *         tipo_midia:
- *           type: string
- *           enum: [imagem, video]
- *           description: Tipo de mídia do usuário.
- *         conteudo:
- *           type: string
- *           format: binary
- *           description: Conteúdo do arquivo de mídia.
  */
 
 
@@ -114,52 +103,12 @@ const controller = new UsuarioController();
  *     summary: Registra um novo usuário.
  *     tags:
  *       - Usuários
- *     consumes:
- *       - multipart/form-data
- *     parameters:
- *       - in: formData
- *         name: nome
- *         type: string
- *         description: Nome do usuário.
- *       - in: formData
- *         name: idade
- *         type: integer
- *         description: Idade do usuário.
- *       - in: formData
- *         name: email
- *         type: string
- *         description: Email do usuário.
- *       - in: formData
- *         name: senha
- *         type: string
- *         description: Senha do usuário.
- *       - in: formData
- *         name: peso
- *         type: number
- *         description: Peso do usuário.
- *       - in: formData
- *         name: peso_meta
- *         type: number
- *         description: Meta de peso do usuário.
- *       - in: formData
- *         name: altura
- *         type: number
- *         description: Altura do usuário.
- *       - in: formData
- *         name: tempo_meta
- *         type: number
- *         description: Tempo da meta do usuário.
- *       - in: formData
- *         name: arquivo
- *         type: file
- *         description: Arquivo de mídia do usuário.
- *       - in: formData
- *         name: tipo_midia
- *         type: string
- *         enum:
- *           - imagem
- *           - video
- *         description: Tipo de mídia do usuário.
+ *     requestBody:
+ *       description: Dados do usuário a ser registrado.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UsuarioRequest'
  *     responses:
  *       '201':
  *         description: Usuário registrado com sucesso.
