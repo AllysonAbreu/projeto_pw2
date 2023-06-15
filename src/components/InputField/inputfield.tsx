@@ -3,7 +3,7 @@ import React from 'react';
 interface InputFieldProps {
   type?: string;
   placeholder: string;
-  iconImage: string;
+  iconImage?: string;
   width?: string;
   height?: string;
 }
