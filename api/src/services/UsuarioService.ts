@@ -14,7 +14,7 @@ export class UsuarioService{
     async atualizarUsuario(id:number, dados:DadosAtualizados) {
         try {
             const dadosAtualizacao = await SenhaHash.atualizaSenhaParaHash(id,dados);
-            return await  repository.updateUsuario(dadosAtualizacao); 
+            return await repository.updateUsuario(dadosAtualizacao); 
         } catch (error:any) {
             throw new Error(`Usuário com id ${id} não encontrado.`); 
         };

@@ -18,7 +18,7 @@ services:
     container_name: my-pgadmin
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: allyson@hotmail.com
+      PGADMIN_DEFAULT_EMAIL: admin@hotmail.com
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
       - "5050:80"

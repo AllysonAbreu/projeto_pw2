@@ -46,42 +46,46 @@ Para executar a aplicação localmente, siga as instruções abaixo:
 ### Configuração do Servidor (Node.js com Express)
 
 1. Clone o repositório do projeto do servidor em sua máquina.
-2. Navegue até o diretório
-
- do projeto e abra um terminal.
+2. Navegue até o diretório do projeto e abra um terminal.
 3. Execute o seguinte comando para instalar as dependências:
 
-```
-npm install
-```
-or
-```
-yarn install
-```
+    ```
+    npm install
+    ```
+    or
+    ```
+    yarn install
+    ```
 
-4. Após a instalação das dependências, gere o Prisma Client para se comunicar com o banco de dados PostgreSQL:
+4. Se tiver o Docker em sua máquina, rode o comando `docker-compose up` e crie o container com as imagens do PgAdmin4 e PostgreSQL. `Observe as credencias que estão no arquivo docker-compose!`
 
-```
-npx prisma generate
-```
-or
-```
-yarn prisma generate
-```
+    4.1 Caso não possua Docker e queria testar outros bancos com o prisma, aconselho seguir a documentação que está abaixo nas referências.
 
-4.1 Lembre-se de atualizar o arquivo do `prisma.schema` para conseguir se conectar ao seu serviço do banco de dados e realizar as migrates para gerar as tabelas com os models pré-constituídos.
+5. Após a instalação das dependências, gere o Prisma Client para se comunicar com o banco de dados PostgreSQL:
 
-5. Execute o seguinte comando para iniciar o servidor:
+    ```
+    npx prisma generate
+    ```
+    or
+    ```
+    yarn prisma generate
+    ```
 
-```
-npm run dev
-```
-or
-```
-yarn dev
-```
+    5.1 Lembre-se de atualizar o arquivo do `prisma.schema` para conseguir se conectar ao seu serviço do banco de dados e realizar as migrates para gerar as tabelas com os models pré-constituídos.
 
-6. Acesso o serviço no seguinte link: http://localhost:3000/api-docs/
+
+
+6. Execute o seguinte comando para iniciar o servidor:
+
+    ```
+    npm run dev
+    ```
+    or
+    ```
+    yarn dev
+    ```
+
+7. Acesso o serviço no seguinte link: http://localhost:3000/api-docs/
 
 ## Estrutura do Código
 

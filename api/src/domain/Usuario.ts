@@ -60,18 +60,14 @@ export class Usuario {
     idade: number;
     email: string;
     senha: string;
-    peso: number;
-    peso_meta: number;
     altura: number;
     tempo_meta: number;
 
-    constructor(nome: string, idade: number, email: string, senha: string, peso: number, peso_meta: number, altura: number, tempo_meta: number){
+    constructor(nome: string, idade: number, email: string, senha: string, altura: number, tempo_meta: number){
       this.nome = nome;
       this.idade = idade;
       this.email = email;
       this.senha = senha;
-      this.peso = peso;
-      this.peso_meta = peso_meta;
       this.altura = altura;
       this.tempo_meta = tempo_meta;
     };
