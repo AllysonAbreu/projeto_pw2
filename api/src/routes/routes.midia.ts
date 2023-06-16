@@ -136,7 +136,7 @@ routesMidias.get('/midias/:id', verificarToken, controller.obterMidia);
 routesMidias.post('/midias', verificarToken, controller.criarMidia);
 /**
  * @swagger
- * /midias/{id}:
+ * /usuarios/midias/{id}:
  *   put:
  *     summary: Atualiza uma mídia pelo ID.
  *     tags:
@@ -168,10 +168,10 @@ routesMidias.post('/midias', verificarToken, controller.criarMidia);
  *       '404':
  *         description: Mídia não encontrada.
  */
-routesMidias.put('/midias/:id', verificarToken, controller.atualizarMidia);
+routesMidias.put('/usuarios/midias/:id', verificarToken, controller.atualizarMidia);
 /**
  * @swagger
- * /midias/{id}:
+ * /usuarios/midias/{id}:
  *   delete:
  *     summary: Exclui uma mídia pelo ID.
  *     tags:
@@ -193,10 +193,10 @@ routesMidias.put('/midias/:id', verificarToken, controller.atualizarMidia);
  *       '404':
  *         description: Mídia não encontrada.
  */
-routesMidias.delete('/midias/:id', verificarToken, controller.excluirMidia);
+routesMidias.delete('/usuarios/midias/:id', verificarToken, controller.excluirMidia);
 /**
  * @swagger
- *   /midias/usuario/{id}:
+ *   /usuario/{id}/midias:
  *     get:
  *       summary: Lista todas as mídias de um usuário.
  *       tags:
@@ -236,6 +236,6 @@ routesMidias.delete('/midias/:id', verificarToken, controller.excluirMidia);
  *         '404':
  *           description: Usuário não encontrado ou não possui mídias.
  */
-routesMidias.get('/midias/usuario/:id', verificarToken, controller.listarMidiasByUserId);
+routesMidias.get('/usuario/:id/midias', verificarToken, controller.listarMidiasByUserId);
 
 export default routesMidias;
