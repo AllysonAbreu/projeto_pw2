@@ -60,14 +60,16 @@ export class RegistroPesoRepository {
     
     async registrarPeso(id:number, peso:number, peso_meta:number ) {
         try {
-            const registroPeso = await prisma.registroPeso.create({        
-                data: {
-                    usuario_id: id,
-                    peso,
-                    peso_meta
-                },
-              });
-              return toResponseRegistroPeso(registroPeso);
+            const [registroPeso] = await prisma.$transaction([
+                prisma.registroPeso.create({        
+                    data: {
+                        usuario_id: id,
+                        peso,
+                        peso_meta
+                    },
+                }),
+            ]);
+            return toResponseRegistroPeso(registroPeso);
         } catch (error:any) {
             throw new Error(`Erro ao cadastrar registro de peso: ${error.message}`);     
         };
@@ -76,11 +78,11 @@ export class RegistroPesoRepository {
     async atualizarRegistro(id:number, { peso, peso_meta }:IAtualizarRegistroPesoRequest) {
         try {
             if (peso === undefined || peso === null) {
-                const dados =  await this.atualizarPropriedade({ id, propriedade: 'peso_meta', valor: peso_meta });
+                const dados = await this.atualizarPropriedade({ id, propriedade: 'peso', valor: peso });
                 return toResponseRegistroPeso(dados);
             };
             if (peso_meta === undefined || peso_meta === null) {
-                const dados = await this.atualizarPropriedade({ id, propriedade: 'peso', valor: peso });
+                const dados = await this.atualizarPropriedade({ id, propriedade: 'peso_meta', valor: peso_meta });
                 return toResponseRegistroPeso(dados);
             };
         } catch (error: any) {
@@ -89,17 +91,18 @@ export class RegistroPesoRepository {
     };
     
     async atualizarPropriedade({ id, propriedade, valor }: { id: number; propriedade: string; valor?: number }) {
-        const dataAtualizacao = Date.now();
         try {
-          const registroPeso = await prisma.registroPeso.update({
-            where: {
-              id,
-            },
-            data: {
-              [propriedade]: valor,
-              modificado_em: new Date(dataAtualizacao)
-            },
-          });
+          const [registroPeso] = await prisma.$transaction([
+            prisma.registroPeso.update({
+                where: {
+                  id,
+                },
+                data: {
+                  [propriedade]: valor,
+                  modificado_em: new Date(Date.now())
+                },
+              }),
+          ]);
           return registroPeso;
         } catch (error: any) {
           throw new Error(`Erro ao atualizar a propriedade '${propriedade}' no banco de dados: ${error.message}`);
@@ -108,11 +111,13 @@ export class RegistroPesoRepository {
     
     async deletarRegistroPeso({ id }: { id: number }) {
         try {
-            const registroPeso = await prisma.registroPeso.delete({
-                where: {
-                    id,
-                },
-            });
+            const [registroPeso] = await prisma.$transaction([
+                prisma.registroPeso.delete({
+                    where: {
+                        id,
+                    },
+                }),
+            ]);
             if(registroPeso){
                 return registroPeso;
             };

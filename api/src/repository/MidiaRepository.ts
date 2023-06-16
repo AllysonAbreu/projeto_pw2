@@ -11,13 +11,15 @@ export class MidiaRepository {
     async criarMidia(midia:CriarMidiaRequest) {
         try {
             const conteudoBuffer: Buffer = await MidiaUtils.convertToBuffer(midia.conteudo);
-            const novaMidia = await prisma.midia.create({
-                data: {
-                    usuario_id: midia.usuario_id,
-                    nome_arquivo: midia.nome_arquivo,
-                    conteudo: conteudoBuffer,
-                },
-            });
+            const [novaMidia] = await prisma.$transaction([
+                prisma.midia.create({
+                    data: {
+                        usuario_id: midia.usuario_id,
+                        nome_arquivo: midia.nome_arquivo,
+                        conteudo: conteudoBuffer,
+                    },
+                }),
+            ]);
             return MidiaMappers.cadastroMidiaResponse(novaMidia);
         } catch (error: any) {
             throw new Error(`Não foi possível cadastrar mídia no banco de dados. Erro: ${error.message}.`);
@@ -42,18 +44,19 @@ export class MidiaRepository {
 
     async atualizarMidia(id: number, midia: AtualizarMidiaRequest) {
         try {
-            const dataAtualizacao  = new Date();
             const conteudoBuffer: Buffer = await MidiaUtils.convertToBuffer(midia.conteudo);
-            const midiaAtualizada = await prisma.midia.update({
-                where: {
-                    id,
-                },
-                data: {
-                    nome_arquivo: midia.nome_arquivo,
-                    conteudo: conteudoBuffer,
-                    modificado_em: dataAtualizacao,
-                },
-            });
+            const [midiaAtualizada] = await prisma.$transaction([
+                prisma.midia.update({
+                    where: {
+                        id,
+                    },
+                    data: {
+                        nome_arquivo: midia.nome_arquivo,
+                        conteudo: conteudoBuffer,
+                        modificado_em: new Date(Date.now())
+                    },
+                }),
+            ]);
             if(midiaAtualizada !== null){
                 const conteudoFille = MidiaUtils.convertToContentType(midiaAtualizada.conteudo);
                 return MidiaMappers.buscaMidiaToResponse(midiaAtualizada, conteudoFille);
@@ -65,11 +68,13 @@ export class MidiaRepository {
 
     async excluirMidia(id: number){
         try {
-            await prisma.midia.delete({
-                where: {
-                    id,
-                },
-            });
+            await prisma.$transaction([
+                prisma.midia.delete({
+                    where: {
+                        id,
+                    },
+                }),
+            ]);
         } catch (error: any) {
             throw new Error(`Não foi possível excluir mídia no banco de dados. Erro: ${error.message}.`);
         };
