@@ -3,31 +3,37 @@ import './signup.css';
 import logo from '../../assets/logo.png';
 import InputField from '../../components/InputField/inputfield';
 import Button from '../../components/Button/button';
+import { useNavigate } from 'react-router-dom';
 
 const Signup: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleDashboard = () => {
+    navigate('/dashboard');
+  };
   return (
     <div className="page">
-      <div className="title">
+      <div className="signuptitle">
         Crie sua conta
       </div>
-      <div className="container">
-        <img src={logo} alt="Logo" className="logo" />
+      <div className="signupcontainer">
+        <img src={logo} alt="Logo" className="signuplogo" />
 
         <div className="input-row">
           <div>
-            <div className="gray-text">Nome Completo</div>
+            <div className="signup-gray-text">Nome Completo</div>
             <InputField
               placeholder="nomecompleto"
             />
           </div>
           <div>
-            <div className="gray-text">Peso Atual</div>
+            <div className="signup-gray-text">Peso Atual</div>
             <InputField
               placeholder="pesoatual"
             />
           </div>
           <div>
-            <div className="gray-text">Peso Desejado</div>
+            <div className="signup-gray-text">Peso Desejado</div>
             <InputField
               placeholder="pesodesejado"
             />
@@ -36,19 +42,19 @@ const Signup: React.FC = () => {
 
         <div className="input-row">
           <div>
-            <div className="gray-text">Nome de Usuário</div>
+            <div className="signup-gray-text">Nome de Usuário</div>
             <InputField
               placeholder="nomedeusuario"
             />
           </div>
           <div>
-            <div className="gray-text">Email</div>
+            <div className="signup-gray-text">Email</div>
             <InputField
               placeholder="email"
             />
           </div>
           <div>
-            <div className="gray-text">Tempo para a meta</div>
+            <div className="signup-gray-text">Tempo para a meta</div>
             <InputField
               placeholder="tempoparameta"
             />
@@ -57,13 +63,13 @@ const Signup: React.FC = () => {
 
         <div className="input-row">
           <div>
-            <div className="gray-text">Senha</div>
+            <div className="signup-gray-text">Senha</div>
             <InputField
               placeholder="senha"
             />
           </div>
           <div>
-            <div className="gray-text">Idade</div>
+            <div className="signup-gray-text">Idade</div>
             <InputField
               placeholder="idadedousuario"
             />
@@ -77,6 +83,7 @@ const Signup: React.FC = () => {
             width="320px"
             height="35px"
             fontSize="14px"
+            onClick={handleDashboard}
           />
         </div>
       </div>

@@ -6,9 +6,9 @@
     height: 100vh;
   }
   
-  .container {
+  .signupcontainer {
     width: 850px;
-    height: 440px;
+    height: 400px;
     background-color: white;
     border-radius: 5px;
     border: 1px solid rgba(0, 0, 0, 0.2);
@@ -19,12 +19,12 @@
     padding-top: 20px;
   }
 
-  .logo {
+  .signuplogo {
     width: 100px;
     height: 100px;
   }
   
-  .title {
+  .signuptitle {
     color: #03045E;
     font-size: 20px;
     font-weight: normal;
