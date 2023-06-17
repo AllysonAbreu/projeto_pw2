@@ -1,0 +1,15 @@
+.menu-button {
+    width: 200px;
+    height: 40px;
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .menu-button-text {
+    color: black;
+  }
+  
