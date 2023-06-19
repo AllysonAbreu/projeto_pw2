@@ -4,7 +4,8 @@ import Header from '../../components/Header/header';
 import SidebarMenu from '../../components/SideMenu/sidemenu';
 import SearchBar from '../../components/SearchBar/searchbar';
 import CustomButton from '../../components/CustomButton/custombutton';
-import buttonIcon from '../../assets/avatar.png'
+
+
 import './dashboard.css'
 
 

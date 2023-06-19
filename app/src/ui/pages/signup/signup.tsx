@@ -1,9 +1,13 @@
 import React from 'react';
-import './signup.css';
-import logo from '../../assets/logo.png';
+import { useNavigate } from 'react-router-dom';
 import InputField from '../../components/InputField/inputfield';
 import Button from '../../components/Button/button';
-import { useNavigate } from 'react-router-dom';
+
+
+import logo from '../../../assets/images/logo.png';
+import './signup.css';
+
+
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
@@ -11,6 +15,7 @@ const Signup: React.FC = () => {
   const handleDashboard = () => {
     navigate('/dashboard');
   };
+  
   return (
     <div className="page">
       <div className="signuptitle">

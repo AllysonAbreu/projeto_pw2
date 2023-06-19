@@ -1,54 +1,56 @@
 import React from 'react';
-import logo from './assets/logo.png';
-import './App.css';
-import Button from './components/Button/button';
-import InputField from './components/InputField/inputfield';
-import userIcon from './assets/avatar.png';
-import passwordIcon from './assets/password.png'
 import { useNavigate } from 'react-router-dom';
+import InputField from '../../components/InputField/inputfield';
+import Button from '../../components/Button/button';
+
+import logo from '../../../assets/images/logo.png';
+import userIcon from '../../../assets/images/user.png';
+import passwordIcon from '../../../assets/images/password.png';
+import '../../app.css';
+import { ROUTE_PATHS } from '../../../constants/routesPaths/routePaths';
 
 
 
-const App = () => {
+const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const handleCreateAccount = () => {
-    navigate('/signup');
+    navigate(ROUTE_PATHS.REGISTER);
   };
-
+  
   return (
     <div className="page">
-      <div className="container">
+        <div className="container">
         <div className="title">
-          Faça o login em nossa
+            Faça o login em nossa
         </div>
         <div className="title bold">
-          Plataforma
+            Plataforma
         </div>
         <img src={logo} alt="Logo" className="logo" />
         <div className="welcome-text">
-          <span className="gray-text">Bem vindo ao</span>
-          <span className="space"> </span>
-          <span className="blue-text">PAF</span>
+            <span className="gray-text">Bem vindo ao</span>
+            <span className="space"> </span>
+            <span className="blue-text">PAF</span>
         </div>
         <div className="form-group">
-          <span className="gray-text">Usuário</span>
-          <InputField
+            <span className="gray-text">Usuário</span>
+            <InputField
             type="text"
             placeholder="Digite seu usuário"
             iconImage={userIcon}
-          />
+            />
         </div>
         <div className="form-group">
-          <span className="gray-text">Senha</span>
-          <InputField
+            <span className="gray-text">Senha</span>
+            <InputField
             type="password"
             placeholder="Digite sua senha"
             iconImage={passwordIcon}
-          />
+            />
         </div>
         <div className="button-group">
-          <Button
+            <Button
             buttonColor="#03045E"
             textColor="white"
             buttonText="CRIAR CONTA"
@@ -56,19 +58,19 @@ const App = () => {
             height="40px"
             fontSize="16px"
             onClick={handleCreateAccount}
-          />
-          <Button
+            />
+            <Button
             buttonColor="#03045E"
             textColor="white"
             buttonText="ENTRAR"
             width="350px"
             height="40px"
             fontSize="16px"
-          />
+            />
         </div>
-      </div>
+        </div>
     </div>
   );
 }
 
-export default App;
+export default Login;

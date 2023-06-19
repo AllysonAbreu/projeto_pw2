@@ -1,5 +1,7 @@
 import React from 'react';
 import Navbar from '../../components/Navbar/navbar';
+
+
 import './about.css'
 
 const username = "Fábio Bala"

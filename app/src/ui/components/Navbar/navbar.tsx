@@ -1,6 +1,7 @@
 import React from 'react';
-import logo from '../../assets/logo.png';
-import userIcon from '../../assets/avatar.png';
+
+import logo from '../../../assets/images/logo.png';
+import userIcon from '../../../assets/images/user.png';
 import './navbar.css';
 
 interface NavbarProps {
