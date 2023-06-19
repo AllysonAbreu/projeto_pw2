@@ -3,14 +3,20 @@ import React from 'react';
 interface InputFieldProps {
   type?: string;
   placeholder: string;
+  value: string;
+  name: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   iconImage?: string;
   width?: string;
   height?: string;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
-  type = 'text',
+  type,
   placeholder,
+  value,
+  name,
+  onChange,
   iconImage,
   width,
   height
@@ -31,7 +37,7 @@ const InputField: React.FC<InputFieldProps> = ({
   };
 
   return (
-    <input type={type} placeholder={placeholder} style={inputStyle} />
+    <input type={type} placeholder={placeholder} name={name} value={value} onChange={onChange} style={inputStyle} />
   );
 }
 

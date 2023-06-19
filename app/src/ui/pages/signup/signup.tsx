@@ -29,18 +29,27 @@ const Signup: React.FC = () => {
             <div className="signup-gray-text">Nome Completo</div>
             <InputField
               placeholder="nomecompleto"
+              value='{credenciaisUsuario.senha}'
+              name='nomecompleto'
+              onChange={handleDashboard}
             />
           </div>
           <div>
             <div className="signup-gray-text">Peso Atual</div>
             <InputField
               placeholder="pesoatual"
+              value='{credenciaisUsuario.senha}'
+              name='nomecompleto'
+              onChange={handleDashboard}
             />
           </div>
           <div>
             <div className="signup-gray-text">Peso Desejado</div>
             <InputField
               placeholder="pesodesejado"
+              value='{credenciaisUsuario.senha}'
+              name='nomecompleto'
+              onChange={handleDashboard}
             />
           </div>
         </div>
@@ -50,18 +59,27 @@ const Signup: React.FC = () => {
             <div className="signup-gray-text">Nome de Usuário</div>
             <InputField
               placeholder="nomedeusuario"
+              value='{credenciaisUsuario.senha}'
+              name='nomecompleto'
+              onChange={handleDashboard}
             />
           </div>
           <div>
             <div className="signup-gray-text">Email</div>
             <InputField
               placeholder="email"
+              value='{credenciaisUsuario.senha}'
+              name='nomecompleto'
+              onChange={handleDashboard}
             />
           </div>
           <div>
             <div className="signup-gray-text">Tempo para a meta</div>
             <InputField
               placeholder="tempoparameta"
+              value='{credenciaisUsuario.senha}'
+              name='nomecompleto'
+              onChange={handleDashboard}
             />
           </div>
         </div>
@@ -71,12 +89,18 @@ const Signup: React.FC = () => {
             <div className="signup-gray-text">Senha</div>
             <InputField
               placeholder="senha"
+              value='{credenciaisUsuario.senha}'
+              name='nomecompleto'
+              onChange={handleDashboard}
             />
           </div>
           <div>
             <div className="signup-gray-text">Idade</div>
             <InputField
               placeholder="idadedousuario"
+              value='{credenciaisUsuario.senha}'
+              name='nomecompleto'
+              onChange={handleDashboard}
             />
           </div>
         </div>
@@ -89,6 +113,7 @@ const Signup: React.FC = () => {
             height="35px"
             fontSize="14px"
             onClick={handleDashboard}
+            type='submit'
           />
         </div>
       </div>

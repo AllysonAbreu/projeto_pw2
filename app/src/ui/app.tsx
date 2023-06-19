@@ -5,7 +5,7 @@ import PrivateRoute from './components/privateRoutes/privateRoute.component';
 
 
 import './app.css';
-import Login from "./pages/home/home";
+import Login from "./pages/login/login";
 import Signup from './pages/signup/signup';
 import AboutPage from './pages/about/about';
 import DashboardPage from './pages/dashboard/dashboard';

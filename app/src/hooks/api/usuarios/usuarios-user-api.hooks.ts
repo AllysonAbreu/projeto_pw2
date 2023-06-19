@@ -4,7 +4,7 @@ import { useHttp } from "../_base/use-http.hook";
 import { useGlobalUser } from "../../../contexts/user/user.context";
 
 interface UserApi {
-  login: (credentials: { username: string; password: string }) => Promise<any>;
+  login: (credentials: { email: string; senha: string }) => Promise<any>;
   logout: () => void;
   register: (payload: {
     nome: string;
@@ -37,11 +37,9 @@ export function useUserApi(): UserApi {
   const {setGlobalUser} = useGlobalUser();
   const httpInstance = useHttp({ baseURL: process.env.REACT_APP_API_URL });
 
-  const login = async ({ username, password }: { username: string; password: string }): Promise<any> => {
+  const login = async ({ email, senha }: { email: string; senha: string }): Promise<any> => {
     try {
-      const response = await httpInstance.post("/login", null, {
-        auth: { username, password },
-      });
+      const response = await httpInstance.post("/login", { email, senha });
       return response;
     } catch (error) {
       throw error;
