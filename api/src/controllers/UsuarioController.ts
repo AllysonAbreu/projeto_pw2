@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { IUsuarioCadastroRequest, IUsuarioLoginRequest } from "./dto/request/UsuarioRequest";
+import { IUsuarioCadastroRequest } from "./dto/request/UsuarioRequest";
 import { UsuarioService } from "../services/UsuarioService";
 import { TokenBlackListService } from "../services/TokenBlackListService";
 import { DadosAtualizados, EmailUsuario } from "../domain/Usuario";
@@ -12,8 +12,8 @@ export class UsuarioController{
 
     async login(req: Request, res: Response){
         try {
-            const { email, senha } = <IUsuarioLoginRequest>req.body;
-            const {token,response} = await usuarioService.autenticarUsuarioService({ email, senha });
+            const { email, senha } = req.body;
+            const {token,response} = await usuarioService.autenticarUsuarioService(email,senha);
             return res.status(200).set('Authorization', token).json({
                 response
             });

@@ -1,9 +1,3 @@
-
-export interface IUsuarioLoginRequest {
-    email: string;
-    senha: string;
-};
-
 export interface IUsuarioCadastroRequest {
     nome: string;
     idade: number;
