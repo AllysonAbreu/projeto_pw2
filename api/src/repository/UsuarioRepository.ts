@@ -35,6 +35,7 @@ export class UsuarioRepository {
     
     async deleteLogicoUsuario({ id }: { id: number }){
         try {
+            const dataAtualizacao = Date.now();
             return await prisma.$transaction([
                 prisma.usuario.update({
                     where: {
@@ -42,7 +43,7 @@ export class UsuarioRepository {
                     },
                     data:{
                         is_ativo: false,
-                        modificado_em: new Date(Date.now()),
+                        modificado_em: new Date(dataAtualizacao),
                     }
                 }),
             ]);
@@ -95,11 +96,12 @@ export class UsuarioRepository {
         };
     };
     
-    async buscarUsuarioByEmail({ email }: EmailUsuario) {
+    async buscarUsuarioByEmail(email:string) {
+        const emailBusca = email;
         try {
             const usuario = await prisma.usuario.findFirst({
                 where: {
-                    email,
+                    email:emailBusca,
                 },
             });
             if(usuario){
