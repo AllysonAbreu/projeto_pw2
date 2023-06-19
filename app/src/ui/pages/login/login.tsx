@@ -50,6 +50,7 @@ const Login: React.FC = () => {
 
         if(validateForm) {
             try {
+                console.log(await login(credenciaisUsuario));
                 const {id} = await login(credenciaisUsuario);
                 setGlobalUser(id);
             } catch (error:any) {
