@@ -3,6 +3,7 @@ import './menubutton.css';
 
 interface MenuButtonProps {
   buttonText: string;
+  onClick?: () => void | undefined;
 }
 
 const MenuButton: React.FC<MenuButtonProps> = ({ buttonText }) => {

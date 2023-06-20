@@ -1,6 +1,7 @@
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { useGlobalUser } from "../../../contexts/user/user.context";
+import UserContext from "../../../contexts/user/user.context";
+import { LOCAL_STORAGE_USER_KEY } from "../../../constants/localstorage/localStorage";
 
 interface IHttpMethods {
   post: (url: string, data?: any, config?: AxiosRequestConfig) => Promise<AxiosResponse<any>>;
@@ -10,9 +11,35 @@ interface IHttpMethods {
 }
 
 export function useHttp({ baseURL, headers }: { baseURL?: string; headers?: any }): IHttpMethods {
-  const instance = axios.create({ baseURL, headers });
+  const { setGlobalUser } = useContext(UserContext);
 
-  const { setGlobalUser } = useGlobalUser();
+  const instance = useMemo(() => {
+    const httpInstance = axios.create({ baseURL, headers });
+
+    httpInstance.interceptors.request.use((config) => {
+      const token = localStorage.getItem(LOCAL_STORAGE_USER_KEY); // Obtenha o token armazenado onde você o salvou (ex: localStorage)
+      const tokenLimpo = token?.replace(/"/g, '');
+      if (token) {
+        config.headers.Authorization = `Bearer ${tokenLimpo}`;
+      }
+      return config;
+    });
+
+    httpInstance.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        const status = error?.response?.status;
+        if (status === 401) {
+          setGlobalUser({
+            token: ""
+          });
+        }
+        throw error;
+      }
+    );
+
+    return httpInstance;
+  }, [baseURL, headers, setGlobalUser]);
 
   async function post(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<any>> {
     try {
@@ -22,7 +49,7 @@ export function useHttp({ baseURL, headers }: { baseURL?: string; headers?: any 
       const status = error?.response?.status;
       if (status === 401) {
         setGlobalUser({
-          id: ""
+          token: ""
         });
       }
       throw error;
@@ -37,7 +64,7 @@ export function useHttp({ baseURL, headers }: { baseURL?: string; headers?: any 
       const status = error?.response?.status;
       if (status === 401) {
         setGlobalUser({
-          id: ""
+          token: ""
         });
       }
       throw error;
@@ -52,7 +79,7 @@ export function useHttp({ baseURL, headers }: { baseURL?: string; headers?: any 
       const status = error?.response?.status;
       if (status === 401) {
         setGlobalUser({
-          id: ""
+          token: ""
         });
       }
       throw error;
@@ -67,7 +94,7 @@ export function useHttp({ baseURL, headers }: { baseURL?: string; headers?: any 
       const status = error?.response?.status;
       if (status === 401) {
         setGlobalUser({
-          id: ""
+          token: ""
         });
       }
       throw error;
@@ -81,6 +108,6 @@ export function useHttp({ baseURL, headers }: { baseURL?: string; headers?: any 
       put,
       remove,
     }),
-    []
+    [post, get, put, remove]
   );
 }

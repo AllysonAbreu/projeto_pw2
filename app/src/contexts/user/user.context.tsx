@@ -1,46 +1,49 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useState, useCallback, ReactNode } from "react";
 import { LOCAL_STORAGE_USER_KEY } from "../../constants/localstorage/localStorage";
 
-interface UserProviderProps {
-  children: React.ReactNode;
-}
-
-interface IUser {
-  id: string;
+export interface IGlobalUser {
+  token: string | null;
 }
 
 interface IUserContext {
-  user: IUser;
-  setGlobalUser: (user: IUser) => void;
+  globalUser: IGlobalUser;
+  setGlobalUser: React.Dispatch<React.SetStateAction<IGlobalUser>>;
 }
 
-const UserContext = createContext<IUserContext | undefined>(undefined);
+const DEFAULT_GLOBAL_USER = {
+  globalUser: {
+    token: "",
+  },
+  setGlobalUser: () => {},
+}
 
-const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<IUser>(() => {
-    const stringifyUser = localStorage.getItem(LOCAL_STORAGE_USER_KEY);
-    return JSON.parse(stringifyUser ?? "{}") as IUser;
+const UserContext = createContext<IUserContext>(DEFAULT_GLOBAL_USER);
+
+const UserContextProvider: React.FC<{children:ReactNode}> = ({ children }) => {
+  const [globalUser, setGlobalUser] = useState<IGlobalUser>(() => {
+    const user = localStorage.getItem(LOCAL_STORAGE_USER_KEY);
+    if (user) {
+      return JSON.parse(user);
+    }
+    return DEFAULT_GLOBAL_USER.globalUser;
   });
 
-  const setGlobalUser = useCallback((user: IUser ) => {
-    setUser(user);
+  const useSetGlobalUser = useCallback((user: React.SetStateAction<IGlobalUser>) => {
+    setGlobalUser(prevState => {
+      if (typeof user === 'function') {
+        return user(prevState);
+      }
+      return user;
+    });
     localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(user));
   }, []);
 
-  const value: IUserContext = {
-    user,
-    setGlobalUser,
-  };
+  return (
+    <UserContext.Provider value={{ globalUser, setGlobalUser:useSetGlobalUser }}>
+      {children}
+    </UserContext.Provider>
+  );
+}
 
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
-};
-
-const useGlobalUser = (): IUserContext => {
-  const context = useContext(UserContext);
-  if (!context) {
-    throw new Error("Usuário global deve ser utilizado como um provedor de usuários.");
-  }
-  return context;
-};
-
-export { UserProvider, useGlobalUser };
+export { UserContextProvider };
+export default UserContext;

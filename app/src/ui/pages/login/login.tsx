@@ -7,9 +7,10 @@ import userIcon from '../../../assets/images/user.png';
 import passwordIcon from '../../../assets/images/password.png';
 import '../../app.css';
 import { ROUTE_PATHS } from '../../../constants/routesPaths/routePaths';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useUserApi } from '../../../hooks/api/usuarios/usuarios-user-api.hooks';
-import { useGlobalUser } from '../../../contexts/user/user.context';
+import UserContext from '../../../contexts/user/user.context';
+import { userTokenIsValid } from '../../../utils/userTokenIsValid.utils';
 
 const CREDENCIAIS_INICIAIS_USUARIO_STATE = {
     email: '',
@@ -21,9 +22,8 @@ const Login: React.FC = () => {
     const [credenciaisUsuario, setCredenciaisUsuario] = useState(CREDENCIAIS_INICIAIS_USUARIO_STATE);
     const [erro, setErro] = useState('');
 
-    console.log(credenciaisUsuario)
     const { login } = useUserApi();
-    const { user, setGlobalUser } = useGlobalUser();
+    const { globalUser, setGlobalUser } = useContext(UserContext);
 
     const navigate = useNavigate();
 
@@ -50,24 +50,23 @@ const Login: React.FC = () => {
 
         if(validateForm) {
             try {
-                console.log(await login(credenciaisUsuario));
-                const {id} = await login(credenciaisUsuario);
-                setGlobalUser(id);
+                const {token} = await login(credenciaisUsuario);
+                setGlobalUser(token);
             } catch (error:any) {
                 setErro(error.message);
             }
         }
     };
 
-    useEffect(() => {
-        if(user?.id) {
-            navigate(ROUTE_PATHS.DASHBOARD);
-        }
-    }, [user, navigate]);
-    
     const handleCreateAccount = () => {
         navigate(ROUTE_PATHS.REGISTER);
     };
+
+    useEffect(() => {
+        if(userTokenIsValid(globalUser)) {
+            navigate(ROUTE_PATHS.DASHBOARD);
+        }
+    }, [globalUser, navigate]);
   
     return (
         <div className="page">

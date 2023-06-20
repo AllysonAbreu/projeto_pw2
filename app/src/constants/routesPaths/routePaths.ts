@@ -1,6 +1,6 @@
 
 export const ROUTE_PATHS = {
-    LOGIN: "/login",
+    LOGIN: "/",
     REGISTER: "/register",
     DASHBOARD: "/dashboard",
     ABOUTUS: "/aboutus",

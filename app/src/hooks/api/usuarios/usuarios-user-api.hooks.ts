@@ -1,11 +1,11 @@
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 
 import { useHttp } from "../_base/use-http.hook";
-import { useGlobalUser } from "../../../contexts/user/user.context";
+import UserContext, { IGlobalUser } from "../../../contexts/user/user.context";
 
 interface UserApi {
   login: (credentials: { email: string; senha: string }) => Promise<any>;
-  logout: () => void;
+  logout: (email:string) => void;
   register: (payload: {
     nome: string;
     idade:number;
@@ -16,9 +16,7 @@ interface UserApi {
     altura: number;
     tempo_meta: number;
   }) => Promise<any>;
-  getUserData: (
-    id:number
-  ) => Promise<any>;
+  getUserData: ( ) => Promise<any>;
   updateImage: (image: File) => Promise<any>;
   updateProfile: ( id:number,
     payload: {
@@ -34,21 +32,21 @@ interface UserApi {
 }
 
 export function useUserApi(): UserApi {
-  const {setGlobalUser} = useGlobalUser();
+  const { globalUser, setGlobalUser } = useContext(UserContext);
   const httpInstance = useHttp({ baseURL: process.env.REACT_APP_API_URL });
 
   const login = async ({ email, senha }: { email: string; senha: string }): Promise<any> => {
     try {
       const response = await httpInstance.post("/login", { email, senha });
-      return response;
+      return response.data;
     } catch (error) {
       throw error;
     }
   };
 
-  const logout = async (): Promise<void> => {
-    await httpInstance.post("/logout");
-    setGlobalUser({ id: "" });
+  const logout = async (email:string): Promise<void> => {
+    await httpInstance.post("/logout", { email });
+    setGlobalUser({ token: null });
   };
 
   const register = async (payload: {
@@ -73,25 +71,26 @@ export function useUserApi(): UserApi {
     };
     try {
       const response = await httpInstance.post("/register/user", payloadMapped);
-      return response;
+      return response.data;
     } catch (error) {
       throw error;
     }
   };
 
-  const getUserData = async (id:number): Promise<any> => {
+  const getUserData = async (): Promise<any> => {
     try {
-      const { data } = await httpInstance.get(`/usuarios/${id}`);
+      const token = globalUser;
+      const {data} = await httpInstance.get(`/usuarios/${token}`);
       return {
-        id: data?.id,
-        nome: data?.nome,
-        idade: data?.idade,
-        email: data?.email,
-        altura: data?.altura,
-        tempo_meta: data?.tempo_meta,
-        is_ativo: data?.is_ativo,
-        criado_em: data?.criado_em,
-        modificado_em: data?.modificado_em,
+        id: data.usuario?.id,
+        nome: data.usuario?.nome,
+        idade: data.usuario?.idade,
+        email: data.usuario?.email,
+        altura: data.usuario?.altura,
+        tempo_meta: data.usuario?.tempo_meta,
+        is_ativo: data.usuario?.is_ativo,
+        criado_em: data.usuario?.criado_em,
+        modificado_em: data.usuario?.modificado_em,
       };
     } catch (error) {
       throw error;
