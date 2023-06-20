@@ -6,7 +6,7 @@ export function toResponseBuscaById(Usuario: Usuario) {
         id: Usuario.id,
         nome: Usuario.nome,
         idade: Usuario.idade,
-        email: Usuario.idade,
+        email: Usuario.email,
         altura: Usuario.altura,
         tempo_meta: Usuario.tempo_meta,
         is_ativo: Usuario.is_ativo,

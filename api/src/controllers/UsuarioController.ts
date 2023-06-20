@@ -4,6 +4,7 @@ import { UsuarioService } from "../services/UsuarioService";
 import { TokenBlackListService } from "../services/TokenBlackListService";
 import { DadosAtualizados, EmailUsuario } from "../domain/Usuario";
 import { SplitToken } from "../utils/splitToken";
+import { DecodeToken } from "../utils/decodeToken";
 
 const usuarioService = new UsuarioService();
 const tokenService = new TokenBlackListService();
@@ -15,7 +16,7 @@ export class UsuarioController{
             const { email, senha } = req.body;
             const {token,response} = await usuarioService.autenticarUsuarioService(email,senha);
             return res.status(200).set('Authorization', token).json({
-                response
+                token
             });
         } catch (error:any) {
             return res.status(400).json({
@@ -77,7 +78,8 @@ export class UsuarioController{
 
     async buscarUsuarioById(req: Request, res: Response) {
         try { 
-            const { id } = req.params;
+            const { token } = req.params;
+            const id = DecodeToken.decodeToken(token);
             const response = await usuarioService.buscarUsuarioPorId(Number(id));
             return res.status(200).json({ usuario: response })
         } catch (error: any) {

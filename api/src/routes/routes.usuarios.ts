@@ -160,7 +160,7 @@ routesUsuarios.post('/login', controller.login);
 routesUsuarios.get('/logout', verificarToken, controller.logout);
 /**
  * @swagger
- * /usuarios/{id}:
+ * /usuarios/{token}:
  *   get:
  *     summary: Retorna um usuário pelo ID.
  *     tags:
@@ -169,11 +169,11 @@ routesUsuarios.get('/logout', verificarToken, controller.logout);
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
- *         description: ID do usuário.
+ *         name: token
+ *         description: Token para autenticação do usuário.
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       '200':
  *         description: Usuário retornado com sucesso.
@@ -188,7 +188,7 @@ routesUsuarios.get('/logout', verificarToken, controller.logout);
  *       '404':
  *         description: Usuário não encontrado.
  */
-routesUsuarios.get('/usuarios/:id', verificarToken, controller.buscarUsuarioById);
+routesUsuarios.get('/usuarios/:token', verificarToken, controller.buscarUsuarioById);
 /**
  * @swagger
  * /usuarios/{id}:
