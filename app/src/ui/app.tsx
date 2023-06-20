@@ -7,6 +7,7 @@ import Login from "./pages/login/login";
 import Signup from './pages/signup/signup';
 import AboutPage from './pages/about/about';
 import DashboardPage from './pages/dashboard/dashboard';
+import EditProfile from "./pages/profile/profile";
 
 
 function App() {
@@ -27,6 +28,12 @@ function App() {
             path={ROUTE_PATHS.DASHBOARD}
             element={
               <PrivateRoute element={<DashboardPage />} />
+            }
+          />
+          <Route
+            path={ROUTE_PATHS.PROFILE}
+            element={
+              <PrivateRoute element={<EditProfile />} />
             }
           />
           <Route 
