@@ -1,34 +1,33 @@
 import { useContext, useMemo } from "react";
 
 import { useHttp } from "../_base/use-http.hook";
-import UserContext, { IGlobalUser } from "../../../contexts/user/user.context";
+import UserContext from "../../../contexts/user/user.context";
 
 interface UserApi {
   login: (credentials: { email: string; senha: string }) => Promise<any>;
-  logout: (email:string) => void;
+  logout: () => void;
   register: (payload: {
     nome: string;
-    idade:number;
+    idade: string;
     email: string;
     senha: string;
-    peso: number;
-    peso_meta: number;
-    altura: number;
-    tempo_meta: number;
+    peso: string;
+    peso_meta: string;
+    altura: string;
+    tempo_meta: string;
   }) => Promise<any>;
   getUserData: ( ) => Promise<any>;
   updateImage: (image: File) => Promise<any>;
   updateProfile: ( id:number,
     payload: {
     nome: string;
-    idade:number;
-    email: string;
+    idade:string;
     senha: string;
-    peso: number;
-    peso_meta: number;
-    altura: number;
-    tempo_meta: number;
+    email: string;
+    altura: string;
+    tempo_meta: string;
   }) => Promise<any>;
+  removeUser: (id:number) => Promise<any>;
 }
 
 export function useUserApi(): UserApi {
@@ -44,34 +43,32 @@ export function useUserApi(): UserApi {
     }
   };
 
-  const logout = async (email:string): Promise<void> => {
-    await httpInstance.post("/logout", { email });
+  const logout = async (): Promise<void> => {
+    await httpInstance.get("/logout");
     setGlobalUser({ token: null });
   };
 
   const register = async (payload: {
     nome: string;
-    idade:number;
+    idade:string;
     email: string;
     senha: string;
-    peso: number;
-    peso_meta: number;
-    altura: number;
-    tempo_meta: number;
+    peso: string;
+    peso_meta: string;
+    altura: string;
+    tempo_meta: string;
   }): Promise<any> => {
     const payloadMapped = {
-        nome: payload.nome,
-        idade: payload.idade,
-        email: payload.email,
-        senha: payload.senha,
-        peso: payload.peso,
-        peso_meta: payload.peso_meta,
-        altura: payload.altura,
-        tempo_meta: payload.tempo_meta,
+        ...payload,
+        peso: parseFloat(payload.peso),
+        peso_meta: parseFloat(payload.peso_meta),
+        altura: parseFloat(payload.altura),
+        tempo_meta: parseInt(payload.tempo_meta),
+        idade: parseInt(payload.idade),
     };
     try {
       const response = await httpInstance.post("/register/user", payloadMapped);
-      return response.data;
+      return response;
     } catch (error) {
       throw error;
     }
@@ -79,13 +76,14 @@ export function useUserApi(): UserApi {
 
   const getUserData = async (): Promise<any> => {
     try {
-      const token = globalUser;
+      const token = globalUser.token;
       const {data} = await httpInstance.get(`/usuarios/${token}`);
       return {
         id: data.usuario?.id,
         nome: data.usuario?.nome,
         idade: data.usuario?.idade,
         email: data.usuario?.email,
+        senha: data.usuario?.senha,
         altura: data.usuario?.altura,
         tempo_meta: data.usuario?.tempo_meta,
         is_ativo: data.usuario?.is_ativo,
@@ -114,23 +112,17 @@ export function useUserApi(): UserApi {
 
   const updateProfile = async (id:number, payload: {
     nome: string;
-    idade:number;
+    idade:string;
     email: string;
     senha: string;
-    peso: number;
-    peso_meta: number;
-    altura: number;
-    tempo_meta: number;
+    altura: string;
+    tempo_meta: string;
   }): Promise<any> => {
     const payloadMapped = {
-        nome: payload.nome,
-        idade: payload.idade,
-        email: payload.email,
-        senha: payload.senha,
-        peso: payload.peso,
-        peso_meta: payload.peso_meta,
-        altura: payload.altura,
-        tempo_meta: payload.tempo_meta,
+        ...payload,
+        idade: parseInt(payload.idade),
+        tempo_meta: parseInt(payload.tempo_meta),
+        altura: parseFloat(payload.altura),
     };
     try {
       const response = await httpInstance.put(`/usuarios/${id}`, payloadMapped);

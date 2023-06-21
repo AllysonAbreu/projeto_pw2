@@ -8,16 +8,17 @@ import { useNavigate } from 'react-router-dom';
 const SidebarMenu: React.FC<any> = (props) => {
 
   const { logout } = useUserApi();
-
-  const handleLogout = (email:string) => {
-    logout(email);
-  };
-
+  
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate(ROUTE_PATHS.LOGIN);
+  };
 
   const handleEditProfile = () => {
     navigate(ROUTE_PATHS.PROFILE);
-};
+  };
 
   return (
     <div className="sidebar-menu">
@@ -25,8 +26,8 @@ const SidebarMenu: React.FC<any> = (props) => {
       <MenuButton buttonText="Resumo de progresso" />
       <MenuButton buttonText="Registro de alimentação" />
       <MenuButton buttonText="Registro de exercícios" />
-      <a href="/editprofile"><MenuButton buttonText="Editar perfil" onClick={handleEditProfile} /></a>
-      <MenuButton buttonText="Logout" onClick={() => handleLogout(props.dados.email)}/>
+      <MenuButton buttonText="Editar perfil" onClick={() => handleEditProfile()} />
+      <MenuButton buttonText="Logout" onClick={() => handleLogout()}/>
     </div>
   );
 }

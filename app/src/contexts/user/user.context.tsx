@@ -1,4 +1,5 @@
 import React, { createContext, useState, useCallback, ReactNode } from "react";
+import { useNavigate } from 'react-router-dom';
 import { LOCAL_STORAGE_USER_KEY } from "../../constants/localstorage/localStorage";
 
 export interface IGlobalUser {
@@ -20,6 +21,7 @@ const DEFAULT_GLOBAL_USER = {
 const UserContext = createContext<IUserContext>(DEFAULT_GLOBAL_USER);
 
 const UserContextProvider: React.FC<{children:ReactNode}> = ({ children }) => {
+  const navigate = useNavigate();
   const [globalUser, setGlobalUser] = useState<IGlobalUser>(() => {
     const user = localStorage.getItem(LOCAL_STORAGE_USER_KEY);
     if (user) {
@@ -28,14 +30,15 @@ const UserContextProvider: React.FC<{children:ReactNode}> = ({ children }) => {
     return DEFAULT_GLOBAL_USER.globalUser;
   });
 
-  const useSetGlobalUser = useCallback((user: React.SetStateAction<IGlobalUser>) => {
+  const useSetGlobalUser = useCallback((user: IGlobalUser | ((prevState: IGlobalUser) => IGlobalUser)) => {
     setGlobalUser(prevState => {
       if (typeof user === 'function') {
         return user(prevState);
       }
       return user;
     });
-    localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(user));
+
+    localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify({token: user}));
   }, []);
 
   return (

@@ -11,16 +11,15 @@ interface IHttpMethods {
 }
 
 export function useHttp({ baseURL, headers }: { baseURL?: string; headers?: any }): IHttpMethods {
-  const { setGlobalUser } = useContext(UserContext);
+  const { globalUser,setGlobalUser } = useContext(UserContext);
 
   const instance = useMemo(() => {
     const httpInstance = axios.create({ baseURL, headers });
 
     httpInstance.interceptors.request.use((config) => {
-      const token = localStorage.getItem(LOCAL_STORAGE_USER_KEY); // Obtenha o token armazenado onde você o salvou (ex: localStorage)
-      const tokenLimpo = token?.replace(/"/g, '');
+      const token = globalUser.token;
       if (token) {
-        config.headers.Authorization = `Bearer ${tokenLimpo}`;
+        config.headers.Authorization = `Bearer ${token}`;
       }
       return config;
     });

@@ -3,12 +3,12 @@ import './menubutton.css';
 
 interface MenuButtonProps {
   buttonText: string;
-  onClick?: () => void | undefined;
+  onClick?: () => void;
 }
 
-const MenuButton: React.FC<MenuButtonProps> = ({ buttonText }) => {
+const MenuButton: React.FC<MenuButtonProps> = ({ buttonText, onClick }) => {
   return (
-    <button className="menu-button">
+    <button className="menu-button" onClick={onClick}>
       <span className="button-text">{buttonText}</span>
     </button>
   );

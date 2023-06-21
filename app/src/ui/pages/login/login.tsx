@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import InputField from '../../components/InputField/inputfield';
 import Button from '../../components/Button/button';
 
@@ -35,7 +35,7 @@ const Login: React.FC = () => {
         setCredenciaisUsuario({...credenciaisUsuario, [name]: value});
     };
 
-    const handleLogin = async (event:any) => {
+    const handleLogin = async (event:React.FormEvent) => {
         event.preventDefault();
 
         const inputCredenciaisUsuario = Object.entries(credenciaisUsuario);
