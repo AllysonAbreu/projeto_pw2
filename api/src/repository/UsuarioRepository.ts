@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-import { AtualizarUsuario, EmailUsuario } from '../domain/Usuario';
+import { AtualizarUsuario } from '../domain/Usuario';
 import { IUsuarioCadastroRequest } from '../controllers/dto/request/UsuarioRequest';
 import { toResponseNovoUsuario } from '../mappers/usuarios_mappers/UpdateUsuarioMapper';
-import { toResponseBuscaById } from '../mappers/usuarios_mappers/UsuarioBuscaByIdMapper';
+import { toResponseBusca } from '../mappers/usuarios_mappers/UsuarioBuscaByIdMapper';
 import { toResponseCadastro } from '../mappers/usuarios_mappers/UsuarioCadastroMapper';
 
 const prisma = new PrismaClient();
@@ -89,7 +89,7 @@ export class UsuarioRepository {
                 },
               });
             if(usuario){
-                return toResponseBuscaById(usuario); 
+                return toResponseBusca(usuario); 
             };
         } catch (error:any) {
           throw new Error(`Erro ao buscar usuário no banco de dados: ${error.message}`);  
@@ -105,7 +105,7 @@ export class UsuarioRepository {
                 },
             });
             if(usuario){
-                return usuario;
+                return toResponseBusca(usuario);
             };
         } catch (error:any) {
             throw new Error(`Erro ao buscar usuário no banco de dados: ${error.message}`);
