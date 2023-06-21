@@ -73,6 +73,9 @@ export class UsuarioService{
         if (!user) {
             throw new Error('Usuário não cadastrado.');
         };
+        if(!user.is_ativo){
+            throw new Error('Usuário inativo.');
+        };
         const token = sign({ email }, process.env.CHAVE_JWT!, {
             expiresIn: '1d',
             algorithm: 'HS256',
