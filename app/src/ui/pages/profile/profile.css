@@ -29,3 +29,9 @@
   .button {
     margin-top: 10px;
   }
+
+  .loader-user{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }

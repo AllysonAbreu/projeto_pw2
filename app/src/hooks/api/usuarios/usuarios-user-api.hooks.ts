@@ -45,7 +45,10 @@ export function useUserApi(): UserApi {
 
   const logout = async (): Promise<void> => {
     await httpInstance.get("/logout");
-    setGlobalUser({ token: null });
+    setGlobalUser({    
+      id: null,
+      token: "",
+    });
   };
 
   const register = async (payload: {

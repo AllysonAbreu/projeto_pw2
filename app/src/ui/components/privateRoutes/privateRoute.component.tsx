@@ -9,7 +9,7 @@ interface PrivateRouteProps {
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ element }) => {
   const {globalUser} = useContext(UserContext);
-  const isAuthenticated = !!globalUser;
+  const isAuthenticated = !!globalUser.id;
 
   return isAuthenticated ? (
     <>

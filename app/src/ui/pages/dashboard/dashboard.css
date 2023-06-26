@@ -36,4 +36,10 @@
   .button-div > :last-child {
     margin-bottom: 0;
   }
+
+  .loader-user{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   

@@ -50,8 +50,9 @@ const Login: React.FC = () => {
 
         if(validateForm) {
             try {
-                const {token} = await login(credenciaisUsuario);
-                setGlobalUser(token);
+                const response = await login(credenciaisUsuario);
+                console.log(`reponse: ${response}`)
+                setGlobalUser(response);
             } catch (error:any) {
                 setErro(error.message);
             }

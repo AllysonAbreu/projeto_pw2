@@ -8,6 +8,7 @@ import InputField from '../../components/InputField/inputfield';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Button/button';
 import { ROUTE_PATHS } from '../../../constants/routesPaths/routePaths';
+import Loader from '../../components/Loader/loader';
 
 const DADOS_USUARIO = {
     id: "",
@@ -24,8 +25,8 @@ const EditProfile: React.FC = () => {
     const [dadosUsuario, setDadosUsuario] = useState(DADOS_USUARIO);
     const [novosDadosUsuario, setNovosDadosUsuario] = useState(DADOS_USUARIO);
     const [isDadosUpdated, setIsDadosUpdated] = useState(false);
+    const [userIsLoading, setUserIsLoading] = useState(false);
     const [erro, setErro] = useState('');
-    console.log(dadosUsuario)
 
     const { globalUser } = useContext(UserContext);
     const { getUserData, updateProfile, removeUser, logout } = useUserApi();
@@ -38,34 +39,46 @@ const EditProfile: React.FC = () => {
           setErro('');
       };
       setNovosDadosUsuario({...novosDadosUsuario, [name]: value});
-      console.log(novosDadosUsuario);
     };
-  
+
     const handleUpdadteUser = async (event:React.FormEvent) => {
       event.preventDefault();
-  
-      const inputCredenciaisRegistro = Object.entries(novosDadosUsuario);
+      
+      const novosDados = {
+        id: novosDadosUsuario.id ? novosDadosUsuario.id : dadosUsuario.id,
+        nome: novosDadosUsuario.nome ? novosDadosUsuario.nome : dadosUsuario.nome,
+        idade: novosDadosUsuario.idade ? novosDadosUsuario.idade : dadosUsuario.idade,
+        email: novosDadosUsuario.email ? novosDadosUsuario.email : dadosUsuario.email,
+        senha: novosDadosUsuario.senha ? novosDadosUsuario.senha : dadosUsuario.senha,
+        altura: novosDadosUsuario.altura ? novosDadosUsuario.altura : dadosUsuario.altura,
+        tempo_meta: novosDadosUsuario.tempo_meta ? novosDadosUsuario.tempo_meta : dadosUsuario.tempo_meta,
+      };
+
+      const inputCredenciaisRegistro = Object.entries(novosDados);
       const validateForm = inputCredenciaisRegistro.every(([_, value]) => value);
   
       if(validateForm) {
           try {
-              const id = parseInt(novosDadosUsuario.id);
-              await updateProfile(id, novosDadosUsuario);
-              setIsDadosUpdated(true)
+              await updateProfile(
+                parseInt(dadosUsuario.id),
+                novosDados
+              );
+              setIsDadosUpdated(!isDadosUpdated)
           } catch (error:any) {
               setErro(error.message);
           }
       };
     };
-
-    const fetchUserData = async () => {
-        try {
-          const response = await getUserData();
-          setDadosUsuario(response);
-        } catch (error) {}
-      };
     
-      useEffect(() => {
+    useEffect(() => {
+      const fetchUserData = async () => {
+          try {
+            setUserIsLoading(true);
+            const response = await getUserData();
+            setDadosUsuario(response);
+          } catch (error) {}
+          setUserIsLoading(false);
+        };
         fetchUserData();
       }, [globalUser, isDadosUpdated]);
 
@@ -84,6 +97,11 @@ const EditProfile: React.FC = () => {
       <Navbar username={dadosUsuario.nome !== '' ? dadosUsuario.nome : 'Nome usuário'}/>
       <Header />
       <div className="profile-text">Perfil</div>
+      {userIsLoading && (
+          <div className="loader-user">
+            <Loader/>
+          </div>
+      )}
       <div className="input-container">
       <form className= "form-singup" onSubmit={handleUpdadteUser}>
       <div className="input-row">
@@ -93,7 +111,7 @@ const EditProfile: React.FC = () => {
               type='text'
               placeholder="nome"
               name='nome'
-              value={dadosUsuario.nome}
+              value={novosDadosUsuario.nome}
               onChange={handleInputChange}
             />
           </div>
@@ -103,7 +121,7 @@ const EditProfile: React.FC = () => {
               type='email'
               placeholder="user@provedor.com"
               name='email'
-              value={dadosUsuario.email}
+              value={novosDadosUsuario.email}
               onChange={handleInputChange}
             />
           </div>
@@ -113,7 +131,7 @@ const EditProfile: React.FC = () => {
               type='password'
               placeholder="sua@senha"
               name='senha'
-              value={dadosUsuario.senha}
+              value={novosDadosUsuario.senha}
               onChange={handleInputChange}
             />
           </div>
@@ -126,7 +144,7 @@ const EditProfile: React.FC = () => {
               type='number'
               placeholder="10"
               name='tempo_meta'
-              value={dadosUsuario.tempo_meta}
+              value={novosDadosUsuario.tempo_meta}
               onChange={handleInputChange}
             />
           </div>
@@ -137,7 +155,7 @@ const EditProfile: React.FC = () => {
               type='number'
               placeholder="1.73"
               name='altura'
-              value={dadosUsuario.altura}
+              value={novosDadosUsuario.altura}
               onChange={handleInputChange}
             />
           </div>
@@ -147,7 +165,7 @@ const EditProfile: React.FC = () => {
               type='number'
               placeholder="30"
               name='idade'
-              value={dadosUsuario.idade}
+              value={novosDadosUsuario.idade}
               onChange={handleInputChange}
             />
           </div>

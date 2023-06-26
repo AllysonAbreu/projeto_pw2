@@ -8,6 +8,7 @@ import CustomButton from '../../components/CustomButton/custombutton';
 import './dashboard.css'
 import { useUserApi } from '../../../hooks/api/usuarios/usuarios-user-api.hooks';
 import UserContext from '../../../contexts/user/user.context';
+import Loader from '../../components/Loader/loader';
 
 const DADOS_USUARIO = {
   id: 0,
@@ -24,19 +25,21 @@ const DADOS_USUARIO = {
 const DashboardPage = () => {
 
   const [dadosUsuario, setDadosUsuario] = useState(DADOS_USUARIO);
+  const [userIsLoading, setUserIsLoading] = useState(false);
   const [erro, setErro] = useState('');
 
   const { globalUser } = useContext(UserContext);
   const { getUserData } = useUserApi();
 
-  const fetchUserData = async () => {
-    try {
-      const response = await getUserData();
-      setDadosUsuario(response);
-    } catch (error) {}
-  };
-
   useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        setUserIsLoading(true);
+        const response = await getUserData();
+        setDadosUsuario(response);
+      } catch (error) {}
+      setUserIsLoading(false);
+    };
     fetchUserData();
   }, [globalUser]);
 
@@ -51,12 +54,17 @@ const DashboardPage = () => {
       </div>
       <div className="button-div">
         <div className='button-div-row1'>
-        <CustomButton text="Nutricionistas"/>
-        <CustomButton text="Academias" />
+          <CustomButton text="Nutricionistas"/>
+          <CustomButton text="Academias" />
         </div>
+          {userIsLoading && (
+            <div className="loader-user">
+              <Loader/>
+            </div>
+          )}
         <div className='button-div-row2'>
-        <CustomButton text="Playlists" />
-        <CustomButton text="Personal" />
+          <CustomButton text="Playlists" />
+          <CustomButton text="Personal" />
         </div>
       </div>
     </div>

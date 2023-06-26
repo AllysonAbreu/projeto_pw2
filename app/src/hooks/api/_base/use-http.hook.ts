@@ -1,7 +1,6 @@
 import { useContext, useMemo } from "react";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import UserContext from "../../../contexts/user/user.context";
-import { LOCAL_STORAGE_USER_KEY } from "../../../constants/localstorage/localStorage";
 
 interface IHttpMethods {
   post: (url: string, data?: any, config?: AxiosRequestConfig) => Promise<AxiosResponse<any>>;
@@ -30,7 +29,8 @@ export function useHttp({ baseURL, headers }: { baseURL?: string; headers?: any 
         const status = error?.response?.status;
         if (status === 401) {
           setGlobalUser({
-            token: ""
+            id: null,
+            token: "",
           });
         }
         throw error;
@@ -48,7 +48,8 @@ export function useHttp({ baseURL, headers }: { baseURL?: string; headers?: any 
       const status = error?.response?.status;
       if (status === 401) {
         setGlobalUser({
-          token: ""
+          id: null,
+          token: "",
         });
       }
       throw error;
@@ -63,7 +64,8 @@ export function useHttp({ baseURL, headers }: { baseURL?: string; headers?: any 
       const status = error?.response?.status;
       if (status === 401) {
         setGlobalUser({
-          token: ""
+          id: null,
+          token: "",
         });
       }
       throw error;
@@ -78,7 +80,8 @@ export function useHttp({ baseURL, headers }: { baseURL?: string; headers?: any 
       const status = error?.response?.status;
       if (status === 401) {
         setGlobalUser({
-          token: ""
+          id: null,
+          token: "",
         });
       }
       throw error;
@@ -93,7 +96,8 @@ export function useHttp({ baseURL, headers }: { baseURL?: string; headers?: any 
       const status = error?.response?.status;
       if (status === 401) {
         setGlobalUser({
-          token: ""
+          id: null,
+          token: "",
         });
       }
       throw error;

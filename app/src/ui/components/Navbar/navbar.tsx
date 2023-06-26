@@ -5,7 +5,7 @@ import userIcon from '../../../assets/images/user.png';
 import './navbar.css';
 
 interface NavbarProps {
-  username: string | boolean;
+  username: string | boolean | null;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ username }) => {
