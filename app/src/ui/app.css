@@ -95,9 +95,30 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
   
 }
 
 .button-group button {
   margin-bottom: 10px;
+}
+
+.password-input-container {
+  position:;
+}
+
+.password-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+
+  height: 25px;
+  margin-top: 12%;
+  margin-right: 28%;
+}
+
+.password-icon:hover {
+  opacity: 0.7;
 }
