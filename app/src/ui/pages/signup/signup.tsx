@@ -167,14 +167,15 @@ const Signup: React.FC = () => {
           />
         </div>
       </form>
-      <div className="button-group">
+      
+      <div className="button-voltar">
           <Button
           buttonColor="#03045E"
           textColor="white"
           buttonText="VOLTAR"
-          width="350px"
-          height="40px"
-          fontSize="16px"
+          width="320px"
+          height="35px"
+          fontSize="14px"
           onClick={handleBackLogin}
           type='button'
           />
