@@ -113,10 +113,10 @@
   right: 10px;
   transform: translateY(-50%);
   cursor: pointer;
-
+  
   height: 25px;
-  margin-top: 12%;
-  margin-right: 28%;
+  margin-top: 6.5%;
+  margin-right: 39%;
 }
 
 .password-icon:hover {
