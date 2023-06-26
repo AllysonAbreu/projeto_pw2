@@ -14,9 +14,9 @@ export class UsuarioController{
     async login(req: Request, res: Response){
         try {
             const { email, senha } = req.body;
-            const {token,response} = await usuarioService.autenticarUsuarioService(email,senha);
+            const {id, token} = await usuarioService.autenticarUsuarioService(email,senha);
             return res.status(200).set('Authorization', token).json({
-                token
+                id, token
             });
         } catch (error:any) {
             return res.status(400).json({

@@ -81,8 +81,8 @@ export class UsuarioService{
             algorithm: 'HS256',
             subject: String(user.id),
         });
-        const response = toResponseLogin(user.id,token);
-        return {token, response};
+        const { id } = toResponseLogin(user,token);
+        return {id, token};
     };
 };
 
