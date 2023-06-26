@@ -19,7 +19,8 @@ const Button: React.FC<ButtonProps> = ({ buttonColor, textColor, buttonText, wid
     width: width || 'auto',
     height: height || 'auto',
     fontSize: fontSize || 'inherit',
-    borderRadius: '3px'
+    borderRadius: '3px',
+    cursor:'pointer'
   };
 
   return (
