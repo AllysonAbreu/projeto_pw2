@@ -12,28 +12,38 @@ import { useContext, useEffect, useState } from 'react';
 import { useUserApi } from '../../../hooks/api/usuarios/usuarios-user-api.hooks';
 import UserContext from '../../../contexts/user/user.context';
 import { userTokenIsValid } from '../../../utils/userTokenIsValid.utils';
+import { ToastifyContext } from '../../../contexts/toastify/toastify.context';
+import { TOASTIFY_STATE } from '../../../constants/toastify/toastify.constants';
 
 const CREDENCIAIS_INICIAIS_USUARIO_STATE = {
   email: '',
   senha: '',
 };
 
+const CREDENCIAIS_INICIAIS_ERRO_STATE = {
+  message: '',
+};
+
 const Login: React.FC = () => {
   const [credenciaisUsuario, setCredenciaisUsuario] = useState(
     CREDENCIAIS_INICIAIS_USUARIO_STATE
   );
-  const [erro, setErro] = useState('');
+  const [erro, setErro] = useState(
+    CREDENCIAIS_INICIAIS_ERRO_STATE
+  );
+
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const { login } = useUserApi();
   const { globalUser, setGlobalUser } = useContext(UserContext);
+  const { addToast } = useContext(ToastifyContext);
 
   const navigate = useNavigate();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     if (value) {
-      setErro('');
+      setErro((currentState) => ({ ...currentState, [name]: '' }));
     }
     setCredenciaisUsuario({ ...credenciaisUsuario, [name]: value });
   };
@@ -46,21 +56,37 @@ const Login: React.FC = () => {
 
     inputCredenciaisUsuario.forEach(([key, value]) => {
       if (!value) {
-        setErro(`O campo ${key} é obrigatório`);
-      }
+        setErro((currentState) => ({
+          ...currentState,
+          [key]: 'Campo obrigatório',
+        }));
+      };
       return value;
     });
 
-        if(validateForm) {
-            try {
-                const response = await login(credenciaisUsuario);
-                console.log(`reponse: ${response}`)
-                setGlobalUser(response);
-            } catch (error:any) {
-                setErro(error.message);
-            }
-        }
+    if(validateForm) {
+        try {
+            const response = await login(credenciaisUsuario);
+            setGlobalUser(response);
+            addToast({
+              title: 'Login realizado com sucesso!',
+              message: 'Bem vindo!',
+              type: TOASTIFY_STATE.SUCESSO,
+              duration: 3000,
+              show: true,
+            });
+        } catch (error:any) {
+          setErro(error);
+          addToast({
+            title: 'Erro ao realizar login!',
+            message: `Verifique suas credenciais e tente novamente. Erro: ${error.response.data.message}`,
+            type: TOASTIFY_STATE.ERROR,
+            duration: 10000,
+            show: true,
+          });
+        };
     };
+  };
 
   const handleCreateAccount = () => {
     navigate(ROUTE_PATHS.REGISTER);

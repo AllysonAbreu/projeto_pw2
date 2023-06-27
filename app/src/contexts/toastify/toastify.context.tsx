@@ -9,7 +9,7 @@ interface IToastifyState {
   duration: number;
 }
 
-const TOASTIFY_INITIAL_STATE: IToastifyState = {
+export const TOASTIFY_INITIAL_STATE: IToastifyState = {
   title: "",
   message: "",
   type: TOASTIFY_STATE.ERROR,

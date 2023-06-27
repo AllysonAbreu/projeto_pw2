@@ -8,6 +8,7 @@ import Signup from './pages/signup/signup';
 import AboutPage from './pages/about/about';
 import DashboardPage from './pages/dashboard/dashboard';
 import EditProfile from "./pages/profile/profile";
+import Toastify from "./components/Toastify/toastify.component";
 
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
             }
           />
         </Routes>
+        <Toastify/>
       </div>
     </>
   );

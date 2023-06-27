@@ -1,11 +1,4 @@
-.page {
-    background-color: #90E0EF;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
+ 
   .aboutcontainer {
     width: 350px;
     height: 300px;

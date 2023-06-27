@@ -1,11 +1,4 @@
-.page {
-    background-color: #90E0EF;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
+
   .signupcontainer {
     width: 900px;
     height: 400px;

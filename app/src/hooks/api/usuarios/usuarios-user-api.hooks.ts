@@ -38,9 +38,9 @@ export function useUserApi(): UserApi {
     try {
       const response = await httpInstance.post("/login", { email, senha });
       return response.data;
-    } catch (error) {
+    } catch (error:any) {
       throw error;
-    }
+    };
   };
 
   const logout = async (): Promise<void> => {
