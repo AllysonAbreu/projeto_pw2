@@ -21,8 +21,8 @@ export class RegistroPesoController {
 
     async registrarPeso(req: Request, res: Response) {
         try {
-            const { id, peso, peso_meta } = req.body;
-            const response = await  service.registrarNovoPeso(Number(id), peso, peso_meta );
+            const { id, peso } = req.body;
+            const response = await  service.registrarNovoPeso(Number(id), peso );
             return res.status(201)
                 .json({ message:`Peso registrado com sucesso.`,
                         registro: response });

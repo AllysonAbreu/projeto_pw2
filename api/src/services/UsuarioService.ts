@@ -67,11 +67,11 @@ export class UsuarioService{
         const user = await repository.buscarUsuarioByEmail(email);
         const senhaAtual = user ? user.senha : '';
         const isSenha = await compare(senha, senhaAtual);
-        if (!isSenha) {
-            throw new Error('Senha está incorreta.');
-        };
         if (!user) {
             throw new Error('Usuário não cadastrado.');
+        };
+        if (!isSenha) {
+            throw new Error('Senha está incorreta.');
         };
         if(!user.is_ativo){
             throw new Error('Usuário inativo.');

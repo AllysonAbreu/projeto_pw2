@@ -10,6 +10,7 @@ export function toResponseLogin(usuario:Usuario, token:string) {
         usuario.email,
         usuario.altura,
         usuario.tempo_meta,
+        usuario.peso_meta,
         usuario.criado_em,
         usuario.modificado_em, 
         token);
