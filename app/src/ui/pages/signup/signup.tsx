@@ -155,20 +155,12 @@ const Signup: React.FC = () => {
             />
           </div>
         </div>
-        <div className="button">
-          <Button
-            buttonColor="#03045E"
-            textColor="white"
-            buttonText="CRIAR CONTA"
-            width="320px"
-            height="35px"
-            fontSize="14px"
-            type='submit'
-          />
-        </div>
+        
       </form>
       
-      <div className="button-voltar">
+      <div className="button-container">
+      
+        <div className="button-voltar">
           <Button
           buttonColor="#03045E"
           textColor="white"
@@ -180,6 +172,19 @@ const Signup: React.FC = () => {
           type='button'
           />
         </div>
+        <div className="button">
+          <Button
+            buttonColor="#03045E"
+            textColor="white"
+            buttonText="CRIAR CONTA"
+            width="320px"
+            height="35px"
+            fontSize="14px"
+            type='submit'
+          />
+        </div>
+      </div>
+      
       </div>
     </div>
   );

@@ -87,6 +87,7 @@ const Login: React.FC = () => {
           <span className="space"> </span>
           <span className="blue-text">PAF</span>
         </div>
+
         <form className="form-group" onSubmit={handleLogin}>
           <span className="gray-text">Usuário</span>
           <InputField
@@ -97,6 +98,7 @@ const Login: React.FC = () => {
             value={credenciaisUsuario.email}
             onChange={handleInputChange}
           />
+
           <span className="gray-text">Senha</span>
           <div className="password-input-container">
             <InputField
@@ -113,6 +115,7 @@ const Login: React.FC = () => {
               onClick={toggleMostrarSenha}
             />
           </div>
+
           <Button
             buttonColor="#03045E"
             textColor="white"
