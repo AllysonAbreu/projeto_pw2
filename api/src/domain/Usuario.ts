@@ -8,6 +8,7 @@ export class Usuario {
     senha: string;
     altura: Decimal;
     tempo_meta: number;
+    peso_meta: Decimal;
     is_ativo: boolean;
     criado_em: Date;
     modificado_em: Date;
@@ -20,6 +21,7 @@ export class Usuario {
       senha: string,
       altura: Decimal,
       tempo_meta: number,
+      peso_meta: Decimal,
       is_ativo: boolean,
       criado_em: Date,
       modificado_em: Date
@@ -31,6 +33,7 @@ export class Usuario {
       this.senha = senha;
       this.altura = altura;
       this.tempo_meta = tempo_meta;
+      this.peso_meta = peso_meta,
       this.is_ativo = is_ativo;
       this.criado_em = criado_em;
       this.modificado_em = modificado_em;
@@ -62,14 +65,16 @@ export class Usuario {
     senha: string;
     altura: number;
     tempo_meta: number;
+    peso_meta: number;
 
-    constructor(nome: string, idade: number, email: string, senha: string, altura: number, tempo_meta: number){
+    constructor(nome: string, idade: number, email: string, senha: string, altura: number, tempo_meta: number, peso_meta:number){
       this.nome = nome;
       this.idade = idade;
       this.email = email;
       this.senha = senha;
       this.altura = altura;
       this.tempo_meta = tempo_meta;
+      this.peso_meta = peso_meta;
     };
   };
   

@@ -92,8 +92,8 @@ export class UsuarioController{
     async atualizarUsuario(req: Request, res: Response) {
         try {
             const { id } = req.params;
-            const { nome, idade, email, senha, altura, tempo_meta } = <DadosAtualizados>req.body;
-            const response = await usuarioService.atualizarUsuario(Number(id), { nome, idade, email, senha, altura, tempo_meta });
+            const { nome, idade, email, senha, altura, tempo_meta, peso_meta } = <DadosAtualizados>req.body;
+            const response = await usuarioService.atualizarUsuario(Number(id), { nome, idade, email, senha, altura, tempo_meta, peso_meta });
             return res.status(200).json({ message: "Usuário atualizado", usuario: response });
         } catch (error: any) {
             return res.status(400).json({

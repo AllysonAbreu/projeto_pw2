@@ -22,6 +22,7 @@ export class UsuarioRepository {
                         email: dados.email,
                         senha: dados.senha,
                         altura: dados.altura,
+                        peso_meta: dados.peso_meta,
                         tempo_meta: dados.tempo_meta,
                         modificado_em: new Date(Date.now()),
                     },
@@ -63,10 +64,10 @@ export class UsuarioRepository {
                         senha: await senhaHash,
                         altura,
                         tempo_meta,
+                        peso_meta,
                         registros_peso: {
                             create: {
                                 peso,
-                                peso_meta,
                             },
                         },
                     },
