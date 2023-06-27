@@ -5,18 +5,18 @@ const repository = new RegistroPesoRepository();
 
 export class RegistroPesoService{
 
-    async atualizarPeso(id:number, { peso, peso_meta }: IAtualizarRegistroPesoRequest) {
+    async atualizarPeso(id:number, { peso }: IAtualizarRegistroPesoRequest) {
         try {
-            return await  repository.atualizarRegistro(id, {peso, peso_meta });
+            return await  repository.atualizarRegistro(id, {peso });
         } catch (error:any) {
             throw new Error(`Registro com id ${id} não encontrado.\nErro: ${error.message}.`);
         };
     };
 
-    async registrarNovoPeso(id:number, peso:number, peso_meta:number) {
+    async registrarNovoPeso(id:number, peso:number) {
         try {
-            if(peso !== undefined && peso !== null && peso_meta !== undefined && peso_meta !== null){
-                return await  repository.registrarPeso(id, peso, peso_meta );
+            if(peso !== undefined && peso !== null){
+                return await  repository.registrarPeso(id, peso);
             } else {
                 throw new Error("Erro ao registrar peso. Peso e peso meta não podem ser nulos.");
             };

@@ -88,9 +88,6 @@ const controller = new RegistroPesoController();
  *              peso:
  *                  type: number
  *                  description: Peso do usuário.
- *              peso_meta:
- *                  type: number
- *                  description: Meta de peso do usuário.
  */
 
 /**

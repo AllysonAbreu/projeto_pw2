@@ -58,14 +58,13 @@ export class RegistroPesoRepository {
         };
     };
     
-    async registrarPeso(id:number, peso:number, peso_meta:number ) {
+    async registrarPeso(id:number, peso:number ) {
         try {
             const [registroPeso] = await prisma.$transaction([
                 prisma.registroPeso.create({        
                     data: {
                         usuario_id: id,
-                        peso,
-                        peso_meta
+                        peso
                     },
                 }),
             ]);
@@ -75,14 +74,10 @@ export class RegistroPesoRepository {
         };
     };
     
-    async atualizarRegistro(id:number, { peso, peso_meta }:IAtualizarRegistroPesoRequest) {
+    async atualizarRegistro(id:number, { peso }:IAtualizarRegistroPesoRequest) {
         try {
             if (peso === undefined || peso === null) {
                 const dados = await this.atualizarPropriedade({ id, propriedade: 'peso', valor: peso });
-                return toResponseRegistroPeso(dados);
-            };
-            if (peso_meta === undefined || peso_meta === null) {
-                const dados = await this.atualizarPropriedade({ id, propriedade: 'peso_meta', valor: peso_meta });
                 return toResponseRegistroPeso(dados);
             };
         } catch (error: any) {
