@@ -14,14 +14,11 @@ import UserContext from '../../../contexts/user/user.context';
 import { userTokenIsValid } from '../../../utils/userTokenIsValid.utils';
 import { ToastifyContext } from '../../../contexts/toastify/toastify.context';
 import { TOASTIFY_STATE } from '../../../constants/toastify/toastify.constants';
+import { CREDENCIAIS_INICIAIS_ERRO_STATE } from '../../../constants/initialError/initialError';
 
 const CREDENCIAIS_INICIAIS_USUARIO_STATE = {
   email: '',
   senha: '',
-};
-
-const CREDENCIAIS_INICIAIS_ERRO_STATE = {
-  message: '',
 };
 
 const Login: React.FC = () => {
@@ -44,13 +41,12 @@ const Login: React.FC = () => {
     const { name, value } = event.target;
     if (value) {
       setErro((currentState) => ({ ...currentState, [name]: '' }));
-    }
+    };
     setCredenciaisUsuario({ ...credenciaisUsuario, [name]: value });
   };
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
-
     const inputCredenciaisUsuario = Object.entries(credenciaisUsuario);
     const validateForm = inputCredenciaisUsuario.every(([_, value]) => value);
 
@@ -65,26 +61,26 @@ const Login: React.FC = () => {
     });
 
     if(validateForm) {
-        try {
-            const response = await login(credenciaisUsuario);
-            setGlobalUser(response);
-            addToast({
-              title: 'Login realizado com sucesso!',
-              message: 'Bem vindo!',
-              type: TOASTIFY_STATE.SUCESSO,
-              duration: 3000,
-              show: true,
-            });
-        } catch (error:any) {
-          setErro(error);
-          addToast({
-            title: 'Erro ao realizar login!',
-            message: `Verifique suas credenciais e tente novamente. Erro: ${error.response.data.message}`,
-            type: TOASTIFY_STATE.ERROR,
-            duration: 10000,
-            show: true,
-          });
-        };
+      try {
+        const response = await login(credenciaisUsuario);
+        setGlobalUser(response);
+        addToast({
+          title: 'Login realizado com sucesso!',
+          message: 'Bem vindo!',
+          type: TOASTIFY_STATE.SUCESSO,
+          duration: 4000,
+          show: true,
+        });
+      } catch (error:any) {
+        setErro(error.response.data.message);
+        addToast({
+          title: 'Erro ao realizar login!',
+          message: `Verifique suas credenciais e tente novamente. Erro: ${erro}`,
+          type: TOASTIFY_STATE.ERROR,
+          duration: 10000,
+          show: true,
+        });
+      };
     };
   };
 

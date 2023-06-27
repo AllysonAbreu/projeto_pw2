@@ -44,11 +44,15 @@ export function useUserApi(): UserApi {
   };
 
   const logout = async (): Promise<void> => {
-    await httpInstance.get("/logout");
-    setGlobalUser({    
-      id: null,
-      token: "",
-    });
+    try {
+      await httpInstance.get("/logout");
+      setGlobalUser({    
+        id: null,
+        token: "",
+      });
+    } catch (error:any) {
+      throw error;
+    };
   };
 
   const register = async (payload: {
@@ -72,9 +76,9 @@ export function useUserApi(): UserApi {
     try {
       const response = await httpInstance.post("/register/user", payloadMapped);
       return response;
-    } catch (error) {
+    } catch (error:any) {
       throw error;
-    }
+    };
   };
 
   const getUserData = async (): Promise<any> => {
@@ -93,9 +97,9 @@ export function useUserApi(): UserApi {
         criado_em: data.usuario?.criado_em,
         modificado_em: data.usuario?.modificado_em,
       };
-    } catch (error) {
+    } catch (error:any) {
       throw error;
-    }
+    };
   };
 
   const updateImage = async (image: File): Promise<any> => {
@@ -108,9 +112,9 @@ export function useUserApi(): UserApi {
       });
 
       return response;
-    } catch (error) {
+    } catch (error:any) {
       throw error;
-    }
+    };
   };
 
   const updateProfile = async (id:number, payload: {
@@ -130,15 +134,15 @@ export function useUserApi(): UserApi {
     try {
       const response = await httpInstance.put(`/usuarios/${id}`, payloadMapped);
       return response;
-    } catch (error) {
+    } catch (error:any) {
       throw error;
-    }
+    };
   };
 
   const removeUser = async(id:number): Promise<any> => {
     try {
       return await httpInstance.remove(`/usuarios/${id}`);
-    } catch (error) {
+    } catch (error:any) {
       throw error;
     };
   }

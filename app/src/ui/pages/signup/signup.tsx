@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InputField from '../../components/InputField/inputfield';
 import Button from '../../components/Button/button';
@@ -8,6 +8,9 @@ import logo from '../../../assets/images/logo.png';
 import './signup.css';
 import { ROUTE_PATHS } from '../../../constants/routesPaths/routePaths';
 import { useUserApi } from '../../../hooks/api/usuarios/usuarios-user-api.hooks';
+import { ToastifyContext } from '../../../contexts/toastify/toastify.context';
+import { TOASTIFY_STATE } from '../../../constants/toastify/toastify.constants';
+import { CREDENCIAIS_INICIAIS_ERRO_STATE } from '../../../constants/initialError/initialError';
 
 const CREDENCIAIS_INICIAIS_REGISTRO_USUARIO_STATE = {
   nome:'',
@@ -20,38 +23,66 @@ const CREDENCIAIS_INICIAIS_REGISTRO_USUARIO_STATE = {
   tempo_meta:'',
 };
 
-
 const Signup: React.FC = () => {
 
   const [credenciaisRegistro, setCredenciaisRegistro] = useState(CREDENCIAIS_INICIAIS_REGISTRO_USUARIO_STATE);
-  const [erro, setErro] = useState('');
+  const [erro, setErro] = useState(
+    CREDENCIAIS_INICIAIS_ERRO_STATE
+  );
 
+  const { addToast } = useContext(ToastifyContext);
+  
   const { register } = useUserApi();
 
   const navigate = useNavigate();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    if(value) {
-        setErro('');
+    if (value) {
+      setErro((currentState) => ({ ...currentState, [name]: '' }));
     };
     setCredenciaisRegistro({...credenciaisRegistro, [name]: value});
   };
 
   const handleRegister = async (event:React.FormEvent) => {
     event.preventDefault();
-
     const inputCredenciaisRegistro = Object.entries(credenciaisRegistro);
     const validateForm = inputCredenciaisRegistro.every(([_, value]) => value);
 
+    inputCredenciaisRegistro.forEach(([key, value]) => {
+      if (!value) {
+        setErro((currentState) => ({
+          ...currentState,
+          [key]: 'Campo obrigatório',
+        }));
+      };
+      return value;
+    });
+
     if(validateForm) {
-        try {
-            await register(credenciaisRegistro);
-            setCredenciaisRegistro(CREDENCIAIS_INICIAIS_REGISTRO_USUARIO_STATE)
-            navigate(ROUTE_PATHS.LOGIN);
-        } catch (error:any) {
-            setErro(error.message);
-        }
+      try {
+        await register(credenciaisRegistro);
+        setCredenciaisRegistro(CREDENCIAIS_INICIAIS_REGISTRO_USUARIO_STATE)
+        addToast({
+            title: 'Cadastro realizado com sucesso!',
+            message: 'Você já pode fazer login na aplicação.',
+            type: TOASTIFY_STATE.SUCESSO,
+            duration: 3000,
+            show: true,
+        });
+        setTimeout(() => {
+          navigate(ROUTE_PATHS.LOGIN);
+        }, 3000);
+      } catch (error:any) {
+        setErro(error.response.data.message);
+        addToast({
+          title: 'Erro ao cadastrar usuário!',
+          message: `Verifique os campos e tente novamente. Erro: ${erro}`,
+          type: TOASTIFY_STATE.ERROR,
+          duration: 10000,
+          show: true,
+        });
+      };
     };
   };
   

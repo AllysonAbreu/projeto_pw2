@@ -9,6 +9,9 @@ import './dashboard.css'
 import { useUserApi } from '../../../hooks/api/usuarios/usuarios-user-api.hooks';
 import UserContext from '../../../contexts/user/user.context';
 import Loader from '../../components/Loader/loader';
+import { CREDENCIAIS_INICIAIS_ERRO_STATE } from '../../../constants/initialError/initialError';
+import { TOASTIFY_STATE } from '../../../constants/toastify/toastify.constants';
+import { ToastifyContext } from '../../../contexts/toastify/toastify.context';
 
 const DADOS_USUARIO = {
   id: 0,
@@ -26,9 +29,12 @@ const DashboardPage = () => {
 
   const [dadosUsuario, setDadosUsuario] = useState(DADOS_USUARIO);
   const [userIsLoading, setUserIsLoading] = useState(false);
-  const [erro, setErro] = useState('');
+  const [erro, setErro] = useState(
+    CREDENCIAIS_INICIAIS_ERRO_STATE
+  );
 
   const { globalUser } = useContext(UserContext);
+  const { addToast } = useContext(ToastifyContext);
   const { getUserData } = useUserApi();
 
   useEffect(() => {
@@ -37,7 +43,16 @@ const DashboardPage = () => {
         setUserIsLoading(true);
         const response = await getUserData();
         setDadosUsuario(response);
-      } catch (error) {}
+      } catch (error:any) {
+        setErro(error.response.data.message);
+        addToast({
+          title: 'Erro ao carregar dados do usuário',
+          message: `Aguarde um pouco ou atualize a página. Erro: ${erro}`,
+          type: TOASTIFY_STATE.ERROR,
+          duration: 10000,
+          show: true,
+        });
+      };
       setUserIsLoading(false);
     };
     fetchUserData();
