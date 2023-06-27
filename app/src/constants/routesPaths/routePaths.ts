@@ -4,5 +4,6 @@ export const ROUTE_PATHS = {
     REGISTER: "/register",
     DASHBOARD: "/dashboard",
     ABOUTUS: "/aboutus",
-    PROFILE: "/editprofile"
+    PROFILE: "/editprofile",
+    WEIGHT: "/weight",
 };

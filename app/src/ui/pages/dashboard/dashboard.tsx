@@ -6,24 +6,13 @@ import SearchBar from '../../components/SearchBar/searchbar';
 import CustomButton from '../../components/CustomButton/custombutton';
 
 import './dashboard.css'
-import { useUserApi } from '../../../hooks/api/usuarios/usuarios-user-api.hooks';
+import { useUserApi } from '../../../hooks/api/usuarios/use-usuarios-api.hooks';
 import UserContext from '../../../contexts/user/user.context';
 import Loader from '../../components/Loader/loader';
 import { CREDENCIAIS_INICIAIS_ERRO_STATE } from '../../../constants/initialError/initialError';
 import { TOASTIFY_STATE } from '../../../constants/toastify/toastify.constants';
 import { ToastifyContext } from '../../../contexts/toastify/toastify.context';
-
-const DADOS_USUARIO = {
-  id: 0,
-  nome: "",
-  idade: 0,
-  email: "",
-  altura: 0,
-  tempo_meta: 0,
-  is_ativo: true,
-  criado_em: "",
-  modificado_em: "",
-};
+import { DADOS_USUARIO } from '../../../constants/initialUser/initialUser';
 
 const DashboardPage = () => {
 

@@ -3,7 +3,7 @@ import Navbar from '../../components/Navbar/navbar';
 import Header from '../../components/Header/header';
 import { useUserApi } from '../../../hooks/api/usuarios/use-usuarios-api.hooks';
 import UserContext from '../../../contexts/user/user.context';
-import './profile.css';
+import './weight.css';
 import InputField from '../../components/InputField/inputfield';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Button/button';
@@ -14,7 +14,8 @@ import { ToastifyContext } from '../../../contexts/toastify/toastify.context';
 import { TOASTIFY_STATE } from '../../../constants/toastify/toastify.constants';
 import { DADOS_USUARIO } from '../../../constants/initialUser/initialUser';
 
-const EditProfile: React.FC = () => {
+
+const WeightPage: React.FC = () => {
 
     const [dadosUsuario, setDadosUsuario] = useState(DADOS_USUARIO);
     const [novosDadosUsuario, setNovosDadosUsuario] = useState(DADOS_USUARIO);
@@ -200,19 +201,6 @@ const EditProfile: React.FC = () => {
               />
             </div>
             <div>
-              <div className="signup-gray-text">Meta de peso</div>
-              <InputField
-                type='number'
-                placeholder="75.00"
-                name='peso_meta'
-                value={novosDadosUsuario.peso_meta}
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
-
-          <div className="input-row">
-            <div>
               <div className="signup-gray-text">Idade</div>
               <InputField
                 type='number'
@@ -262,4 +250,4 @@ const EditProfile: React.FC = () => {
   );
 };
 
-export default EditProfile;
+export default WeightPage;

@@ -7,21 +7,12 @@ import Button from '../../components/Button/button';
 import logo from '../../../assets/images/logo.png';
 import './signup.css';
 import { ROUTE_PATHS } from '../../../constants/routesPaths/routePaths';
-import { useUserApi } from '../../../hooks/api/usuarios/usuarios-user-api.hooks';
+import { useUserApi } from '../../../hooks/api/usuarios/use-usuarios-api.hooks';
 import { ToastifyContext } from '../../../contexts/toastify/toastify.context';
 import { TOASTIFY_STATE } from '../../../constants/toastify/toastify.constants';
 import { CREDENCIAIS_INICIAIS_ERRO_STATE } from '../../../constants/initialError/initialError';
+import { CREDENCIAIS_INICIAIS_REGISTRO_USUARIO_STATE } from '../../../constants/initialUser/initialUser';
 
-const CREDENCIAIS_INICIAIS_REGISTRO_USUARIO_STATE = {
-  nome:'',
-  idade:'',
-  email:'',
-  senha:'',
-  peso:'',
-  peso_meta:'',
-  altura:'',
-  tempo_meta:'',
-};
 
 const Signup: React.FC = () => {
 
@@ -29,6 +20,9 @@ const Signup: React.FC = () => {
   const [erro, setErro] = useState(
     CREDENCIAIS_INICIAIS_ERRO_STATE
   );
+  console.log(`erro: ${erro.message}`)
+  console.log(`cred user: ${credenciaisRegistro.nome}`)
+
 
   const { addToast } = useContext(ToastifyContext);
   
@@ -186,11 +180,18 @@ const Signup: React.FC = () => {
             />
           </div>
         </div>
-        
+        <Button
+            buttonColor="#03045E"
+            textColor="white"
+            buttonText="CRIAR CONTA"
+            width="320px"
+            height="35px"
+            fontSize="14px"
+            type='submit'
+          />
       </form>
       
       <div className="button-container">
-      
         <div className="button-voltar">
           <Button
           buttonColor="#03045E"
@@ -201,17 +202,6 @@ const Signup: React.FC = () => {
           fontSize="14px"
           onClick={handleBackLogin}
           type='button'
-          />
-        </div>
-        <div className="button">
-          <Button
-            buttonColor="#03045E"
-            textColor="white"
-            buttonText="CRIAR CONTA"
-            width="320px"
-            height="35px"
-            fontSize="14px"
-            type='submit'
           />
         </div>
       </div>

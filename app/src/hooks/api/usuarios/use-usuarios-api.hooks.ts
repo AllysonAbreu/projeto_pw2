@@ -26,6 +26,7 @@ interface UserApi {
     email: string;
     altura: string;
     tempo_meta: string;
+    peso_meta: string;
   }) => Promise<any>;
   removeUser: (id:number) => Promise<any>;
 }
@@ -93,6 +94,7 @@ export function useUserApi(): UserApi {
         senha: data.usuario?.senha,
         altura: data.usuario?.altura,
         tempo_meta: data.usuario?.tempo_meta,
+        peso_meta: data.usuario?.peso_meta,
         is_ativo: data.usuario?.is_ativo,
         criado_em: data.usuario?.criado_em,
         modificado_em: data.usuario?.modificado_em,
@@ -124,12 +126,14 @@ export function useUserApi(): UserApi {
     senha: string;
     altura: string;
     tempo_meta: string;
+    peso_meta: string;
   }): Promise<any> => {
     const payloadMapped = {
         ...payload,
         idade: parseInt(payload.idade),
         tempo_meta: parseInt(payload.tempo_meta),
         altura: parseFloat(payload.altura),
+        peso_meta: parseFloat(payload.peso_meta)
     };
     try {
       const response = await httpInstance.put(`/usuarios/${id}`, payloadMapped);

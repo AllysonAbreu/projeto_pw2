@@ -9,7 +9,7 @@ import '../../app.css';
 
 import { ROUTE_PATHS } from '../../../constants/routesPaths/routePaths';
 import { useContext, useEffect, useState } from 'react';
-import { useUserApi } from '../../../hooks/api/usuarios/usuarios-user-api.hooks';
+import { useUserApi } from '../../../hooks/api/usuarios/use-usuarios-api.hooks';
 import UserContext from '../../../contexts/user/user.context';
 import { userTokenIsValid } from '../../../utils/userTokenIsValid.utils';
 import { ToastifyContext } from '../../../contexts/toastify/toastify.context';
@@ -112,14 +112,20 @@ const Login: React.FC = () => {
 
         <form className="form-group" onSubmit={handleLogin}>
           <span className="gray-text">Usuário</span>
-          <InputField
-            type="email"
-            placeholder="Digite seu email"
-            iconImage={userIcon}
-            name="email"
-            value={credenciaisUsuario.email}
-            onChange={handleInputChange}
-          />
+          <div className="user-input-container">
+            <InputField
+              type="email"
+              placeholder="Digite seu email"
+              name="email"
+              value={credenciaisUsuario.email}
+              onChange={handleInputChange}
+            />
+            <img
+              className="user-login-icon"
+              src={userIcon}
+              alt="User login icon"
+            />
+          </div>        
 
           <span className="gray-text">Senha</span>
           <div className="password-input-container">
