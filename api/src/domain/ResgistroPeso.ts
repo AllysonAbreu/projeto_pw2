@@ -5,7 +5,6 @@ class RegistroPeso {
   id: number;
   usuario_id: number;
   peso: Decimal;
-  peso_meta: Decimal;
   data_registro: Date;
   criado_em: Date;
   modificado_em: Date;
@@ -15,7 +14,6 @@ class RegistroPeso {
       id: number,
       usuario_id: number,
       peso: Decimal,
-      peso_meta: Decimal,
       data_registro: Date,
       criado_em: Date,
       modificado_em: Date,
@@ -24,7 +22,6 @@ class RegistroPeso {
       this.id = id;
       this.usuario_id = usuario_id;
       this.peso = peso;
-      this.peso_meta = peso_meta;
       this.data_registro = data_registro;
       this.criado_em = criado_em;
       this.modificado_em = modificado_em;

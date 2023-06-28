@@ -54,7 +54,7 @@ export class RegistroPesoRepository {
                 currentPage: page,
             };
         } catch (error: any) {
-            throw new Error(`Erro ao buscar registros de peso no banco de dados com o id: ${id}.\nError message: ${error.message}.`);
+            throw new Error(`Erro ao buscar registros de peso no banco de dados com o id: ${id}.Error message: ${error.message}.`);
         };
     };
     
