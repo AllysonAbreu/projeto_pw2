@@ -31,9 +31,6 @@ const controller = new RegistroPesoController();
  *         peso:
  *           type: number
  *           description: Peso registrado.
- *         peso_meta:
- *           type: number
- *           description: Meta de peso.
  *         criado_em:
  *           type: string
  *           format: date-time
@@ -45,7 +42,6 @@ const controller = new RegistroPesoController();
  *       required:
  *         - id
  *         - peso
- *         - peso_meta
  *         - criado_em
  *         - modificado_em
  *
