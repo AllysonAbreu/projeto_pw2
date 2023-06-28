@@ -1,2 +1,2 @@
 
-export const PAGINA_INICIAL_DEFAULT = 0;
+export const PAGINA_INICIAL_DEFAULT = 1;

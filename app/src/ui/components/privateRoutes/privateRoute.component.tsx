@@ -12,9 +12,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ element }) => {
   const isAuthenticated = !!globalUser.id;
 
   return isAuthenticated ? (
-    <>
-      <div className='private-route-container'>{element}</div>
-    </>
+      <div className='private-route-container app'>{element}</div>
   ) : (
     <Navigate to={ROUTE_PATHS.LOGIN} replace />
   );

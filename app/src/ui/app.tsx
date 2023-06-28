@@ -15,7 +15,6 @@ import WeightPage from "./pages/weight/weight";
 function App() {
 
   return (
-    <>
       <div className="app">
         <Routes>
           <Route 
@@ -53,7 +52,6 @@ function App() {
         </Routes>
         <Toastify/>
       </div>
-    </>
   );
 };
 

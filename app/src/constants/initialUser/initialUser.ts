@@ -20,3 +20,7 @@ export const CREDENCIAIS_INICIAIS_REGISTRO_USUARIO_STATE = {
     altura:'',
     tempo_meta:'',
 };
+
+export const INITIAL_WEIGHT = {
+    peso: "",
+};

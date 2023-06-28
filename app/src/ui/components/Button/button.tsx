@@ -9,9 +9,11 @@ interface ButtonProps {
   fontSize?: string;
   type: React.ButtonHTMLAttributes<HTMLButtonElement>['type'];
   onClick?: () => void;
+  className?: string;
+  disabled?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ buttonColor, textColor, buttonText, width, height, fontSize, type, onClick }) => {
+const Button: React.FC<ButtonProps> = ({ buttonColor, textColor, buttonText, width, height, fontSize, type, onClick, className, disabled }) => {
   const buttonStyle = {
     backgroundColor: buttonColor,
     color: textColor,
@@ -24,7 +26,7 @@ const Button: React.FC<ButtonProps> = ({ buttonColor, textColor, buttonText, wid
   };
 
   return (
-    <button style={buttonStyle} type={type} onClick={onClick}>
+    <button style={buttonStyle} type={type} onClick={onClick} className={className} disabled={disabled}>
       {buttonText}
     </button>
   );

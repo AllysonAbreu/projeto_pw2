@@ -6,7 +6,7 @@ export function usePagination() {
     const [page, setPage] = useState(PAGINA_INICIAL_DEFAULT);
 
     function handleBeforePage(){
-        if(page > 1) setPage(page - 1);
+        setPage(page - 1);
     };
 
     function handleNextPage(){

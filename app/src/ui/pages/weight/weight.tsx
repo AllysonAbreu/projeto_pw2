@@ -12,206 +12,170 @@ import Loader from '../../components/Loader/loader';
 import { CREDENCIAIS_INICIAIS_ERRO_STATE } from '../../../constants/initialError/initialError';
 import { ToastifyContext } from '../../../contexts/toastify/toastify.context';
 import { TOASTIFY_STATE } from '../../../constants/toastify/toastify.constants';
-import { DADOS_USUARIO } from '../../../constants/initialUser/initialUser';
+import { DADOS_USUARIO, INITIAL_WEIGHT } from '../../../constants/initialUser/initialUser';
+import { useRegistroPesoApi } from '../../../hooks/api/registroPeso/use-registroPeso-api.hooks';
+import { usePagination } from '../../../hooks/pagination/use-pagination.hook';
+import { INITIAL_CONTENT_PAGEABLE, INITIAL_CONTENT_PAGE_SIZE } from '../../../constants/initialContentPage/initialContentPage';
+import CardWeight from '../../components/CardWeight/cardWeight-component';
 
 
 const WeightPage: React.FC = () => {
 
-    const [dadosUsuario, setDadosUsuario] = useState(DADOS_USUARIO);
-    const [novosDadosUsuario, setNovosDadosUsuario] = useState(DADOS_USUARIO);
-    const [isDadosUpdated, setIsDadosUpdated] = useState(false);
-    const [userIsLoading, setUserIsLoading] = useState(false);
-    const [erro, setErro] = useState(
-      CREDENCIAIS_INICIAIS_ERRO_STATE
-    );
+  const [dadosUsuario, setDadosUsuario] = useState(DADOS_USUARIO);
+  const [isDadosUpdated, setIsDadosUpdated] = useState(false);
+  const [dataIsLoading, setDataIsLoading] = useState(false);
+  const [erro, setErro] = useState(
+    CREDENCIAIS_INICIAIS_ERRO_STATE
+  );
+  const [registroPeso, setRegistroPeso] = useState(INITIAL_WEIGHT);
+  const { page, handleBeforePage, handleNextPage } = usePagination();
+  const [pageableDados, setPageableDados] = useState(INITIAL_CONTENT_PAGEABLE);
+  const [registrosPesos,setRegistrosPesos] = useState([]);
 
-    const { globalUser } = useContext(UserContext);
-    const { addToast } = useContext(ToastifyContext);
-    const { getUserData, updateProfile, removeUser, logout } = useUserApi();
 
-    const navigate = useNavigate();
+  const { addToast } = useContext(ToastifyContext);
+  const { getUserData } = useUserApi();
+  const { register, getRegisters } = useRegistroPesoApi();
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = event.target;
-      if(value) {
-        setErro((currentState) => ({ ...currentState, [name]: '' }));
-      };
-      setNovosDadosUsuario({...novosDadosUsuario, [name]: value});
+  const navigate = useNavigate();
+
+  const handleInputRegisterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    if(value) {
+      setErro((currentState) => ({ ...currentState, [name]: '' }));
     };
+    setRegistroPeso({...registroPeso, [name]:value});
+  };
 
-    const handleUpdadteUser = async (event:React.FormEvent) => {
-      event.preventDefault();
-      
-      const novosDados = {
-        id: novosDadosUsuario.id ? novosDadosUsuario.id : dadosUsuario.id,
-        nome: novosDadosUsuario.nome ? novosDadosUsuario.nome : dadosUsuario.nome,
-        idade: novosDadosUsuario.idade ? novosDadosUsuario.idade : dadosUsuario.idade,
-        email: novosDadosUsuario.email ? novosDadosUsuario.email : dadosUsuario.email,
-        senha: novosDadosUsuario.senha ? novosDadosUsuario.senha : dadosUsuario.senha,
-        altura: novosDadosUsuario.altura ? novosDadosUsuario.altura : dadosUsuario.altura,
-        tempo_meta: novosDadosUsuario.tempo_meta ? novosDadosUsuario.tempo_meta : dadosUsuario.tempo_meta,
-        peso_meta: novosDadosUsuario.peso_meta ? novosDadosUsuario.peso_meta : dadosUsuario.peso_meta,
+  const handleRegistraInfo = async (event:React.FormEvent) => {
+    event.preventDefault();
+
+    const inputNovosDados = Object.entries(registroPeso);
+    const validateForm = inputNovosDados.every(([_, value]) => value);
+
+    inputNovosDados.forEach(([key, value]) => {
+      if (!value) {
+        setErro((currentState) => ({
+          ...currentState,
+          [key]: 'Campo obrigatório',
+        }));
       };
+      return value;
+    });
 
-      const inputCredenciaisAtualizadas = Object.entries(novosDados);
-      const validateForm = inputCredenciaisAtualizadas.every(([_, value]) => value);
-  
-      inputCredenciaisAtualizadas.forEach(([key, value]) => {
-        if (!value) {
-          setErro((currentState) => ({
-            ...currentState,
-            [key]: 'Campo obrigatório',
-          }));
-        };
-        return value;
-      });
+    if(validateForm) {
+      try {
+          await register(
+            dadosUsuario.id,
+            registroPeso.peso
+          );
+          setIsDadosUpdated(!isDadosUpdated)
+          addToast({
+            title: 'Dados inseridos com sucesso',
+            message: 'Seus dados foram inseridos com sucesso!',
+            type: TOASTIFY_STATE.SUCESSO,
+            duration: 3000,
+            show: true,
+          });
+      } catch (error:any) {
+        setErro(error.response.data.message);
+        addToast({
+          title: 'Erro ao atualizar dados!',
+          message: `Verifique suas credenciais e tente novamente. Erro: ${erro}`,
+          type: TOASTIFY_STATE.ERROR,
+          duration: 10000,
+          show: true,
+        });
+      };
+    };
+  };
 
-      if(validateForm) {
+  function mappedPageInfo(responseUser:any){
+    const id = responseUser.id;
+    const size = INITIAL_CONTENT_PAGE_SIZE;
+    return {
+      id,
+      size
+    };
+  };
+
+  function mappedPageableInfo(responsePesos:any){
+    const totalPages = responsePesos.totalPages;
+    const currentPage = responsePesos.currentPage;
+
+    return {
+      totalPages,
+      currentPage
+    };
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
         try {
-            await updateProfile(
-              parseInt(dadosUsuario.id),
-              novosDados
-            );
-            setIsDadosUpdated(!isDadosUpdated)
-            addToast({
-              title: 'Dados atualizados',
-              message: 'Seus dados foram atualizados com sucesso!',
-              type: TOASTIFY_STATE.SUCESSO,
-              duration: 3000,
-              show: true,
-            });
+          setDataIsLoading(true);
+          const responseUser = await getUserData();
+          setDadosUsuario(responseUser);
+          const {id, size} = mappedPageInfo(responseUser);
+          const responsePesos = await getRegisters(id, size);
+          setRegistrosPesos(responsePesos.registrosPeso.registrosPeso);
+          const {totalPages, currentPage} = mappedPageableInfo(responsePesos);
+          setPageableDados({totalPages, currentPage});
         } catch (error:any) {
           setErro(error.response.data.message);
           addToast({
-            title: 'Erro ao atualizar dados!',
-            message: `Verifique suas credenciais e tente novamente. Erro: ${erro}`,
+            title: 'Erro ao carregar dados do usuário',
+            message: `Aguarde um pouco ou atualize a página. Erro: ${erro}`,
             type: TOASTIFY_STATE.ERROR,
             duration: 10000,
             show: true,
           });
         };
+        setDataIsLoading(false);
       };
-    };
-    
-    useEffect(() => {
-      const fetchUserData = async () => {
-          try {
-            setUserIsLoading(true);
-            const response = await getUserData();
-            setDadosUsuario(response);
-          } catch (error:any) {
-            setErro(error.response.data.message);
-            addToast({
-              title: 'Erro ao carregar dados do usuário',
-              message: `Aguarde um pouco ou atualize a página. Erro: ${erro}`,
-              type: TOASTIFY_STATE.ERROR,
-              duration: 10000,
-              show: true,
-            });
-          };
-          setUserIsLoading(false);
-        };
-        fetchUserData();
-      }, [globalUser, isDadosUpdated]);
+      fetchData();
+    }, [page, isDadosUpdated]);
 
-    const handleBackDashboard = () => {
-      navigate(ROUTE_PATHS.DASHBOARD);
-    };
+  const handleBackDashboard = () => {
+    navigate(ROUTE_PATHS.DASHBOARD);
+  };
 
-    const handleDeleteAccount = () => {
-      removeUser(parseInt(dadosUsuario.id))
-      logout()
-      addToast({
-        title: 'Usuário removido com sucesso!',
-        message: `Dados do usuário foram removidos com sucesso!`,
-        type: TOASTIFY_STATE.SUCESSO,
-        duration: 3000,
-        show: true,
-      });
-      setTimeout(() => {
-        navigate(ROUTE_PATHS.LOGIN);
-      }, 3000);
-    };
+  function renderCards(){
+    return registrosPesos.map((registro:any, index:number) => {
+      return (
+        <CardWeight
+          key={index}
+          id={registro.id}
+          userId={dadosUsuario.id}
+          peso={registro.peso}
+          dataCriacao={registro.criado_em}
+          dataModificacao={registro.modificado_em}
+        />
+    )});
+  };
 
   return (
-      <div>
-        <Navbar username={dadosUsuario.nome !== '' ? dadosUsuario.nome : 'Nome usuário'}/>
-        <Header />
-        <div className="profile-text">Perfil</div>
-        {userIsLoading && (
-            <div className="loader-user">
-              <Loader/>
-            </div>
-        )}
-        <div className="input-container">
-        <form className= "form-singup" onSubmit={handleUpdadteUser}>
+    <div className='app'>
+      <Navbar username={dadosUsuario.nome !== '' ? dadosUsuario.nome : 'Nome usuário'}/>
+      <Header />
+      <div className="profile-text">Histórico de Registros</div>
+      {dataIsLoading && (
+          <div className="loader-user">
+            <Loader/>
+          </div>
+      )}
+      <div className='principal-content'>
+      <div className="input-container">
+        <form className= "form-singup" onSubmit={handleRegistraInfo}>
         <div className="input-row">
-            <div>
-              <div className="signup-gray-text">Nome Completo</div>
-              <InputField
-                type='text'
-                placeholder="nome"
-                name='nome'
-                value={novosDadosUsuario.nome}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div>
-              <div className="signup-gray-text">Email</div>
-              <InputField
-                type='email'
-                placeholder="user@provedor.com"
-                name='email'
-                value={novosDadosUsuario.email}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div>
-              <div className="signup-gray-text">Senha</div>
-              <InputField
-                type='password'
-                placeholder="sua@senha"
-                name='senha'
-                value={novosDadosUsuario.senha}
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
-
-          <div className="input-row">
-            <div>
-              <div className="signup-gray-text">Tempo para a meta (em meses)</div>
-              <InputField
-                type='number'
-                placeholder="10"
-                name='tempo_meta'
-                value={novosDadosUsuario.tempo_meta}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div>
-              <div className="signup-gray-text">Altura</div>
-              <InputField
-                type='number'
-                placeholder="1.73"
-                name='altura'
-                value={novosDadosUsuario.altura}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div>
-              <div className="signup-gray-text">Idade</div>
-              <InputField
-                type='number'
-                placeholder="30"
-                name='idade'
-                value={novosDadosUsuario.idade}
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
-          <div className="button">
+          <div className="signup-gray-text">Novo registro:</div>
+            <InputField
+              type='number'
+              placeholder="75.98"
+              name='peso'
+              value={registroPeso.peso}
+              onChange={handleInputRegisterChange}
+            />
+          <div className="button-save-novo-registro-peso">
             <Button
               buttonColor="#03045E"
               textColor="white"
@@ -222,30 +186,61 @@ const WeightPage: React.FC = () => {
               type='submit'
             />
           </div>
-        </form>
-        <div className="button-group">
-            <Button
-            buttonColor="#03045E"
-            textColor="white"
-            buttonText="APAGAR CONTA"
-            width="350px"
-            height="40px"
-            fontSize="16px"
-            onClick={handleDeleteAccount}
-            type='button'
-            />
-            <Button
-            buttonColor="#03045E"
-            textColor="white"
-            buttonText="VOLTAR"
-            width="350px"
-            height="40px"
-            fontSize="16px"
-            onClick={handleBackDashboard}
-            type='button'
-            />
+        </div>
+      </form>
+      <div>
+        {pageableDados && (
+          <div className='registro-peso-info'>
+            <div className="wrapper__registro-peso">
+              <div className="registro-peso__title signup-gray-text">Registros:</div>
+              <div className="registro-peso__container">
+                {renderCards()}
+              </div>
+              <div className='pagination-weight'>
+                <Button
+                  buttonColor="#03045E"
+                  className={`button__pagination-anterior disabled-${pageableDados.currentPage === 1}`}
+                  textColor="white"
+                  buttonText="Voltar"
+                  width="350px"
+                  height="40px"
+                  fontSize="16px"
+                  onClick={handleBeforePage}
+                  type='button'
+                  disabled={pageableDados.currentPage === 1}
+                />
+                <span className='numero_pagina'>{page}</span>
+                <Button
+                  buttonColor="#03045E"
+                  className={`button__pagination-proximo disabled-${page === pageableDados.totalPages}`}
+                  textColor="white"
+                  buttonText="Próximo"
+                  width="350px"
+                  height="40px"
+                  fontSize="16px"
+                  onClick={handleNextPage}
+                  type='button'
+                  disabled={page === pageableDados.totalPages}
+                />
+              </div>
+            </div>
           </div>
+        )}
       </div>
+      <div className="button-group">
+          <Button
+          buttonColor="#03045E"
+          textColor="white"
+          buttonText="VOLTAR"
+          width="350px"
+          height="40px"
+          fontSize="16px"
+          onClick={handleBackDashboard}
+          type='button'
+          />
+        </div>
+      </div>
+    </div>
   </div>
   );
 };

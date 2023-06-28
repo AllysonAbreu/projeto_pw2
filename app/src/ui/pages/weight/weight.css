@@ -1,3 +1,64 @@
+.principal-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.form-singup{
+  display: flex;
+}
+
+.input-row{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.signup-gray-text{
+  color: #03045E;
+  font-size: 16px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-save-novo-registro-peso{
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.wrapper__registro-peso{
+  margin: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5%;
+  border: 3px solid #2171ec;
+}
+
+.pagination-weight{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.numero_pagina{
+  margin: 50px;
+}
+
+.button__pagination-anterior{
+  width: 150px;
+  height: 40px;
+}
+
 .profile-text {
     font-size: 32px;
     color: #03045E;
