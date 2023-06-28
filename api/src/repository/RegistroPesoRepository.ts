@@ -23,40 +23,41 @@ export class RegistroPesoRepository {
         };
     };
     
-    async buscarRegistrosPesosByUsuarioId(id: number, page: number, pageSize: number) {
+    async buscarRegistrosPesosByUsuarioId(id: number, pageSize: number) {
         try {
-            const [registrosPesos, totalRegistros] = await Promise.all([
-                prisma.registroPeso.findMany({
-                    where: {
-                        usuario_id: id,
-                    },
-                    skip: (page - 1) * pageSize,
-                    take: pageSize,
-                }),
-                prisma.registroPeso.count({
-                    where: {
-                        usuario_id: id,
-                    },
-                }),
-            ]);
-    
-            if (registrosPesos.length === 0) {
-                throw new Error(`Não há registros de peso para o usuário com id: ${id}.`);
-            };
-    
-            const registrosPesoResponse = toResponseRegistroPesoByUserId(registrosPesos);
-            const totalPages = Math.ceil(totalRegistros / pageSize);
-    
-            return {
-                registrosPeso: registrosPesoResponse,
-                totalPages,
-                pageSize,
-                currentPage: page,
-            };
+          const [registrosPesos, totalRegistros] = await Promise.all([
+            prisma.registroPeso.findMany({
+              where: {
+                usuario_id: id,
+              },
+              take: pageSize,
+            }),
+            prisma.registroPeso.count({
+              where: {
+                usuario_id: id,
+              },
+            }),
+          ]);
+      
+          if (registrosPesos.length === 0) {
+            throw new Error(`Não há registros de peso para o usuário com id: ${id}.`);
+          }
+      
+          const registrosPesoResponse = toResponseRegistroPesoByUserId(registrosPesos);
+          const totalPages = Math.ceil(totalRegistros / pageSize);
+          const currentPage = 1;
+      
+          return {
+            registrosPeso: registrosPesoResponse,
+            totalPages,
+            pageSize,
+            currentPage,
+          };
         } catch (error: any) {
-            throw new Error(`Erro ao buscar registros de peso no banco de dados com o id: ${id}.\nError message: ${error.message}.`);
-        };
-    };
+          throw new Error(`Erro ao buscar registros de peso no banco de dados com o id: ${id}. Error message: ${error.message}.`);
+        }
+      }
+      
     
     async registrarPeso(id:number, peso:number ) {
         try {
