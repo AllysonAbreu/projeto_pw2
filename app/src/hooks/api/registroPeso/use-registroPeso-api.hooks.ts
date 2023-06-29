@@ -6,7 +6,7 @@ interface RegistroPesoApi {
   register: (idRequest:string, pesoRequest:string ) => Promise<any>;
   updateRegister: ( idRequest:string, pesoRequest:string ) => Promise<any>;
   removeRegister: (id:number) => Promise<any>;
-  getRegisters: (id:number, pageSize:number) => Promise<any>;
+  getRegisters: (id:number, page:number, pageSize:number) => Promise<any>;
 };
 
 export function useRegistroPesoApi(): RegistroPesoApi {
@@ -46,9 +46,9 @@ export function useRegistroPesoApi(): RegistroPesoApi {
     };
   };
 
-  const getRegisters = async(id:number, pageSize:number): Promise<any> => {
+  const getRegisters = async(id:number, page:number, pageSize:number): Promise<any> => {
     try {
-      const response = await httpInstance.get(`/usuario/${id}/pesos?pageSize=${pageSize}`);
+      const response = await httpInstance.get(`/usuario/${id}/pesos?page=${page}&pageSize=${pageSize}`);
       return response.data.response;
     } catch (error:any) {
       throw error;

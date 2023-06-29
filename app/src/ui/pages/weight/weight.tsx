@@ -17,6 +17,7 @@ import { useRegistroPesoApi } from '../../../hooks/api/registroPeso/use-registro
 import { usePagination } from '../../../hooks/pagination/use-pagination.hook';
 import { INITIAL_CONTENT_PAGEABLE, INITIAL_CONTENT_PAGE_SIZE } from '../../../constants/initialContentPage/initialContentPage';
 import CardWeight from '../../components/CardWeight/cardWeight-component';
+import CustomButton from '../../components/CustomButton/custombutton';
 
 
 const WeightPage: React.FC = () => {
@@ -116,7 +117,7 @@ const WeightPage: React.FC = () => {
           const responseUser = await getUserData();
           setDadosUsuario(responseUser);
           const {id, size} = mappedPageInfo(responseUser);
-          const responsePesos = await getRegisters(id, size);
+          const responsePesos = await getRegisters(id, page, size);
           setRegistrosPesos(responsePesos.registrosPeso.registrosPeso);
           const {totalPages, currentPage} = mappedPageableInfo(responsePesos);
           setPageableDados({totalPages, currentPage});
@@ -197,27 +198,17 @@ const WeightPage: React.FC = () => {
                 {renderCards()}
               </div>
               <div className='pagination-weight'>
-                <Button
-                  buttonColor="#03045E"
-                  className={`button__pagination-anterior disabled-${pageableDados.currentPage === 1}`}
-                  textColor="white"
-                  buttonText="Voltar"
-                  width="350px"
-                  height="40px"
-                  fontSize="16px"
+                <CustomButton
+                  className={`button__pagination-anterior`}
+                  text="Voltar"      
                   onClick={handleBeforePage}
                   type='button'
-                  disabled={pageableDados.currentPage === 1}
+                  disabled={page === 1}
                 />
                 <span className='numero_pagina'>{page}</span>
-                <Button
-                  buttonColor="#03045E"
-                  className={`button__pagination-proximo disabled-${page === pageableDados.totalPages}`}
-                  textColor="white"
-                  buttonText="Próximo"
-                  width="350px"
-                  height="40px"
-                  fontSize="16px"
+                <CustomButton
+                  className={`button__pagination-proximo`}
+                  text="Próximo"
                   onClick={handleNextPage}
                   type='button'
                   disabled={page === pageableDados.totalPages}

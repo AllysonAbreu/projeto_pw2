@@ -6,4 +6,5 @@ export const ROUTE_PATHS = {
     ABOUTUS: "/aboutus",
     PROFILE: "/editprofile",
     WEIGHT: "/weight",
+    UPDATE_WEIGHT: "/update-weight"
 };

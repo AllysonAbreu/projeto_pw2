@@ -10,6 +10,7 @@ import DashboardPage from './pages/dashboard/dashboard';
 import EditProfile from "./pages/profile/profile";
 import Toastify from "./components/Toastify/toastify.component";
 import WeightPage from "./pages/weight/weight";
+import UpdateCardWeight, { IUpdateWeightProps } from "./components/CardWeight/updateWeight";
 
 
 function App() {
@@ -47,6 +48,12 @@ function App() {
             path={ROUTE_PATHS.WEIGHT}
             element={
               <PrivateRoute element={<WeightPage />} />
+            }
+          />
+          <Route 
+            path={ROUTE_PATHS.UPDATE_WEIGHT}
+            element={
+              <PrivateRoute element={<UpdateCardWeight id={""} peso={""}/>} />
             }
           />
         </Routes>

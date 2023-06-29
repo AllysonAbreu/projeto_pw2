@@ -8,6 +8,10 @@ import { INITIAL_WEIGHT } from '../../../constants/initialUser/initialUser';
 import InputField from '../InputField/inputfield';
 
 import './cardWeight.css'
+import { format, parseISO } from 'date-fns';
+import UpdateCardWeight from './updateWeight';
+import { ROUTE_PATHS } from '../../../constants/routesPaths/routePaths';
+import { useNavigate } from 'react-router';
 
 interface IProps {
   id:string;
@@ -30,63 +34,8 @@ const CardWeight: React.FC<IProps> = ({
     dataCriacao,
     dataModificacao
   };
-  
-  const [erro, setErro] = useState(
-    CREDENCIAIS_INICIAIS_ERRO_STATE
-  );
-  const [novosRegistrosPeso, setNovosRegistrosPeso] = useState(INITIAL_WEIGHT);
   const { addToast } = useContext(ToastifyContext);
   const { removeRegister, updateRegister } = useRegistroPesoApi();
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    if(value) {
-      setErro((currentState) => ({ ...currentState, [name]: '' }));
-    };
-    setNovosRegistrosPeso({...novosRegistrosPeso, [name]: value});
-  };
-
-  const handleUpdateRegistro = async (event:React.FormEvent) => {
-    event.preventDefault();
-    
-    const inputCredenciaisAtualizadas = Object.entries(novosRegistrosPeso);
-    const validateForm = inputCredenciaisAtualizadas.every(([_, value]) => value);
-
-    inputCredenciaisAtualizadas.forEach(([key, value]) => {
-      if (!value) {
-        setErro((currentState) => ({
-          ...currentState,
-          [key]: 'Campo obrigatório',
-        }));
-      };
-      return value;
-    });
-
-    if(validateForm) {
-      try {
-          await updateRegister(
-            userId,
-            novosRegistrosPeso.peso
-          );
-          addToast({
-            title: 'Registro atualizado',
-            message: `Registro atualizado com sucesso!`,
-            type: TOASTIFY_STATE.SUCESSO,
-            duration: 3000,
-            show: true,
-        });
-      } catch (error:any) {
-        setErro(error.response.data.message);
-        addToast({
-          title: 'Erro ao atualizar dados',
-          message: `Verifique suas credenciais e tente novamente. Erro: ${erro}`,
-          type: TOASTIFY_STATE.ERROR,
-          duration: 10000,
-          show: true,
-        });
-      };
-    };
-  };
 
   const handleDeleteRegistro = () => {
     removeRegister(parseInt(id))
@@ -99,46 +48,30 @@ const CardWeight: React.FC<IProps> = ({
     });
   };
 
+  const navigate = useNavigate();
+
+  const handleUpdateRegistro = () => {
+    navigate(ROUTE_PATHS.UPDATE_WEIGHT, {state: {cardData}});
+  };
+
   function renderUpdateRegistro() {
     return (
-        <>
-            <div className="input-container">
-                <form className= "form-singup" onSubmit={handleUpdateRegistro}>
-                    <div className="input-row">
-                        <div className="input-row">
-                            <div className="signup-gray-text">Novo registro peso</div>
-                                <InputField
-                                    type='number'
-                                    placeholder="75.00"
-                                    name='peso'
-                                    value={novosRegistrosPeso.peso}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                    </div>
-                    <div className="button">
-                        <Button
-                        buttonColor="#03045E"
-                        textColor="white"
-                        buttonText="Atualizar"
-                        width="320px"
-                        height="35px"
-                        fontSize="14px"
-                        type='submit'
-                        />
-                    </div>
-                </form>
-            </div>
-        </>
+        <UpdateCardWeight
+         id={cardData.id}
+         peso={cardData.peso} 
+        />
     );
   };
+
+  const formattedDataCriacao = format(parseISO(dataCriacao), 'dd/MM/yyyy HH:mm'); // Converter e formatar a data de criação
+  const formattedDataModificacao = format(parseISO(dataModificacao), 'dd/MM/yyyy HH:mm'); // Converter e formatar a data de modificação
 
   return (
     <div className="card-weight" >
         <div className='text-content_weight'>
             <span className='card-weight__id'>{`Massa: ${cardData.peso}kg`}</span>
-            <span className='card-weight__data_criacao'>{`Data inserção: ${cardData.dataCriacao}`}</span>
-            <span className='card-weight__data_modificacao'>{`Data modificação${cardData.dataModificacao}`}</span>
+            <span className='card-weight__data_criacao'>{`Data inserção: ${formattedDataCriacao}`}</span>
+            <span className='card-weight__data_modificacao'>{`Data modificação: ${formattedDataModificacao}`}</span>
         </div>
         <div className="button-group__card-weight">
             <div className='button-group__card-weight_update'>
@@ -149,7 +82,7 @@ const CardWeight: React.FC<IProps> = ({
                 width="350px"
                 height="40px"
                 fontSize="16px"
-                onClick={renderUpdateRegistro}
+                onClick={handleUpdateRegistro}
                 type='button'
                 />
             </div>
