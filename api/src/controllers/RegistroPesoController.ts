@@ -9,8 +9,8 @@ export class RegistroPesoController {
     async buscarTodosPesosRegistradosByUsuario(req: Request, res: Response) {
         try {
             const { id } = req.params;
-            const { pageSize } = req.query;
-            const response = await  service.buscarRegistrosPesosByUsuario(Number(id), Number(pageSize));
+            const { page, pageSize } = req.query;
+            const response = await  service.buscarRegistrosPesosByUsuario(Number(id), Number(page), Number(pageSize));
             return res.status(200).json({ response });
         } catch (error: any) {
             return res.status(400).json({

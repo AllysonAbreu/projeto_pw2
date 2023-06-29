@@ -25,9 +25,9 @@ export class RegistroPesoService{
         };
     };
 
-    async buscarRegistrosPesosByUsuario(id: number, pageSize: number) {
+    async buscarRegistrosPesosByUsuario(id: number, page:number, pageSize: number) {
         try {
-            return await  repository.buscarRegistrosPesosByUsuarioId(id, pageSize);
+            return await  repository.buscarRegistrosPesosByUsuarioId(id, page, pageSize);
         } catch (error:any) {
           throw new Error(`Erro ao buscar registros de peso do usuário com id ${id}.\nErro: ${error.message}.`);  
         };
