@@ -23,7 +23,7 @@ export class RegistroPesoRepository {
         };
     };
     
-    async buscarRegistrosPesosByUsuarioId(id: number, pageSize: number) {
+    async buscarRegistrosPesosByUsuarioId(id: number, page:number, pageSize: number) {
         try {
           const [registrosPesos, totalRegistros] = await Promise.all([
             prisma.registroPeso.findMany({
@@ -31,6 +31,7 @@ export class RegistroPesoRepository {
                 usuario_id: id,
               },
               take: pageSize,
+              skip: (Number(page) - 1) * Number(pageSize), // Calcular o número de registros a serem pulados
             }),
             prisma.registroPeso.count({
               where: {
@@ -45,7 +46,7 @@ export class RegistroPesoRepository {
       
           const registrosPesoResponse = toResponseRegistroPesoByUserId(registrosPesos);
           const totalPages = Math.ceil(totalRegistros / pageSize);
-          const currentPage = 1;
+          const currentPage = page;
       
           return {
             registrosPeso: registrosPesoResponse,

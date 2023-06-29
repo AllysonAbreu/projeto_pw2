@@ -12,11 +12,15 @@ const controller = new RegistroPesoController();
  *     BuscarPesoRequest:
  *       type: object
  *       properties:
+ *         page:
+ *          type: integer
+ *          description: Página atual.
  *         pageSize:
  *           type: integer
  *           description: Tamanho da página.
  *       required:
  *         - pageSize
+ *         - page
  *
  *     RegistroPesoBuscaByUserIdResponse:
  *       type: object
@@ -99,9 +103,15 @@ const controller = new RegistroPesoController();
  *         schema:
  *           type: integer
  *       - in: query
+ *         name: page
+ *         description: Página atual.
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: query
  *         name: pageSize
  *         description: Tamanho da página para paginação.
- *         required: false
+ *         required: true
  *         schema:
  *           type: integer
  *     responses:
