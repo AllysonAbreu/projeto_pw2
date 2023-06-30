@@ -76,12 +76,10 @@ export class RegistroPesoRepository {
         };
     };
     
-    async atualizarRegistro(id:number, { peso }:IAtualizarRegistroPesoRequest) {
+    async atualizarRegistro(id:number, peso:number) {
         try {
-            if (peso === undefined || peso === null) {
-                const dados = await this.atualizarPropriedade({ id, propriedade: 'peso', valor: peso });
-                return toResponseRegistroPeso(dados);
-            };
+          const dados = await this.atualizarPropriedade({ id, propriedade: 'peso', valor: peso });
+          return toResponseRegistroPeso(dados);
         } catch (error: any) {
             throw new Error(`Erro ao atualizar registro de peso: ${error.message}`);
         };

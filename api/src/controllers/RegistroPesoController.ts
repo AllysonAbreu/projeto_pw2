@@ -62,8 +62,8 @@ export class RegistroPesoController {
     async atualizarRegistro(req: Request, res: Response) {
         try {
             const { id } = req.params;
-            const dados = <IAtualizarRegistroPesoRequest>req.body;
-            const response = await  service.atualizarPeso( Number(id), { ...dados });
+            const {peso} = <IAtualizarRegistroPesoRequest>req.body;
+            const response = await  service.atualizarPeso( Number(id), Number(peso));
             return res.status(200).json({ message: `Registro atualizado.`, registro: response });
         } catch (error: any) {
             return res.status(400).json({

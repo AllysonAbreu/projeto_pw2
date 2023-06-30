@@ -5,9 +5,12 @@ const repository = new RegistroPesoRepository();
 
 export class RegistroPesoService{
 
-    async atualizarPeso(id:number, { peso }: IAtualizarRegistroPesoRequest) {
+    async atualizarPeso(id:number, peso:number) {
         try {
-            return await  repository.atualizarRegistro(id, {peso });
+            if (peso !== undefined && peso !== null) {
+                return await repository.atualizarRegistro(id, peso);
+            };
+            throw new Error(`Registro de peso não pode ser nulo ou indefinido.`);
         } catch (error:any) {
             throw new Error(`Registro com id ${id} não encontrado.\nErro: ${error.message}.`);
         };
