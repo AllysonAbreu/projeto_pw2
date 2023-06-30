@@ -1,0 +1,92 @@
+.toastify {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+  
+    z-index: 9999;
+  
+    display: flex;
+    flex-direction: column;
+  
+    justify-content: center;
+  
+    max-width: 40%;
+  
+    animation: fade-in 180ms;
+  
+    overflow: hidden;
+  
+    background: var(--error);
+  
+    padding: 4px;
+  
+    border-radius: 8px;
+  }
+  
+  .toastify-header {
+    padding: 0 0.6rem 0.2rem 0.6rem;
+  
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  
+    color: var(--white);
+  }
+  
+  .toastify-error {
+    background: var(--error);
+  }
+  
+  .toastify-success {
+    background: var(--success);
+  }
+  
+  .toastify-message {
+    background: var(--white);
+    padding: 0.5rem 0.8rem;
+  
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+  
+  .toastify-message-error {
+    color: var(--error);
+  }
+  
+  .toastify-message-success {
+    color: var(--success);
+  }
+  
+  .toastify-close-icon {
+    cursor: pointer;
+  
+    background: transparent;
+    border: none;
+    font-size: 1rem;
+    color: var(--white);
+  
+    display: flex;
+  }
+  
+  .toastify-close-icon:hover {
+    filter: brightness(0.9);
+  }
+  
+  @media (max-width: 768px) {
+    .toastify {
+      top: auto;
+      left: 1rem;
+      bottom: 5rem;
+      max-width: 100%;
+    }
+  }
+  
+  @keyframes fade-in {
+    from {
+      transform: translateX(100%);
+    }
+  
+    to {
+      transform: translateX(0);
+    }
+  }

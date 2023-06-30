@@ -1,0 +1,77 @@
+.registro-peso__container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    padding: 20px;
+}
+
+.card-weight{
+    margin: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 5%;
+    border: 3px solid #2171ec;
+}
+
+.text-content_weight{
+    display: flex;
+    flex-direction: column;
+    font-size: 20px;
+    color: #03045E;
+    text-align: center;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.button-group__card-weight{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.button-group__card-weight_update{
+    padding: 5px;
+}
+
+.button-group__card-weight_remove{
+    padding: 5px;
+}
+
+.update-registro__container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    padding: 20px;
+}
+.input-container__update_registro{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    padding: 20px;
+}
+
+.form-update_registro{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    padding: 20px;
+}
+
+.input-row__update-registro{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    padding: 20px;
+}
