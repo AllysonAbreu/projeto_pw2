@@ -50,7 +50,7 @@ const DashboardPage = () => {
 
   return (
     <div>
-      <Navbar username={dadosUsuario.nome !== '' ? dadosUsuario.nome : 'Nome usuário'}/>
+      <Navbar username={dadosUsuario.nome} userId={dadosUsuario.imagem} />
       <Header />
       <SidebarMenu dados={dadosUsuario} />
       <div className="searchbar">

@@ -8,6 +8,7 @@ export const DADOS_USUARIO = {
     altura: "",
     peso_meta: "",
     tempo_meta: "",
+    imagem: "",
 };
 
 export const CREDENCIAIS_INICIAIS_REGISTRO_USUARIO_STATE = {
@@ -19,6 +20,7 @@ export const CREDENCIAIS_INICIAIS_REGISTRO_USUARIO_STATE = {
     peso_meta:'',
     altura:'',
     tempo_meta:'',
+    imagem: null as File | null,
 };
 
 export const INITIAL_WEIGHT = {

@@ -53,7 +53,7 @@ function App() {
           <Route 
             path={ROUTE_PATHS.UPDATE_WEIGHT}
             element={
-              <PrivateRoute element={<UpdateCardWeight />} />
+              <PrivateRoute element={<UpdateCardWeight  />} />
             }
           />
         </Routes>

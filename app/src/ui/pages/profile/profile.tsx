@@ -134,7 +134,7 @@ const EditProfile: React.FC = () => {
 
   return (
       <div>
-        <Navbar username={dadosUsuario.nome !== '' ? dadosUsuario.nome : 'Nome usuário'}/>
+        <Navbar username={dadosUsuario.nome} userId={dadosUsuario.imagem}/>
         <Header />
         <div className="profile-text">Perfil</div>
         {userIsLoading && (

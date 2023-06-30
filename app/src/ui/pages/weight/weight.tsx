@@ -156,7 +156,7 @@ const WeightPage: React.FC = () => {
 
   return (
     <div className='app'>
-      <Navbar username={dadosUsuario.nome !== '' ? dadosUsuario.nome : 'Nome usuário'}/>
+      <Navbar username={dadosUsuario.nome} userId={dadosUsuario.imagem} />
       <Header />
       <div className="profile-text">Histórico de Registros</div>
       {dataIsLoading && (

@@ -17,7 +17,8 @@ interface UserApi {
     tempo_meta: string;
   }) => Promise<any>;
   getUserData: ( ) => Promise<any>;
-  updateImage: (image: File) => Promise<any>;
+  updateImage: (id:string, nome:string, image: File | null) => Promise<any>;
+  getUserImage: (id:string) => Promise<any>;
   updateProfile: ( id:number,
     payload: {
     nome: string;
@@ -76,7 +77,7 @@ export function useUserApi(): UserApi {
     };
     try {
       const response = await httpInstance.post("/register/user", payloadMapped);
-      return response;
+      return response.data;
     } catch (error:any) {
       throw error;
     };
@@ -98,27 +99,51 @@ export function useUserApi(): UserApi {
         is_ativo: data.usuario?.is_ativo,
         criado_em: data.usuario?.criado_em,
         modificado_em: data.usuario?.modificado_em,
+        imagem: data.usuario?.imagem,
       };
     } catch (error:any) {
       throw error;
     };
   };
 
-  const updateImage = async (image: File): Promise<any> => {
+  
+  const getUserImage = async (id:string): Promise<any> => {
     try {
-      const formData = new FormData();
-      formData.append("foto", image);
-
-      const response = await httpInstance.post("/usuarios/alterarFoto", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      return response;
+      const {data} = await httpInstance.get(`/usuario/${id}/midia`);
+      return {
+        id: data.usuario?.id,
+        usuario_id: data.usuario?.usuario_id,
+        nome_arquivo: data.usuario?.nome_arquivo,
+        tipo_midia: data.usuario?.tipo_midia,
+        conteudo: data.usuario?.conteudo,
+        data_criacao: data.usuario?.data_criacao,
+        data_atualizacao: data.usuario?.data_atualizacao,
+      };
     } catch (error:any) {
       throw error;
     };
   };
 
+  const updateImage = async (id: string, nome: string, image: File | null): Promise<any> => {
+    try {
+      if (image) {
+        const formData = new FormData();
+        formData.append("usuario_id", id);
+        formData.append("nome_arquivo", nome);
+        formData.append("conteudo", image);
+        const response = await httpInstance.post("/midias", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        return response.data;
+      } else {
+        throw new Error("Não há arquivo de imagem.");
+      }
+    } catch (error: any) {
+      throw error;
+    }
+  };
+  
+  
   const updateProfile = async (id:number, payload: {
     nome: string;
     idade:string;
@@ -157,6 +182,7 @@ export function useUserApi(): UserApi {
       logout,
       register,
       getUserData,
+      getUserImage,
       updateImage,
       updateProfile,
       removeUser,

@@ -9,7 +9,7 @@ const username = "Fábio Bala"
 const About: React.FC = () => {
   return (
     <div>
-      <Navbar username={username} />
+      <Navbar username={username}  userId=''/>
       <div className="page">
         <div className="aboutcontainer">
           <h2>Sobre o App</h2>
