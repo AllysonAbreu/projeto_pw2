@@ -8,21 +8,19 @@ import { INITIAL_WEIGHT } from '../../../constants/initialUser/initialUser';
 import InputField from '../InputField/inputfield';
 
 import './cardWeight.css'
+import { useLocation, useNavigate } from 'react-router';
+import { ROUTE_PATHS } from '../../../constants/routesPaths/routePaths';
 
-export interface IUpdateWeightProps {
-  id:string;
-  peso: string;
-};
 
-const UpdateCardWeight: React.FC<IUpdateWeightProps> = ({
-    id,
-    peso
-}) => {
+const UpdateCardWeight: React.FC = () => {
+  const navigate = useNavigate();
 
-  const cardData = {
-    id,
-    peso,
-  };
+  const location = useLocation();
+  const cardData = location.state?.cardData; // Verificando se o state está definido
+  console.log(cardData)
+  const id = cardData?.id;
+  console.log(id)
+  const peso = cardData?.peso;
   
   const [erro, setErro] = useState(
     CREDENCIAIS_INICIAIS_ERRO_STATE
@@ -58,7 +56,7 @@ const UpdateCardWeight: React.FC<IUpdateWeightProps> = ({
     if(validateForm) {
       try {
           await updateRegister(
-            cardData.id,
+            id,
             novosRegistrosPeso.peso
           );
           addToast({
@@ -81,22 +79,24 @@ const UpdateCardWeight: React.FC<IUpdateWeightProps> = ({
     };
   };
 
+  const handleBack = () => {
+    navigate(ROUTE_PATHS.WEIGHT);
+  };
+
   return (
     <div className='update-registro__container'>
-        <div className="input-container">
-            <form className= "form-singup" onSubmit={handleUpdateRegistro}>
-                <div className="input-row">
-                    <div className="input-row">
+        <div className="input-container__update_registro">
+            <form className= "form-update_registro" onSubmit={handleUpdateRegistro}>
+                    <div className="input-row__update-registro">
                         <div className="signup-gray-text">Novo registro peso</div>
                             <InputField
                                 type='number'
-                                placeholder={cardData.peso}
+                                defaultValue={peso}
                                 name='peso'
                                 value={novosRegistrosPeso.peso}
                                 onChange={handleInputChange}
                             />
                         </div>
-                </div>
                 <div className="button">
                     <Button
                     buttonColor="#03045E"
@@ -110,7 +110,21 @@ const UpdateCardWeight: React.FC<IUpdateWeightProps> = ({
                 </div>
             </form>
         </div>
+        <div className="button-container">
+        <div className="button-voltar">
+          <Button
+          buttonColor="#03045E"
+          textColor="white"
+          buttonText="VOLTAR"
+          width="320px"
+          height="35px"
+          fontSize="14px"
+          onClick={handleBack}
+          type='button'
+          />
+        </div>
     </div>
+  </div>
   );
 };
 

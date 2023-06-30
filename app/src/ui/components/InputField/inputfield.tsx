@@ -2,7 +2,8 @@ import React from 'react';
 
 interface InputFieldProps {
   type?: string;
-  placeholder: string;
+  placeholder?: string;
+  defaultValue?: string | number;
   value: string;
   name: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -19,6 +20,7 @@ const InputField: React.FC<InputFieldProps> = ({
   name,
   onChange,
   iconImage,
+  defaultValue,
   width,
   height
 }) => {
@@ -38,7 +40,7 @@ const InputField: React.FC<InputFieldProps> = ({
   };
 
   return (
-    <input type={type} placeholder={placeholder} name={name} value={value} onChange={onChange} style={inputStyle} />
+    <input type={type} defaultValue={defaultValue} placeholder={placeholder} name={name} value={value} onChange={onChange} style={inputStyle} />
   );
 }
 

@@ -54,15 +54,6 @@ const CardWeight: React.FC<IProps> = ({
     navigate(ROUTE_PATHS.UPDATE_WEIGHT, {state: {cardData}});
   };
 
-  function renderUpdateRegistro() {
-    return (
-        <UpdateCardWeight
-         id={cardData.id}
-         peso={cardData.peso} 
-        />
-    );
-  };
-
   const formattedDataCriacao = format(parseISO(dataCriacao), 'dd/MM/yyyy HH:mm'); // Converter e formatar a data de criação
   const formattedDataModificacao = format(parseISO(dataModificacao), 'dd/MM/yyyy HH:mm'); // Converter e formatar a data de modificação
 
