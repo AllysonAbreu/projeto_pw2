@@ -10,13 +10,12 @@ export class MidiaRepository {
     
     async criarMidia(midia:CriarMidiaRequest) {
         try {
-            const conteudoBuffer: Buffer = await MidiaUtils.convertToBuffer(midia.conteudo);
             const [novaMidia] = await prisma.$transaction([
                 prisma.midia.create({
                     data: {
                         usuario_id: midia.usuario_id,
                         nome_arquivo: midia.nome_arquivo,
-                        conteudo: conteudoBuffer,
+                        conteudo: midia.conteudo,
                     },
                 }),
             ]);
@@ -114,6 +113,22 @@ export class MidiaRepository {
             };
         } catch (error: any) {
             throw new Error(`Não foi possível listar mídias no banco de dados. Erro: ${error.message}.`);
+        };
+    };
+
+    async buscarMidia(usuario_id: number) {
+        try{
+            const [midia] = await prisma.midia.findMany({
+                where: {
+                    usuario_id,
+                }
+            });
+            if (midia !== null) {
+                const conteudoFille = MidiaUtils.convertToContentType(midia.conteudo);
+                return MidiaMappers.buscaMidiaToResponse(midia, conteudoFille);
+            };
+        } catch (error: any) {
+            throw new Error(`Não foi possível obter mídia no banco de dados. Erro: ${error.message}.`);
         };
     };
 };

@@ -50,4 +50,12 @@ export class MidiaService {
             throw new Error(`Não foi possível listar mídias. Erro: ${error.message}.`);
         };
     };
+
+    async buscarMidia(id: number) {
+        try {
+            return await repository.buscarMidia(id);
+        } catch (error: any) {
+            throw new Error(`Não foi possível buscar mídia. Erro: ${error.message}.`);
+        };
+    };
 };

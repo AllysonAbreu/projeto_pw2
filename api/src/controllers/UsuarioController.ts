@@ -53,7 +53,7 @@ export class UsuarioController{
             const response = await usuarioService.cadastrarUsuario({ nome, idade, email, senha, peso, peso_meta, altura, tempo_meta });
             return res.status(201)
                 .json({ message:`Usuário cadastrado com sucesso.`,
-                        usuario: response });
+                        response });
         } catch (error: any) {
             return res.status(400).json({
                 message: error.message,
