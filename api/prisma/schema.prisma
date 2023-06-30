@@ -14,7 +14,6 @@ model RegistroPeso {
   id              Int      @id @default(autoincrement())
   usuario_id      Int
   peso            Decimal  @db.Decimal(5, 2)
-  peso_meta       Decimal
   criado_em       DateTime @default(now())
   modificado_em   DateTime @default(now())
   usuario         Usuario  @relation(fields: [usuario_id], references: [id])
@@ -43,6 +42,7 @@ model Usuario {
   senha           String
   altura          Decimal
   tempo_meta      Int
+  peso_meta       Decimal
   is_ativo        Boolean          @default(true)
   criado_em       DateTime         @default(now())
   modificado_em   DateTime         @default(now())

@@ -13,14 +13,14 @@ const controller = new RegistroPesoController();
  *       type: object
  *       properties:
  *         page:
- *           type: integer
- *           description: Número da página.
+ *          type: integer
+ *          description: Página atual.
  *         pageSize:
  *           type: integer
  *           description: Tamanho da página.
  *       required:
- *         - page
  *         - pageSize
+ *         - page
  *
  *     RegistroPesoBuscaByUserIdResponse:
  *       type: object
@@ -31,9 +31,6 @@ const controller = new RegistroPesoController();
  *         peso:
  *           type: number
  *           description: Peso registrado.
- *         peso_meta:
- *           type: number
- *           description: Meta de peso.
  *         criado_em:
  *           type: string
  *           format: date-time
@@ -45,7 +42,6 @@ const controller = new RegistroPesoController();
  *       required:
  *         - id
  *         - peso
- *         - peso_meta
  *         - criado_em
  *         - modificado_em
  *
@@ -88,9 +84,6 @@ const controller = new RegistroPesoController();
  *              peso:
  *                  type: number
  *                  description: Peso do usuário.
- *              peso_meta:
- *                  type: number
- *                  description: Meta de peso do usuário.
  */
 
 /**
@@ -111,14 +104,14 @@ const controller = new RegistroPesoController();
  *           type: integer
  *       - in: query
  *         name: page
- *         description: Número da página para paginação.
- *         required: false
+ *         description: Página atual.
+ *         required: true
  *         schema:
  *           type: integer
  *       - in: query
  *         name: pageSize
  *         description: Tamanho da página para paginação.
- *         required: false
+ *         required: true
  *         schema:
  *           type: integer
  *     responses:

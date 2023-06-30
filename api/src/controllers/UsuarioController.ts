@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
-import { IUsuarioCadastroRequest, IUsuarioLoginRequest } from "./dto/request/UsuarioRequest";
+import { IUsuarioCadastroRequest } from "./dto/request/UsuarioRequest";
 import { UsuarioService } from "../services/UsuarioService";
 import { TokenBlackListService } from "../services/TokenBlackListService";
 import { DadosAtualizados, EmailUsuario } from "../domain/Usuario";
 import { SplitToken } from "../utils/splitToken";
+import { DecodeToken } from "../utils/decodeToken";
 
 const usuarioService = new UsuarioService();
 const tokenService = new TokenBlackListService();
@@ -12,10 +13,10 @@ export class UsuarioController{
 
     async login(req: Request, res: Response){
         try {
-            const { email, senha } = <IUsuarioLoginRequest>req.body;
-            const {token,response} = await usuarioService.autenticarUsuarioService({ email, senha });
+            const { email, senha } = req.body;
+            const {id, token} = await usuarioService.autenticarUsuarioService(email,senha);
             return res.status(200).set('Authorization', token).json({
-                response
+                id, token
             });
         } catch (error:any) {
             return res.status(400).json({
@@ -77,7 +78,8 @@ export class UsuarioController{
 
     async buscarUsuarioById(req: Request, res: Response) {
         try { 
-            const { id } = req.params;
+            const { token } = req.params;
+            const id = DecodeToken.decodeToken(token);
             const response = await usuarioService.buscarUsuarioPorId(Number(id));
             return res.status(200).json({ usuario: response })
         } catch (error: any) {
@@ -90,8 +92,8 @@ export class UsuarioController{
     async atualizarUsuario(req: Request, res: Response) {
         try {
             const { id } = req.params;
-            const { nome, idade, email, senha, altura, tempo_meta } = <DadosAtualizados>req.body;
-            const response = await usuarioService.atualizarUsuario(Number(id), { nome, idade, email, senha, altura, tempo_meta });
+            const { nome, idade, email, senha, altura, tempo_meta, peso_meta } = <DadosAtualizados>req.body;
+            const response = await usuarioService.atualizarUsuario(Number(id), { nome, idade, email, senha, altura, tempo_meta, peso_meta });
             return res.status(200).json({ message: "Usuário atualizado", usuario: response });
         } catch (error: any) {
             return res.status(400).json({

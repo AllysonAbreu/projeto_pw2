@@ -23,49 +23,50 @@ export class RegistroPesoRepository {
         };
     };
     
-    async buscarRegistrosPesosByUsuarioId(id: number, page: number, pageSize: number) {
+    async buscarRegistrosPesosByUsuarioId(id: number, page:number, pageSize: number) {
         try {
-            const [registrosPesos, totalRegistros] = await Promise.all([
-                prisma.registroPeso.findMany({
-                    where: {
-                        usuario_id: id,
-                    },
-                    skip: (page - 1) * pageSize,
-                    take: pageSize,
-                }),
-                prisma.registroPeso.count({
-                    where: {
-                        usuario_id: id,
-                    },
-                }),
-            ]);
-    
-            if (registrosPesos.length === 0) {
-                throw new Error(`Não há registros de peso para o usuário com id: ${id}.`);
-            };
-    
-            const registrosPesoResponse = toResponseRegistroPesoByUserId(registrosPesos);
-            const totalPages = Math.ceil(totalRegistros / pageSize);
-    
-            return {
-                registrosPeso: registrosPesoResponse,
-                totalPages,
-                pageSize,
-                currentPage: page,
-            };
+          const [registrosPesos, totalRegistros] = await Promise.all([
+            prisma.registroPeso.findMany({
+              where: {
+                usuario_id: id,
+              },
+              take: pageSize,
+              skip: (Number(page) - 1) * Number(pageSize), // Calcular o número de registros a serem pulados
+            }),
+            prisma.registroPeso.count({
+              where: {
+                usuario_id: id,
+              },
+            }),
+          ]);
+      
+          if (registrosPesos.length === 0) {
+            throw new Error(`Não há registros de peso para o usuário com id: ${id}.`);
+          }
+      
+          const registrosPesoResponse = toResponseRegistroPesoByUserId(registrosPesos);
+          const totalPages = Math.ceil(totalRegistros / pageSize);
+          const currentPage = page;
+      
+          return {
+            registrosPeso: registrosPesoResponse,
+            totalPages,
+            pageSize,
+            currentPage,
+          };
         } catch (error: any) {
-            throw new Error(`Erro ao buscar registros de peso no banco de dados com o id: ${id}.\nError message: ${error.message}.`);
-        };
-    };
+          throw new Error(`Erro ao buscar registros de peso no banco de dados com o id: ${id}. Error message: ${error.message}.`);
+        }
+      }
+      
     
-    async registrarPeso(id:number, peso:number, peso_meta:number ) {
+    async registrarPeso(id:number, peso:number ) {
         try {
             const [registroPeso] = await prisma.$transaction([
                 prisma.registroPeso.create({        
                     data: {
                         usuario_id: id,
-                        peso,
-                        peso_meta
+                        peso
                     },
                 }),
             ]);
@@ -75,14 +76,10 @@ export class RegistroPesoRepository {
         };
     };
     
-    async atualizarRegistro(id:number, { peso, peso_meta }:IAtualizarRegistroPesoRequest) {
+    async atualizarRegistro(id:number, { peso }:IAtualizarRegistroPesoRequest) {
         try {
             if (peso === undefined || peso === null) {
                 const dados = await this.atualizarPropriedade({ id, propriedade: 'peso', valor: peso });
-                return toResponseRegistroPeso(dados);
-            };
-            if (peso_meta === undefined || peso_meta === null) {
-                const dados = await this.atualizarPropriedade({ id, propriedade: 'peso_meta', valor: peso_meta });
                 return toResponseRegistroPeso(dados);
             };
         } catch (error: any) {

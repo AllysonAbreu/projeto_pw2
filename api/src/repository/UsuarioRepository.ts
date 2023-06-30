@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-import { AtualizarUsuario, EmailUsuario } from '../domain/Usuario';
+import { AtualizarUsuario } from '../domain/Usuario';
 import { IUsuarioCadastroRequest } from '../controllers/dto/request/UsuarioRequest';
 import { toResponseNovoUsuario } from '../mappers/usuarios_mappers/UpdateUsuarioMapper';
-import { toResponseBuscaById } from '../mappers/usuarios_mappers/UsuarioBuscaByIdMapper';
+import { toResponseBusca } from '../mappers/usuarios_mappers/UsuarioBuscaByIdMapper';
 import { toResponseCadastro } from '../mappers/usuarios_mappers/UsuarioCadastroMapper';
 
 const prisma = new PrismaClient();
@@ -22,6 +22,7 @@ export class UsuarioRepository {
                         email: dados.email,
                         senha: dados.senha,
                         altura: dados.altura,
+                        peso_meta: dados.peso_meta,
                         tempo_meta: dados.tempo_meta,
                         modificado_em: new Date(Date.now()),
                     },
@@ -35,6 +36,7 @@ export class UsuarioRepository {
     
     async deleteLogicoUsuario({ id }: { id: number }){
         try {
+            const dataAtualizacao = Date.now();
             return await prisma.$transaction([
                 prisma.usuario.update({
                     where: {
@@ -42,7 +44,7 @@ export class UsuarioRepository {
                     },
                     data:{
                         is_ativo: false,
-                        modificado_em: new Date(Date.now()),
+                        modificado_em: new Date(dataAtualizacao),
                     }
                 }),
             ]);
@@ -62,10 +64,10 @@ export class UsuarioRepository {
                         senha: await senhaHash,
                         altura,
                         tempo_meta,
+                        peso_meta,
                         registros_peso: {
                             create: {
                                 peso,
-                                peso_meta,
                             },
                         },
                     },
@@ -88,22 +90,23 @@ export class UsuarioRepository {
                 },
               });
             if(usuario){
-                return toResponseBuscaById(usuario); 
+                return toResponseBusca(usuario); 
             };
         } catch (error:any) {
           throw new Error(`Erro ao buscar usuário no banco de dados: ${error.message}`);  
         };
     };
     
-    async buscarUsuarioByEmail({ email }: EmailUsuario) {
+    async buscarUsuarioByEmail(email:string) {
+        const emailBusca = email;
         try {
             const usuario = await prisma.usuario.findFirst({
                 where: {
-                    email,
+                    email:emailBusca,
                 },
             });
             if(usuario){
-                return usuario;
+                return toResponseBusca(usuario);
             };
         } catch (error:any) {
             throw new Error(`Erro ao buscar usuário no banco de dados: ${error.message}`);
