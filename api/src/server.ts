@@ -36,12 +36,6 @@ app.get('/static/:file', (req, res) => {
 
 app.use('/static', express.static(statics));
 
-app.use(
-  fileUpload({
-    limits: { fileSize: 50 * 1024 * 1024 },
-  })
-);
-
 // Configuração do Swagger
 const swaggerOptions = {
   swaggerDefinition: {

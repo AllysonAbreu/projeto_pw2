@@ -7,7 +7,7 @@ export class MidiaValidators{
         return true;
     };
 
-    static conteudoIsValid(conteudo?:Express.Multer.File){
+    static conteudoIsValid(conteudo?:Buffer){
         if(conteudo === null || conteudo === undefined){
             throw new Error('Conteúdo não pode ser nulo.');
         };

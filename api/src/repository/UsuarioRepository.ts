@@ -2,8 +2,9 @@ import { PrismaClient } from '@prisma/client';
 import { AtualizarUsuario } from '../domain/Usuario';
 import { IUsuarioCadastroRequest } from '../controllers/dto/request/UsuarioRequest';
 import { toResponseNovoUsuario } from '../mappers/usuarios_mappers/UpdateUsuarioMapper';
-import { toResponseBusca } from '../mappers/usuarios_mappers/UsuarioBuscaByIdMapper';
+import { toResponseBusca, toResponseBuscaUserComum } from '../mappers/usuarios_mappers/UsuarioBuscaByIdMapper';
 import { toResponseCadastro } from '../mappers/usuarios_mappers/UsuarioCadastroMapper';
+import { MidiaUtils } from '../utils/midiaUtils';
 
 const prisma = new PrismaClient();
 
@@ -90,7 +91,19 @@ export class UsuarioRepository {
                 },
               });
             if(usuario){
-                return toResponseBusca(usuario); 
+                try{
+                    const [midia] = await prisma.midia.findMany({
+                        where: {
+                            usuario_id:usuario.id,
+                        }
+                    });
+                    if (midia !== null) {
+                        const conteudoFille = MidiaUtils.convertToContentType(midia.conteudo);
+                        return toResponseBusca(usuario, conteudoFille);
+                    };
+                } catch (error: any) {
+                    throw new Error(`Não foi possível obter mídia no banco de dados. Erro: ${error.message}.`);
+                };
             };
         } catch (error:any) {
           throw new Error(`Erro ao buscar usuário no banco de dados: ${error.message}`);  
@@ -106,7 +119,7 @@ export class UsuarioRepository {
                 },
             });
             if(usuario){
-                return toResponseBusca(usuario);
+                return toResponseBuscaUserComum(usuario);
             };
         } catch (error:any) {
             throw new Error(`Erro ao buscar usuário no banco de dados: ${error.message}`);

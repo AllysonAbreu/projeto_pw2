@@ -1,10 +1,14 @@
 import { Router } from "express";
 import { MidiaController } from "../controllers/MidiaController";
 import { verificarToken } from "../middlewares/verificarTokenJWT";
+import multer from "multer";
 
 
 const routesMidias = Router();
 const controller = new MidiaController();
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 /**
  * @swagger
@@ -133,7 +137,7 @@ routesMidias.get('/midias/:id', verificarToken, controller.obterMidia);
  *       '400':
  *         description: Erro na requisição.
  */
-routesMidias.post('/midias', verificarToken, controller.criarMidia);
+routesMidias.post('/midias', upload.single('conteudo'), controller.criarMidia);
 /**
  * @swagger
  * /usuarios/midias/{id}:
@@ -237,5 +241,38 @@ routesMidias.delete('/usuarios/midias/:id', verificarToken, controller.excluirMi
  *           description: Usuário não encontrado ou não possui mídias.
  */
 routesMidias.get('/usuario/:id/midias', verificarToken, controller.listarMidiasByUserId);
+
+
+/**
+ * @swagger
+ * /usuario/{id}/midia:
+ *   get:
+ *     summary: Obtém uma mídia pelo ID do usuário.
+ *     tags:
+ *       - Midias
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         description: ID do usuário.
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Mídia obtida com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/MidiaResponse'
+ *       '401':
+ *         description: Não autorizado.
+ *       '403':
+ *         description: Não há token válido.
+ *       '404':
+ *         description: Mídia não encontrada.
+ */
+routesMidias.get('/usuario/:id/midia', verificarToken, controller.listarMidiaByUserId)
 
 export default routesMidias;
