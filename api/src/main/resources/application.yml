@@ -1,13 +1,23 @@
-jwt:
-  secret: usersecretforjwtauthenticateoratoroeuaroupadoreideromalalalameudeuscomoessabencaodechave
+# Specify the path of the OpenAPI documentation
+springdoc:
+  api-docs:
+    path: /api-docs
+  # Specify the path of the Swagger UI
+  swagger-ui:
+    path: /swagger-ui.html
+    # Enable or disable Swagger UI
+    enabled: true
+
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/dev_db
-    username: admin
-    password: admin
+    url: jdbc:postgresql://${NEON_PGSQL_URL:ep-dry-sky-953847.us-east-2.aws.neon.tech/testes_db}?user=${NEON_PGSQL_USER:AllysonAbreu}&password=${NEON_PGSQL_PASSWORD:fXMRb04cuTtG}
+#    url: jdbc:postgresql://localhost:54320/postgres
+#    username: admin
+#    password: admin
 jpa:
   hibernate:
     ddl-auto: validate
+    show-sql: true
   database-plataform: org.hibernate.dialect.PostgreSQLDialect
 server:
   error:
@@ -18,3 +28,8 @@ logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+api:
+  security:
+    token:
+      secret: ${JWT_TOKEN:usersecretforjwtauthenticateoratoroeuaroupadoreideromalalalameudeuscomoessabencaodechave}
